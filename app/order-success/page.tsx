@@ -83,7 +83,7 @@ export default function OrderSuccessPage() {
                                 Order Placed Successfully!
                             </h1>
                             <p className="text-gray-600 text-lg">
-                                Thank you for your order. We'll contact you shortly to confirm your delivery details.
+                                Thank you for your order. We&apos;ll contact you shortly to confirm your delivery details.
                             </p>
                         </div>
 
@@ -174,8 +174,8 @@ export default function OrderSuccessPage() {
 
                         <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg no-print">
                             <p className="text-sm text-blue-900">
-                                <strong>What's Next?</strong> Our team will contact you within 24 hours to confirm your order and delivery schedule.
-                                You'll receive your order within 3-5 business days.
+                                <strong>What&apos;s Next?</strong> Our team will contact you within 24 hours to confirm your order and delivery schedule.
+                                You&apos;ll receive your order within 3-5 business days.
                             </p>
                         </div>
                     </div>

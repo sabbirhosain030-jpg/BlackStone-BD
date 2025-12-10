@@ -105,7 +105,7 @@ export default function CategoriesPage() {
                                 Browse by Category
                             </h2>
                             <p className="text-gray-600 text-lg">
-                                Find exactly what you're looking for
+                                Find exactly what you&apos;re looking for
                             </p>
                         </div>
                     </AnimatedSection>
@@ -147,7 +147,7 @@ export default function CategoriesPage() {
                                 transition={{ duration: 0.5 }}
                             >
                                 <h2 className="text-4xl font-bold text-white mb-6">
-                                    Can't Find What You're Looking For?
+                                    Can&apos;t Find What You&apos;re Looking For?
                                 </h2>
                                 <p className="text-xl text-blue-100 mb-8">
                                     Browse our entire collection or contact our support team

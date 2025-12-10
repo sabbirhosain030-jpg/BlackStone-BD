@@ -103,7 +103,7 @@ export default function ContactPage() {
                         <MessageCircle className="h-16 w-16 mx-auto mb-6" />
                         <h1 className="text-5xl font-bold mb-4">Get in Touch</h1>
                         <p className="text-xl text-blue-100 max-w-2xl mx-auto">
-                            Have a question or need assistance? We're here to help! Reach out to us and we'll get back to you as soon as possible.
+                            Have a question or need assistance? We&apos;re here to help! Reach out to us and we&apos;ll get back to you as soon as possible.
                         </p>
                     </motion.div>
                 </div>
@@ -157,7 +157,7 @@ export default function ContactPage() {
                                 className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-6"
                             >
                                 <p className="font-medium">✓ Message sent successfully!</p>
-                                <p className="text-sm">We'll get back to you soon.</p>
+                                <p className="text-sm">We&apos;ll get back to you soon.</p>
                             </motion.div>
                         )}
 
