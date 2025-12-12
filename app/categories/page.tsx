@@ -5,56 +5,48 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CategoryCard from '@/components/CategoryCard';
 import AnimatedSection from '@/components/AnimatedSection';
-import { Shirt, Watch, Footprints, Briefcase, Sparkles, Home as HomeIcon } from 'lucide-react';
+import { User, Heart, UserCircle, Users, Gem } from 'lucide-react';
 
 const categories = [
     {
-        name: 'Electronics',
-        description: 'Latest gadgets and electronic devices',
-        icon: Sparkles,
+        name: "Men's",
+        description: "Premium men's clothing and fashion",
+        icon: User,
         productCount: 24,
-        href: '/products?category=Electronics',
-        gradient: 'bg-gradient-to-br from-blue-600 to-indigo-700',
+        href: "/products?category=Men's",
+        gradient: 'bg-gradient-to-br from-slate-700 to-slate-900',
     },
     {
-        name: 'Watches',
-        description: 'Premium timepieces for the modern professional',
-        icon: Watch,
-        productCount: 18,
-        href: '/products?category=Watches',
-        gradient: 'bg-gradient-to-br from-amber-500 to-orange-600',
-    },
-    {
-        name: 'Footwear',
-        description: 'Step up your style with our collection',
-        icon: Footprints,
+        name: "Women's",
+        description: "Elegant women's clothing collection",
+        icon: Heart,
         productCount: 32,
-        href: '/products?category=Footwear',
-        gradient: 'bg-gradient-to-br from-emerald-500 to-teal-600',
+        href: "/products?category=Women's",
+        gradient: 'bg-gradient-to-br from-rose-400 to-rose-600',
+    },
+    {
+        name: 'Boys',
+        description: "Stylish clothing for boys",
+        icon: UserCircle,
+        productCount: 18,
+        href: '/products?category=Boys',
+        gradient: 'bg-gradient-to-br from-sky-500 to-sky-700',
+    },
+    {
+        name: 'Girls',
+        description: "Beautiful clothing for girls",
+        icon: Users,
+        productCount: 22,
+        href: '/products?category=Girls',
+        gradient: 'bg-gradient-to-br from-pink-400 to-pink-600',
     },
     {
         name: 'Accessories',
-        description: 'Complete your look with our accessories',
-        icon: Briefcase,
+        description: 'Watches, bags, jewelry, and more',
+        icon: Gem,
         productCount: 28,
         href: '/products?category=Accessories',
-        gradient: 'bg-gradient-to-br from-purple-500 to-violet-600',
-    },
-    {
-        name: 'Clothing',
-        description: 'Trendy clothing for every style',
-        icon: Shirt,
-        productCount: 15,
-        href: '/products?category=Clothing',
-        gradient: 'bg-gradient-to-br from-pink-500 to-rose-600',
-    },
-    {
-        name: 'Home & Living',
-        description: 'Elevate your living space',
-        icon: HomeIcon,
-        productCount: 21,
-        href: '/products?category=Home',
-        gradient: 'bg-gradient-to-br from-cyan-500 to-blue-600',
+        gradient: 'bg-gradient-to-br from-amber-500 to-amber-700',
     },
 ];
 

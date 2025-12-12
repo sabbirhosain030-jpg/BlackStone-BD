@@ -20,7 +20,8 @@ function ProductsContent() {
     const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState(initialSearch);
 
-    const categories = ['All', ...Array.from(new Set(products.map(p => p.category)))];
+    // Define specific category order
+    const categories = ['All', "Men's", "Women's", 'Boys', 'Girls', 'Accessories'];
 
     useEffect(() => {
         let result = products;

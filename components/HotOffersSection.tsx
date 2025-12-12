@@ -2,23 +2,89 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Flame, ArrowRight, Sparkles } from 'lucide-react';
-import { HotOffer, Product } from '@/types';
+import { Flame, ArrowRight, Sparkles, Clock } from 'lucide-react';
 import ProductCard from './ProductCard';
+import { useAdmin } from '@/context/AdminContext';
+import { useState, useEffect } from 'react';
 
-interface HotOffersSectionProps {
-    offers: HotOffer[];
-    products: Product[];
+interface CountdownTimerProps {
+    endDate: string;
 }
 
-export default function HotOffersSection({ offers, products }: HotOffersSectionProps) {
+function CountdownTimer({ endDate }: CountdownTimerProps) {
+    const [timeLeft, setTimeLeft] = useState({
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+    });
+
+    useEffect(() => {
+        const calculateTimeLeft = () => {
+            const difference = new Date(endDate).getTime() - new Date().getTime();
+
+            if (difference > 0) {
+                setTimeLeft({
+                    days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+                    hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+                    minutes: Math.floor((difference / 1000 / 60) % 60),
+                    seconds: Math.floor((difference / 1000) % 60),
+                });
+            } else {
+                setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+            }
+        };
+
+        calculateTimeLeft();
+        const timer = setInterval(calculateTimeLeft, 1000);
+
+        return () => clearInterval(timer);
+    }, [endDate]);
+
+    return (
+        <div className="flex justify-center gap-3 sm:gap-4">
+            {[
+                { label: 'Days', value: timeLeft.days },
+                { label: 'Hours', value: timeLeft.hours },
+                { label: 'Mins', value: timeLeft.minutes },
+                { label: 'Secs', value: timeLeft.seconds },
+            ].map((item) => (
+                <motion.div
+                    key={item.label}
+                    className="bg-white rounded-xl shadow-lg p-3 sm:p-4 min-w-[60px] sm:min-w-[80px]"
+                    initial={{ scale: 0.9 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: 'spring', stiffness: 300 }}
+                >
+                    <motion.div
+                        key={item.value}
+                        initial={{ scale: 1.2, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                        className="text-2xl sm:text-3xl font-bold text-orange-600"
+                    >
+                        {String(item.value).padStart(2, '0')}
+                    </motion.div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider">{item.label}</div>
+                </motion.div>
+            ))}
+        </div>
+    );
+}
+
+export default function HotOffersSection() {
+    const { hotOffers, products } = useAdmin();
+
     // Filter for active offers only
-    const activeOffers = offers.filter(offer => offer.isActive);
+    const activeOffers = hotOffers.filter(offer => offer.isActive);
 
     // Check if we have any active offers
     const hasActiveOffers = activeOffers.length > 0;
 
-    // Get products that match hot offer criteria (could be enhanced with specific product IDs in offers)
+    // Get the first active offer for the timer
+    const currentOffer = activeOffers[0];
+
+    // Get products that match hot offer criteria (products with original price > price)
     const hotOfferProducts = hasActiveOffers
         ? products.filter(p => p.originalPrice && p.originalPrice > p.price).slice(0, 4)
         : [];
@@ -55,7 +121,7 @@ export default function HotOffersSection({ offers, products }: HotOffersSectionP
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Section Header */}
                 <motion.div
-                    className="text-center mb-12"
+                    className="text-center mb-8"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
@@ -81,6 +147,23 @@ export default function HotOffersSection({ offers, products }: HotOffersSectionP
 
                 {hasActiveOffers && hotOfferProducts.length > 0 ? (
                     <>
+                        {/* Countdown Timer */}
+                        {currentOffer && (
+                            <motion.div
+                                className="text-center mb-12"
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: 0.2 }}
+                            >
+                                <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-700 px-4 py-2 rounded-full mb-4">
+                                    <Clock className="h-5 w-5" />
+                                    <span className="font-semibold">{currentOffer.title} - Ends Soon!</span>
+                                </div>
+                                <CountdownTimer endDate={currentOffer.endDate} />
+                            </motion.div>
+                        )}
+
                         {/* Active Offers Display */}
                         <motion.div
                             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
@@ -116,7 +199,7 @@ export default function HotOffersSection({ offers, products }: HotOffersSectionP
                         >
                             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                 <Link
-                                    href="/products"
+                                    href="/products?filter=hot-offers"
                                     className="inline-flex items-center bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-bold px-8 py-4 rounded-full shadow-lg shadow-orange-500/30 transition-all"
                                 >
                                     View All Hot Offers

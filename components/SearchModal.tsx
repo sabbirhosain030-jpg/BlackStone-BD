@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, X, ArrowRight, Sparkles, Watch, Footprints, Briefcase, Shirt, Home as HomeIcon } from 'lucide-react';
+import { Search, X, ArrowRight, User, Users, UserCircle, Heart, Gem } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { products } from '@/lib/data';
@@ -127,12 +127,11 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                                     </h3>
                                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                         {[
-                                            { name: 'Electronics', icon: Sparkles, color: 'from-blue-500 to-indigo-600' },
-                                            { name: 'Watches', icon: Watch, color: 'from-amber-500 to-orange-600' },
-                                            { name: 'Footwear', icon: Footprints, color: 'from-emerald-500 to-teal-600' },
-                                            { name: 'Accessories', icon: Briefcase, color: 'from-purple-500 to-violet-600' },
-                                            { name: 'Clothing', icon: Shirt, color: 'from-pink-500 to-rose-600' },
-                                            { name: 'Home', icon: HomeIcon, color: 'from-cyan-500 to-blue-600' },
+                                            { name: "Men's", icon: User, color: 'from-slate-700 to-slate-900' },
+                                            { name: "Women's", icon: Heart, color: 'from-rose-400 to-rose-600' },
+                                            { name: 'Boys', icon: UserCircle, color: 'from-sky-500 to-sky-700' },
+                                            { name: 'Girls', icon: Users, color: 'from-pink-400 to-pink-600' },
+                                            { name: 'Accessories', icon: Gem, color: 'from-amber-500 to-amber-700' },
                                         ].map((category) => {
                                             const Icon = category.icon;
                                             return (

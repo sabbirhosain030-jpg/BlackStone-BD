@@ -108,7 +108,7 @@ export default function Home() {
                     </div>
                 </AnimatedSection>
 
-                {/* i. New Arrivals Section (Moved to Top) */}
+                {/* 1. New Arrivals Section */}
                 <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <AnimatedSection>
                         <div className="text-center mb-12">
@@ -158,7 +158,6 @@ export default function Home() {
                         ))}
                     </motion.div>
 
-                    {/* Animated Button for New Arrivals */}
                     <div className="mt-12 text-center">
                         <Link href="/products?sort=newest">
                             <motion.button
@@ -172,7 +171,60 @@ export default function Home() {
                     </div>
                 </section>
 
-                {/* ii. Best Selling Products */}
+                {/* 2. Featured Collection */}
+                <section className="py-20 bg-gray-50">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <AnimatedSection>
+                            <div className="text-center mb-12">
+                                <h2 className="text-4xl font-bold text-gray-900">Featured Collection</h2>
+                                <p className="text-gray-600 mt-3 text-lg">Handpicked favorites just for you</p>
+                            </div>
+                        </AnimatedSection>
+
+                        <motion.div
+                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true }}
+                            variants={{
+                                visible: {
+                                    transition: {
+                                        staggerChildren: 0.1,
+                                    },
+                                },
+                            }}
+                        >
+                            {featuredProducts.map((product, index) => (
+                                <motion.div
+                                    key={product.id}
+                                    variants={{
+                                        hidden: { opacity: 0, y: 20 },
+                                        visible: { opacity: 1, y: 0 },
+                                    }}
+                                >
+                                    <ProductCard product={product} index={index} />
+                                </motion.div>
+                            ))}
+                        </motion.div>
+
+                        <div className="mt-12 text-center">
+                            <Link href="/products">
+                                <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    className="px-8 py-3 bg-gray-900 text-white font-bold rounded-full hover:bg-gray-800 transition-colors shadow-lg"
+                                >
+                                    View All Products
+                                </motion.button>
+                            </Link>
+                        </div>
+                    </div>
+                </section>
+
+                {/* 3. Hot Offer Section with Timer (Admin Controlled) */}
+                <HotOffersSection />
+
+                {/* 4. Best Selling Products */}
                 <section className="py-20 bg-gray-50">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <AnimatedSection>
@@ -231,105 +283,8 @@ export default function Home() {
                     </div>
                 </section>
 
-                {/* iii. Trending Fashion */}
+                {/* 5. Trending Fashion */}
                 <TrendingFashion />
-
-                {/* Hot Offer Page Link Section */}
-                <section className="py-16 bg-gradient-to-r from-orange-600 to-red-600 text-white relative overflow-hidden">
-                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                        >
-                            <Flame className="h-16 w-16 text-yellow-300 mx-auto mb-4 animate-bounce" />
-                            <h2 className="text-4xl md:text-5xl font-bold mb-6">Don't Miss Out on Hot Offers!</h2>
-                            <p className="text-xl text-orange-100 mb-8 max-w-2xl mx-auto">
-                                Exclusive deals and limited-time discounts are waiting for you. Grab them before they're gone!
-                            </p>
-                            <Link href="/products?filter=hot-offers">
-                                <motion.button
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="px-10 py-4 bg-white text-orange-600 font-bold text-lg rounded-full shadow-2xl hover:bg-gray-100 transition-colors"
-                                >
-                                    View All Hot Offers
-                                </motion.button>
-                            </Link>
-                        </motion.div>
-                    </div>
-                </section>
-
-                {/* Featured Products Section (Retained but updated) */}
-                <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <AnimatedSection>
-                        <div className="text-center mb-12">
-                            <h2 className="text-4xl font-bold text-gray-900">Featured Collection</h2>
-                            <p className="text-gray-600 mt-3 text-lg">Handpicked favorites just for you</p>
-                        </div>
-                    </AnimatedSection>
-
-                    <motion.div
-                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true }}
-                    >
-                        {featuredProducts.map((product, index) => (
-                            <ProductCard key={product.id} product={product} index={index} />
-                        ))}
-                    </motion.div>
-
-                    <div className="mt-12 text-center">
-                        <Link href="/products">
-                            <motion.button
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                className="px-8 py-3 bg-gray-900 text-white font-bold rounded-full hover:bg-gray-800 transition-colors shadow-lg"
-                            >
-                                View All Products
-                            </motion.button>
-                        </Link>
-                    </div>
-                </section>
-
-                {/* Categories Banner */}
-                <AnimatedSection>
-                    <section className="py-20 relative overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-[length:200%_100%]">
-                            <motion.div
-                                className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600"
-                                animate={{
-                                    backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
-                                }}
-                                transition={{
-                                    duration: 15,
-                                    repeat: Infinity,
-                                    ease: "linear"
-                                }}
-                                style={{ backgroundSize: '200% 200%' }}
-                            />
-                        </div>
-                        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                            <h2 className="text-4xl font-bold text-white mb-8 relative z-10">Shop by Category</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
-                                <Link href="/products?category=Electronics" className="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20 hover:bg-white/20 transition-all group">
-                                    <h3 className="text-2xl font-bold text-white mb-2">Electronics</h3>
-                                    <p className="text-blue-100 group-hover:text-white">Latest Gadgets &rarr;</p>
-                                </Link>
-                                <Link href="/products?category=Fashion" className="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20 hover:bg-white/20 transition-all group">
-                                    <h3 className="text-2xl font-bold text-white mb-2">Fashion</h3>
-                                    <p className="text-blue-100 group-hover:text-white">Trendy Styles &rarr;</p>
-                                </Link>
-                                <Link href="/products?category=Accessories" className="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20 hover:bg-white/20 transition-all group">
-                                    <h3 className="text-2xl font-bold text-white mb-2">Accessories</h3>
-                                    <p className="text-blue-100 group-hover:text-white">Premium Items &rarr;</p>
-                                </Link>
-                            </div>
-                        </div>
-                    </section>
-                </AnimatedSection>
 
                 {/* Features Section */}
                 <AnimatedSection className="py-16 bg-white border-t border-gray-100">
