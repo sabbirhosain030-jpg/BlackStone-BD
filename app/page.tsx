@@ -7,7 +7,9 @@ import Hero from '@/components/Hero';
 import ProductCard from '@/components/ProductCard';
 import AnimatedSection from '@/components/AnimatedSection';
 import HotOffersBanner from '@/components/HotOffersBanner';
+import HotOffersSection from '@/components/HotOffersSection';
 import { getFeaturedProducts, getNewArrivals } from '@/lib/data';
+import { useAdmin } from '@/context/AdminContext';
 import Link from 'next/link';
 import { ArrowRight, Shield, Truck, RefreshCw, Award, Play } from 'lucide-react';
 import { useState } from 'react';
@@ -15,6 +17,7 @@ import { useState } from 'react';
 export default function Home() {
     const featuredProducts = getFeaturedProducts();
     const newArrivals = getNewArrivals();
+    const { hotOffers, products } = useAdmin();
     const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
     const features = [
@@ -314,6 +317,9 @@ export default function Home() {
                         ))}
                     </motion.div>
                 </section>
+
+                {/* Hot Offers Section */}
+                <HotOffersSection offers={hotOffers} products={products} />
 
                 {/* Electronics Category Section */}
                 <section className="py-20 bg-gray-50">

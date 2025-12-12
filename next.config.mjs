@@ -12,6 +12,13 @@ const nextConfig = {
             },
         ],
     },
+    // Ensure Framer Motion works properly in production
+    transpilePackages: ['framer-motion'],
+    // Optimize for production animations
+    compiler: {
+        removeConsole: process.env.NODE_ENV === 'production',
+    },
 };
 
 export default nextConfig;
+

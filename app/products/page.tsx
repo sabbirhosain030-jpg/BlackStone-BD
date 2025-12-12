@@ -44,6 +44,23 @@ function ProductsContent() {
         setFilteredProducts(result);
     }, [selectedCategory, priceRange, searchQuery]);
 
+    // Auto-close mobile filter panel after selection
+    const handleCategoryChange = (category: string) => {
+        setSelectedCategory(category);
+        // Close mobile filter after a short delay to show selection
+        setTimeout(() => {
+            setIsMobileFilterOpen(false);
+        }, 300);
+    };
+
+    const handlePriceChange = (min: number, max: number) => {
+        setPriceRange([min, max]);
+        // Close mobile filter after price is applied
+        setTimeout(() => {
+            setIsMobileFilterOpen(false);
+        }, 300);
+    };
+
     // Update search query if URL param changes
     useEffect(() => {
         const query = searchParams.get('search');
@@ -123,7 +140,7 @@ function ProductsContent() {
                                                     name="category"
                                                     value={category}
                                                     checked={selectedCategory === category}
-                                                    onChange={(e) => setSelectedCategory(e.target.value)}
+                                                    onChange={(e) => handleCategoryChange(e.target.value)}
                                                     className="hidden"
                                                 />
                                                 <span className={`text-sm ${selectedCategory === category ? 'text-blue-600 font-medium' : 'text-gray-600'}`}>
@@ -138,7 +155,7 @@ function ProductsContent() {
                                 <PriceFilter
                                     minPrice={0}
                                     maxPrice={10000}
-                                    onPriceChange={(min, max) => setPriceRange([min, max])}
+                                    onPriceChange={handlePriceChange}
                                 />
                             </div>
                         </div>
