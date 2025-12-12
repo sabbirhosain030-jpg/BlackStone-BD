@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Plus, Edit, Trash2, Flame, ToggleLeft, ToggleRight, Megaphone, CheckCircle, X } from 'lucide-react';
+import Image from 'next/image';
 import { hotOffers as initialOffers } from '@/lib/data';
 import { HotOffer } from '@/types';
 import StatsCard from '@/components/admin/StatsCard';

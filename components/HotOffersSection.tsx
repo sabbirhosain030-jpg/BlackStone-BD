@@ -84,9 +84,7 @@ export default function HotOffersSection({ offers, products }: HotOffersSectionP
                         {/* Active Offers Display */}
                         <motion.div
                             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
-                            initial="hidden"
-                            whileInView="visible"
-                            viewport={{ once: true, margin: '-100px' }}
+                            viewport={{ once: true }}
                             variants={{
                                 visible: {
                                     transition: {

@@ -81,6 +81,26 @@ export const getNewArrivals = () => products.filter(p => p.isNew);
 export const getHotProducts = () => products.filter(p => p.originalPrice && p.originalPrice > p.price);
 export const getProductById = (id: string) => products.find(p => p.id === id);
 
+export const getBestSellingProducts = () => {
+    const productSales: { [key: string]: number } = {};
+
+    // Calculate sales from orders
+    orders.forEach(order => {
+        order.items.forEach(item => {
+            productSales[item.id] = (productSales[item.id] || 0) + item.quantity;
+        });
+    });
+
+    // Sort products by sales count
+    return [...products]
+        .sort((a, b) => {
+            const salesA = productSales[a.id] || 0;
+            const salesB = productSales[b.id] || 0;
+            return salesB - salesA;
+        })
+        .slice(0, 8); // Return top 8
+};
+
 import { Category, Customer, HotOffer, SiteSettings } from '@/types';
 
 export const categories: Category[] = [
