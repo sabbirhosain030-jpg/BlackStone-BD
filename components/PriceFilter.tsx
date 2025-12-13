@@ -2,15 +2,16 @@
 
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { Banknote } from 'lucide-react';
+import { Banknote, Flame } from 'lucide-react';
 
 interface PriceFilterProps {
     minPrice: number;
     maxPrice: number;
     onPriceChange: (min: number, max: number) => void;
+    onClose?: () => void; // For mobile auto-close
 }
 
-export default function PriceFilter({ minPrice, maxPrice, onPriceChange }: PriceFilterProps) {
+export default function PriceFilter({ minPrice, maxPrice, onPriceChange, onClose }: PriceFilterProps) {
     const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
 
     const handleChange = (values: number[]) => {
@@ -24,10 +25,16 @@ export default function PriceFilter({ minPrice, maxPrice, onPriceChange }: Price
             animate={{ opacity: 1, y: 0 }}
             className="bg-white p-6 rounded-xl shadow-sm border border-gray-100"
         >
-            <div className="flex items-center gap-2 mb-4">
-                <Banknote className="h-5 w-5 text-blue-600" />
-                <h3 className="text-lg font-bold text-gray-900">Price Range (BDT)</h3>
+            <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                    <Banknote className="h-5 w-5 text-blue-600" />
+                    <h3 className="text-lg font-bold text-gray-900">Filters</h3>
+                </div>
             </div>
+
+            {/* Price Filter Only - Hot is handled in Sidebar */}
+
+            <h4 className="text-sm font-bold text-gray-900 mb-3">Price Range (BDT)</h4>
 
             <div className="space-y-6">
                 <div className="flex justify-between text-sm font-medium text-gray-700">
@@ -88,33 +95,39 @@ export default function PriceFilter({ minPrice, maxPrice, onPriceChange }: Price
                         input[type="range"]::-webkit-slider-thumb {
                             -webkit-appearance: none;
                             appearance: none;
-                            width: 18px;
-                            height: 18px;
+                            width: 20px;
+                            height: 20px;
                             border-radius: 50%;
-                            background: #3B82F6;
+                            background: white;
                             cursor: pointer;
-                            border: 3px solid white;
-                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                            border: 3px solid #2563EB;
+                            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+                            transition: all 0.2s ease;
                         }
                         
                         input[type="range"]::-moz-range-thumb {
-                            width: 18px;
-                            height: 18px;
+                            width: 20px;
+                            height: 20px;
                             border-radius: 50%;
-                            background: #3B82F6;
+                            background: white;
                             cursor: pointer;
-                            border: 3px solid white;
-                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                            border: 3px solid #2563EB;
+                            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+                            transition: all 0.2s ease;
                         }
                         
-                        input[type="range"]::-webkit-slider-thumb:hover {
-                            background: #2563EB;
-                            transform: scale(1.1);
+                        input[type="range"]::-webkit-slider-thumb:hover,
+                        input[type="range"]::-webkit-slider-thumb:active {
+                            background: #EFF6FF;
+                            transform: scale(1.15);
+                            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.6);
                         }
                         
-                        input[type="range"]::-moz-range-thumb:hover {
-                            background: #2563EB;
-                            transform: scale(1.1);
+                        input[type="range"]::-moz-range-thumb:hover,
+                        input[type="range"]::-moz-range-thumb:active {
+                            background: #EFF6FF;
+                            transform: scale(1.15);
+                            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.6);
                         }
                     `}</style>
                 </div>
@@ -145,7 +158,13 @@ export default function PriceFilter({ minPrice, maxPrice, onPriceChange }: Price
                 <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => onPriceChange(priceRange[0], priceRange[1])}
+                    onClick={() => {
+                        onPriceChange(priceRange[0], priceRange[1]);
+                        // Auto-close on mobile
+                        if (onClose && window.innerWidth < 768) {
+                            onClose();
+                        }
+                    }}
                     className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors"
                 >
                     Apply Filter

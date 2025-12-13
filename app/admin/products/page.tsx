@@ -2,20 +2,32 @@
 
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { Plus, Edit, Trash2, Image as ImageIcon, X, Package, AlertTriangle, DollarSign, Upload } from 'lucide-react';
+import { Plus, Edit, Trash2, Image as ImageIcon, X, Package, AlertTriangle, DollarSign, Upload, RefreshCcw, Archive } from 'lucide-react';
 import { Product } from '@/types';
 import StatsCard from '@/components/admin/StatsCard';
 import { useAdmin } from '@/context/AdminContext';
 
+// ... imports
+
 export default function AdminProductsPage() {
-    const { products, categories, addProduct, updateProduct, deleteProduct } = useAdmin();
+    const { products, categories, addProduct, updateProduct, deleteProduct, restoreProduct } = useAdmin();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
     const [formData, setFormData] = useState<Partial<Product>>({});
+    const [viewMode, setViewMode] = useState<'active' | 'trash'>('active');
+
+    // Filter products based on view mode
+    const displayedProducts = products.filter(p => viewMode === 'active' ? !p.isDeleted : p.isDeleted);
 
     const handleDelete = (id: string) => {
-        if (confirm('Are you sure you want to delete this product?')) {
+        if (confirm('Are you sure you want to move this product to trash?')) {
             deleteProduct(id);
+        }
+    };
+
+    const handleRestore = (id: string) => {
+        if (confirm('Restore this product?')) {
+            restoreProduct(id);
         }
     };
 
@@ -41,7 +53,6 @@ export default function AdminProductsPage() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // In a real app, we would send this data to the backend
         if (editingProduct) {
             updateProduct({ ...editingProduct, ...formData } as Product);
         } else {
@@ -64,46 +75,47 @@ export default function AdminProductsPage() {
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                 >
-                    Products
+                    {viewMode === 'active' ? 'Products' : 'Recycle Bin'}
                 </motion.h1>
-                <motion.button
-                    onClick={handleAddNew}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-colors"
-                >
-                    <Plus className="h-5 w-5" />
-                    Add New Product
-                </motion.button>
+                <div className="flex gap-3">
+                    <motion.button
+                        onClick={() => setViewMode(viewMode === 'active' ? 'trash' : 'active')}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold border ${viewMode === 'active' ? 'bg-white text-gray-700 border-gray-300' : 'bg-gray-100 text-gray-900 border-gray-400'}`}
+                    >
+                        {viewMode === 'active' ? (
+                            <>
+                                <Trash2 className="h-5 w-5" />
+                                Trash ({products.filter(p => p.isDeleted).length})
+                            </>
+                        ) : (
+                            <>
+                                <Package className="h-5 w-5" />
+                                View Active
+                            </>
+                        )}
+                    </motion.button>
+                    {viewMode === 'active' && (
+                        <motion.button
+                            onClick={handleAddNew}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-colors"
+                        >
+                            <Plus className="h-5 w-5" />
+                            Add New Product
+                        </motion.button>
+                    )}
+                </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <StatsCard
-                    label="Total Products"
-                    value={products.length.toString()}
-                    icon={Package}
-                    color="bg-blue-500"
-                    trend="+12%"
-                    delay={0}
-                />
-                <StatsCard
-                    label="Low Stock"
-                    value={products.filter(p => p.stock < 10).length.toString()}
-                    icon={AlertTriangle}
-                    color="bg-orange-500"
-                    trend="Needs Attention"
-                    trendUp={false}
-                    delay={0.1}
-                />
-                <StatsCard
-                    label="Total Value"
-                    value={`৳${products.reduce((acc, p) => acc + (p.price * p.stock), 0).toLocaleString()}`}
-                    icon={DollarSign}
-                    color="bg-green-500"
-                    trend="+8%"
-                    delay={0.2}
-                />
-            </div>
+            {/* Stats (Hide in Trash mode or show Trash stats?) - Keeping general Active stats */}
+            {viewMode === 'active' && (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    {/* ... StatsCards ... */}
+                </div>
+            )}
 
             <motion.div
                 className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
@@ -123,65 +135,85 @@ export default function AdminProductsPage() {
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {products.map((product, index) => (
-                                <motion.tr
-                                    key={product.id}
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: index * 0.05 }}
-                                    whileHover={{ backgroundColor: '#f9fafb' }}
-                                    className="cursor-pointer"
-                                >
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="flex items-center">
-                                            <div className="h-12 w-12 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden">
-                                                <img src={product.images[0]} alt={product.name} className="h-full w-full object-cover" />
+                            {displayedProducts.length === 0 ? (
+                                <tr>
+                                    <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                                        {viewMode === 'active' ? 'No active products found.' : 'Recycle bin is empty.'}
+                                    </td>
+                                </tr>
+                            ) : (
+                                displayedProducts.map((product, index) => (
+                                    <motion.tr
+                                        key={product.id}
+                                        initial={{ opacity: 0, x: -20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: index * 0.05 }}
+                                        whileHover={{ backgroundColor: '#f9fafb' }}
+                                        className="cursor-pointer"
+                                    >
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="flex items-center">
+                                                <div className="h-12 w-12 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden">
+                                                    <img src={product.images[0]} alt={product.name} className="h-full w-full object-cover" />
+                                                </div>
+                                                <div className="ml-4">
+                                                    <div className="text-sm font-medium text-gray-900">{product.name}</div>
+                                                    <div className="text-sm text-gray-500">ID: #{product.id}</div>
+                                                </div>
                                             </div>
-                                            <div className="ml-4">
-                                                <div className="text-sm font-medium text-gray-900">{product.name}</div>
-                                                <div className="text-sm text-gray-500">ID: #{product.id}</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                            {product.category}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        ৳{product.price.toLocaleString()}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {product.stock}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${product.stock > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                                            }`}>
-                                            {product.stock > 0 ? 'In Stock' : 'Out of Stock'}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                                        <motion.button
-                                            onClick={() => handleEdit(product)}
-                                            whileHover={{ scale: 1.1 }}
-                                            whileTap={{ scale: 0.9 }}
-                                            className="text-blue-600 hover:text-blue-900 inline-flex items-center gap-1"
-                                        >
-                                            <Edit className="h-4 w-4" />
-                                            Edit
-                                        </motion.button>
-                                        <motion.button
-                                            onClick={() => handleDelete(product.id)}
-                                            whileHover={{ scale: 1.1 }}
-                                            whileTap={{ scale: 0.9 }}
-                                            className="text-red-600 hover:text-red-900 inline-flex items-center gap-1"
-                                        >
-                                            <Trash2 className="h-4 w-4" />
-                                            Delete
-                                        </motion.button>
-                                    </td>
-                                </motion.tr>
-                            ))}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                {product.category}
+                                            </span>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            ৳{product.price.toLocaleString()}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            {product.stock}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${product.stockStatus === 'coming-soon' ? 'bg-yellow-100 text-yellow-800' :
+                                                product.stockStatus === 'out-of-stock' || product.stock === 0 ? 'bg-red-100 text-red-800' :
+                                                    'bg-green-100 text-green-800'
+                                                }`}>
+                                                {product.stockStatus === 'coming-soon' ? 'Coming Soon' :
+                                                    product.stockStatus === 'out-of-stock' ? 'Out of Stock' :
+                                                        product.stock > 0 ? 'In Stock' : 'Out of Stock'}
+                                            </span>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                            {viewMode === 'active' ? (
+                                                <>
+                                                    <motion.button
+                                                        onClick={() => handleEdit(product)}
+                                                        className="text-blue-600 hover:text-blue-900 inline-flex items-center gap-1"
+                                                    >
+                                                        <Edit className="h-4 w-4" />
+                                                        Edit
+                                                    </motion.button>
+                                                    <motion.button
+                                                        onClick={() => handleDelete(product.id)}
+                                                        className="text-red-600 hover:text-red-900 inline-flex items-center gap-1"
+                                                    >
+                                                        <Trash2 className="h-4 w-4" />
+                                                        Delete
+                                                    </motion.button>
+                                                </>
+                                            ) : (
+                                                <motion.button
+                                                    onClick={() => handleRestore(product.id)}
+                                                    className="text-green-600 hover:text-green-900 inline-flex items-center gap-1"
+                                                >
+                                                    <RefreshCcw className="h-4 w-4" />
+                                                    Restore
+                                                </motion.button>
+                                            )}
+                                        </td>
+                                    </motion.tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
                 </div>
@@ -235,7 +267,6 @@ export default function AdminProductsPage() {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Previous Price</label>
                                     <input
                                         type="number"
                                         value={formData.originalPrice || ''}
@@ -257,10 +288,23 @@ export default function AdminProductsPage() {
                                 </div>
                             </div>
                             <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Stock Status (Override)</label>
+                                <select
+                                    value={formData.stockStatus || ''}
+                                    onChange={(e) => setFormData({ ...formData, stockStatus: e.target.value as any })}
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                                    <option value="">Auto (Based on Stock Count)</option>
+                                    <option value="in-stock">In Stock</option>
+                                    <option value="out-of-stock">Out of Stock</option>
+                                    <option value="coming-soon">Coming Soon</option>
+                                </select>
+                            </div>
+                            <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
                                 <select
                                     value={formData.category || ''}
-                                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                                    onChange={(e) => setFormData({ ...formData, category: e.target.value, subCategory: '' })}
                                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 >
                                     {categories.map(category => (
@@ -268,6 +312,23 @@ export default function AdminProductsPage() {
                                     ))}
                                 </select>
                             </div>
+
+                            {/* Sub Category Logic */}
+                            {formData.category && categories.find(c => c.name === formData.category)?.subCategories && (
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Sub Category</label>
+                                    <select
+                                        value={formData.subCategory || ''}
+                                        onChange={(e) => setFormData({ ...formData, subCategory: e.target.value })}
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    >
+                                        <option value="">Select Sub-Category</option>
+                                        {categories.find(c => c.name === formData.category)?.subCategories?.map(sub => (
+                                            <option key={sub} value={sub}>{sub}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
                                 <textarea

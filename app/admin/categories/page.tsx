@@ -43,18 +43,26 @@ export default function AdminCategoriesPage() {
             name: '',
             description: '',
             image: '',
-            productCount: 0
+            productCount: 0,
+            subCategories: [],
+            isHot: false,
+            parentCategory: undefined
         });
         setIsModalOpen(true);
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        const categoryData = {
+            ...formData,
+            subCategories: formData.subCategories || []
+        };
+
         if (editingCategory) {
-            updateCategory({ ...editingCategory, ...formData } as Category);
+            updateCategory({ ...editingCategory, ...categoryData } as Category);
         } else {
             const newCategory = {
-                ...formData,
+                ...categoryData,
                 id: (categories.length + 1).toString(),
                 slug: formData.name?.toLowerCase().replace(/\s+/g, '-') || '',
                 productCount: 0
@@ -63,6 +71,11 @@ export default function AdminCategoriesPage() {
         }
         setIsModalOpen(false);
     };
+
+    // Filter potential parent categories (exclude self and existing children)
+    const parentOptions = categories.filter(c =>
+        c.id !== editingCategory?.id && !c.parentCategory
+    );
 
     return (
         <div>
@@ -105,7 +118,8 @@ export default function AdminCategoriesPage() {
                         <thead className="bg-gray-50">
                             <tr>
                                 <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Name</th>
-                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Slug</th>
+                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Type</th>
+                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Status</th>
                                 <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Products</th>
                                 <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
                             </tr>
@@ -130,11 +144,34 @@ export default function AdminCategoriesPage() {
                                             </div>
                                             <div className="ml-4">
                                                 <div className="text-sm font-medium text-gray-900">{category.name}</div>
+                                                {category.parentCategory && (
+                                                    <div className="text-xs text-gray-500">
+                                                        ↳ Cost of {categories.find(c => c.id === category.parentCategory)?.name || 'Parent'}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {category.slug}
+                                        <div className="flex flex-col gap-1">
+                                            {category.parentCategory ? (
+                                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
+                                                    Sub-Category
+                                                </span>
+                                            ) : (
+                                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                                                    Main Category
+                                                </span>
+                                            )}
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {category.isHot && (
+                                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+                                                <span className="w-1.5 h-1.5 mr-1.5 bg-red-400 rounded-full animate-pulse"></span>
+                                                HOT
+                                            </span>
+                                        )}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
@@ -180,7 +217,7 @@ export default function AdminCategoriesPage() {
                         initial={{ scale: 0.9, y: 20 }}
                         animate={{ scale: 1, y: 0 }}
                         onClick={(e) => e.stopPropagation()}
-                        className="bg-white rounded-2xl p-8 max-w-md w-full"
+                        className="bg-white rounded-2xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto"
                     >
                         <div className="flex justify-between items-center mb-6">
                             <h2 className="text-2xl font-bold text-gray-900">
@@ -203,17 +240,57 @@ export default function AdminCategoriesPage() {
                                     required
                                 />
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Slug</label>
-                                <input
-                                    type="text"
-                                    value={formData.slug || ''}
-                                    onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="enter-slug-name"
-                                    required
-                                />
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Top Level Status</label>
+                                    <div className="flex items-center gap-2 p-3 border border-gray-300 rounded-lg">
+                                        <input
+                                            type="checkbox"
+                                            id="isHot"
+                                            checked={formData.isHot || false}
+                                            onChange={(e) => setFormData({ ...formData, isHot: e.target.checked })}
+                                            className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                                        />
+                                        <label htmlFor="isHot" className="text-sm text-gray-700 font-medium">Mark as HOT 🔥</label>
+                                    </div>
+                                </div>
                             </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Parent Category (Optional)</label>
+                                <select
+                                    value={formData.parentCategory || ''}
+                                    onChange={(e) => setFormData({ ...formData, parentCategory: e.target.value || undefined })}
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                                    <option value="">None (Main Category)</option>
+                                    {parentOptions.map(category => (
+                                        <option key={category.id} value={category.id}>
+                                            {category.name}
+                                        </option>
+                                    ))}
+                                </select>
+                                <p className="mt-1 text-xs text-gray-500">Select a parent to make this a sub-category</p>
+                            </div>
+
+                            {!formData.parentCategory && (
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Sub-Categories (Quick Add)</label>
+                                    <input
+                                        type="text"
+                                        value={formData.subCategories ? formData.subCategories.join(', ') : ''}
+                                        onChange={(e) => setFormData({
+                                            ...formData,
+                                            subCategories: e.target.value.split(',').map(s => s.trim()).filter(Boolean)
+                                        })}
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        placeholder="e.g. Pants, Shirts, Jackets"
+                                    />
+                                    <p className="mt-1 text-xs text-gray-500">Comma separated list of sub-categories</p>
+                                </div>
+                            )}
+
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Image URL</label>
                                 <input
@@ -224,6 +301,7 @@ export default function AdminCategoriesPage() {
                                     placeholder="https://example.com/image.jpg"
                                 />
                             </div>
+
                             <div className="flex gap-4 justify-end pt-4 border-t border-gray-100">
                                 <button
                                     type="button"

@@ -11,6 +11,14 @@ export interface Product {
     reviews: number;
     isNew?: boolean;
     isFeatured?: boolean;
+    subCategory?: string;
+    stockStatus?: 'in-stock' | 'out-of-stock' | 'coming-soon';
+    views?: number; // NEW - Track product page views
+    totalSales?: number; // NEW - Track number of sales
+    isHotOffer?: boolean; // NEW - Mark as hot offer product
+    isDiscountManual?: boolean; // NEW - Manual discount override flag
+    createdAt?: string; // NEW - Creation date for New Arrivals
+    isDeleted?: boolean; // NEW - Soft delete flag
 }
 
 export interface CartItem extends Product {
@@ -44,6 +52,9 @@ export interface Category {
     image?: string;
     productCount: number;
     isFeatured?: boolean;
+    isHot?: boolean; // NEW - Mark as "Hot" category in filters
+    parentCategory?: string; // NEW - ID of parent category (null for main categories)
+    subCategories?: string[]; // NEW - IDs of subcategories
 }
 
 export interface Customer {
@@ -68,6 +79,8 @@ export interface HotOffer {
     endDate: string;
     isActive: boolean;
     link?: string;
+    timerEndDate?: string; // NEW - Countdown timer end date/time
+    productIds?: string[]; // NEW - Associated product IDs
 }
 
 export interface SiteSettings {
@@ -84,4 +97,18 @@ export interface SiteSettings {
     };
     deliveryChargeInsideDhaka: number;
     deliveryChargeOutsideDhaka: number;
+}
+
+export interface TrendingItem {
+    id: string;
+    title: string;
+    image: string;
+    category: string;
+    isActive: boolean;
+}
+
+export interface Subscriber {
+    id: string;
+    email: string;
+    joinedAt: string;
 }

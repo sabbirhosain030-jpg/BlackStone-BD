@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { LayoutDashboard, Package, ShoppingBag, Users, Settings, LogOut, TrendingUp } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingBag, Users, Settings, LogOut, TrendingUp, Sparkles } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 export default function AdminSidebar() {
@@ -15,6 +15,8 @@ export default function AdminSidebar() {
         { href: '/admin/orders', label: 'Orders', icon: ShoppingBag },
         { href: '/admin/customers', label: 'Customers', icon: Users },
         { href: '/admin/hot-offers', label: 'Hot Offers', icon: TrendingUp },
+        { href: '/admin/trending', label: 'Trending', icon: Sparkles },
+        { href: '/admin/subscribers', label: 'Subscribers', icon: Users },
         { href: '/admin/settings', label: 'Settings', icon: Settings },
     ];
 

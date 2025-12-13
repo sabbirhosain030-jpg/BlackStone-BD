@@ -77,12 +77,33 @@ export default function ProductActions({ product }: ProductActionsProps) {
                             <Plus className="h-4 w-4 text-gray-600" />
                         </button>
                     </div>
+                    {/* Buy Now Button */}
+                    <button
+                        onClick={() => {
+                            addToCart(product, quantity);
+                            // In a real app: router.push('/checkout');
+                        }}
+                        disabled={product.stockStatus === 'out-of-stock' || product.stockStatus === 'coming-soon' || product.stock === 0}
+                        className={`flex-1 font-bold py-3 px-8 rounded-lg flex items-center justify-center transition-colors shadow-lg ${product.stockStatus === 'coming-soon' || product.stockStatus === 'out-of-stock' || product.stock === 0
+                                ? 'bg-gray-100 text-gray-400 cursor-not-allowed hidden'
+                                : 'bg-white text-blue-600 border-2 border-blue-600 hover:bg-blue-50'
+                            }`}
+                    >
+                        Buy Now
+                    </button>
+
                     <button
                         onClick={handleAddToCart}
-                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg flex items-center justify-center transition-colors shadow-lg shadow-blue-600/20"
+                        disabled={product.stockStatus === 'out-of-stock' || product.stockStatus === 'coming-soon' || product.stock === 0}
+                        className={`flex-1 font-bold py-3 px-8 rounded-lg flex items-center justify-center transition-colors shadow-lg ${product.stockStatus === 'coming-soon' || product.stockStatus === 'out-of-stock' || product.stock === 0
+                                ? 'bg-gray-300 cursor-not-allowed text-gray-500'
+                                : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/20'
+                            }`}
                     >
                         <ShoppingCart className="mr-2 h-5 w-5" />
-                        Add to Cart
+                        {product.stockStatus === 'coming-soon' ? 'Coming Soon' :
+                            product.stockStatus === 'out-of-stock' || product.stock === 0 ? 'Out of Stock' :
+                                'Add to Cart'}
                     </button>
                 </div>
 

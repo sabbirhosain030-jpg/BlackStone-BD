@@ -1,4 +1,4 @@
-import { Product } from '@/types';
+import { Product, TrendingItem } from '@/types';
 
 export const products: Product[] = [
     {
@@ -13,118 +13,7 @@ export const products: Product[] = [
         rating: 4.8,
         reviews: 124,
         isFeatured: true,
-    },
-    {
-        id: '2',
-        name: "Men's Classic Polo Shirt",
-        description: 'Premium cotton polo shirt with a comfortable fit. Perfect for casual and semi-formal occasions.',
-        price: 1800,
-        originalPrice: 2200,
-        category: "Men's",
-        images: ['https://images.unsplash.com/photo-1625910513413-5fc84f804a62?q=80&w=1000&auto=format&fit=crop'],
-        stock: 75,
-        rating: 4.9,
-        reviews: 89,
-        isFeatured: true,
-        isNew: true,
-    },
-    {
-        id: '3',
-        name: "Women's Elegant Dress",
-        description: 'Beautiful floral print dress perfect for any occasion. Comfortable and stylish.',
-        price: 2500,
-        originalPrice: 3200,
-        category: "Women's",
-        images: ['https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=1000&auto=format&fit=crop'],
-        stock: 40,
-        rating: 4.7,
-        reviews: 156,
-        isFeatured: true,
-    },
-    {
-        id: '4',
-        name: "Men's Formal Blazer",
-        description: 'Tailored fit blazer with premium fabric. Perfect for business meetings and formal events.',
-        price: 4500,
-        originalPrice: 5500,
-        category: "Men's",
-        images: ['https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=1000&auto=format&fit=crop'],
-        stock: 25,
-        rating: 4.8,
-        reviews: 67,
-        isFeatured: true,
-    },
-    {
-        id: '5',
-        name: "Women's Designer Handbag",
-        description: 'Elegant leather handbag with gold accents. Spacious interior with multiple compartments.',
-        price: 3200,
-        category: 'Accessories',
-        images: ['https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1000&auto=format&fit=crop'],
-        stock: 30,
-        rating: 4.6,
-        reviews: 98,
-    },
-    {
-        id: '6',
-        name: "Boys' Casual T-Shirt Set",
-        description: 'Comfortable cotton t-shirt set for boys. Vibrant colors and durable fabric.',
-        price: 850,
-        originalPrice: 1100,
-        category: 'Boys',
-        images: ['https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?q=80&w=1000&auto=format&fit=crop'],
-        stock: 100,
-        rating: 4.5,
-        reviews: 210,
-        isNew: true,
-    },
-    {
-        id: '7',
-        name: "Girls' Party Dress",
-        description: 'Beautiful party dress with floral embroidery. Perfect for special occasions.',
-        price: 1500,
-        originalPrice: 1900,
-        category: 'Girls',
-        images: ['https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?q=80&w=1000&auto=format&fit=crop'],
-        stock: 45,
-        rating: 4.7,
-        reviews: 78,
-        isFeatured: true,
-    },
-    {
-        id: '8',
-        name: "Men's Denim Jeans",
-        description: 'Classic fit denim jeans with stretch comfort. Timeless style for everyday wear.',
-        price: 1650,
-        category: "Men's",
-        images: ['https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=1000&auto=format&fit=crop'],
-        stock: 80,
-        rating: 4.4,
-        reviews: 320,
-    },
-    {
-        id: '9',
-        name: "Women's Silk Blouse",
-        description: 'Luxurious silk blouse with elegant design. Perfect for office and evening wear.',
-        price: 2200,
-        originalPrice: 2800,
-        category: "Women's",
-        images: ['https://images.unsplash.com/photo-1564257631407-4deb1f99d992?q=80&w=1000&auto=format&fit=crop'],
-        stock: 35,
-        rating: 4.8,
-        reviews: 112,
-        isNew: true,
-    },
-    {
-        id: '10',
-        name: "Boys' Sports Shorts",
-        description: 'Comfortable athletic shorts for active boys. Quick-dry fabric with elastic waistband.',
-        price: 650,
-        category: 'Boys',
-        images: ['https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=1000&auto=format&fit=crop'],
-        stock: 90,
-        rating: 4.3,
-        reviews: 145,
+        stockStatus: 'in-stock'
     },
     {
         id: '11',
@@ -134,15 +23,17 @@ export const products: Product[] = [
         originalPrice: 2200,
         category: "Men's",
         images: ['https://images.unsplash.com/photo-1571455786673-9d9d6c194f90?q=80&w=1000&auto=format&fit=crop'],
-        stock: 50,
+        stock: 0,
         rating: 4.8,
         reviews: 45,
         isNew: true,
+        stockStatus: 'coming-soon'
     }
 ];
 
-export const getFeaturedProducts = () => products.filter(p => p.isFeatured);
-export const getNewArrivals = () => products.filter(p => p.isNew);
+// Logic Update: Featured (No Hot Offers)
+export const getFeaturedProducts = () => products.filter(p => p.isFeatured && !(p.originalPrice && p.originalPrice > p.price));
+export const getNewArrivals = () => products.filter(p => p.isNew).slice(0, 8); // Limit to 8
 export const getHotProducts = () => products.filter(p => p.originalPrice && p.originalPrice > p.price);
 export const getProductById = (id: string) => products.find(p => p.id === id);
 
@@ -157,6 +48,7 @@ export const getBestSellingProducts = () => {
     });
 
     // Sort products by sales count
+    // Logic Update: Best Selling based on Sales/Visits (Sales for now)
     return [...products]
         .sort((a, b) => {
             const salesA = productSales[a.id] || 0;
@@ -176,7 +68,8 @@ export const categories: Category[] = [
         description: "Premium men's clothing and fashion",
         productCount: 0,
         isFeatured: true,
-        image: 'https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=1000&auto=format&fit=crop'
+        image: 'https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=1000&auto=format&fit=crop',
+        subCategories: ['Pants', 'Shirts', 'T-Shirts', 'Panjabi', 'Suits', 'Jackets']
     },
     {
         id: '2',
@@ -185,7 +78,8 @@ export const categories: Category[] = [
         description: "Elegant women's clothing collection",
         productCount: 0,
         isFeatured: true,
-        image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1000&auto=format&fit=crop'
+        image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1000&auto=format&fit=crop',
+        subCategories: ['Dresses', 'Kurtis', 'Sarees', 'Tops', 'Pants']
     },
     {
         id: '3',
@@ -193,7 +87,8 @@ export const categories: Category[] = [
         slug: 'boys',
         description: "Stylish boys' clothing",
         productCount: 0,
-        image: 'https://images.unsplash.com/photo-1503919545889-aef636e10ad4?q=80&w=1000&auto=format&fit=crop'
+        image: 'https://images.unsplash.com/photo-1503919545889-aef636e10ad4?q=80&w=1000&auto=format&fit=crop',
+        subCategories: ['T-Shirts', 'Jeans', 'Shorts', 'Sets']
     },
     {
         id: '4',
@@ -201,7 +96,8 @@ export const categories: Category[] = [
         slug: 'girls',
         description: "Beautiful girls' clothing",
         productCount: 0,
-        image: 'https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?q=80&w=1000&auto=format&fit=crop'
+        image: 'https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?q=80&w=1000&auto=format&fit=crop',
+        subCategories: ['Dresses', 'Tops', 'Skirts', 'Sets']
     },
     {
         id: '5',
@@ -291,6 +187,30 @@ export const siteSettings: SiteSettings = {
     deliveryChargeOutsideDhaka: 120
 };
 
+export const trendingItems: TrendingItem[] = [
+    {
+        id: '1',
+        title: 'Summer Vibes',
+        image: 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=1000&auto=format&fit=crop',
+        category: "Men's",
+        isActive: true
+    },
+    {
+        id: '2',
+        title: 'Urban Chic',
+        image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000&auto=format&fit=crop',
+        category: "Women's",
+        isActive: true
+    },
+    {
+        id: '3',
+        title: 'Casual Comfort',
+        image: 'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?q=80&w=1000&auto=format&fit=crop',
+        category: "Men's",
+        isActive: true
+    }
+];
+
 import { Order } from '@/types';
 
 export const orders: Order[] = [
@@ -366,4 +286,9 @@ export const orders: Order[] = [
         paymentMethod: 'cod',
         createdAt: '2024-03-07T11:20:00Z'
     }
+];
+
+export const initialSubscribers = [
+    { id: '1', email: 'john.doe@example.com', joinedAt: '2023-11-15T10:30:00Z' },
+    { id: '2', email: 'jane.smith@test.com', joinedAt: '2023-11-16T14:20:00Z' },
 ];

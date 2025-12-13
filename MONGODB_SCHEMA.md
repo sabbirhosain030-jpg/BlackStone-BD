@@ -70,6 +70,9 @@ Stores product category information.
   image: "https://images.unsplash.com/category-electronics.jpg",
   productCount: 45,                 // Number of products in this category
   isFeatured: true,                 // Show on homepage?
+  isHot: false,                     // Show in Hot filter? (New)
+  parentCategory: null,             // Parent category ID (New)
+  subCategories: ["sub-1", "sub-2"], // IDs of subcategories (New)
   createdAt: ISODate("2024-01-01T00:00:00Z"),
   updatedAt: ISODate("2024-12-10T08:45:00Z")
 }
@@ -79,6 +82,8 @@ Stores product category information.
 - `{ id: 1 }` - Unique index on string ID
 - `{ slug: 1 }` - Unique index for URL routing
 - `{ name: 1 }` - For category search
+- `{ parentCategory: 1 }` - For fetching subcategories
+- `{ isHot: 1 }` - For hot category filtering
 
 ---
 

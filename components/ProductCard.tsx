@@ -63,14 +63,15 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.4 + index * 0.1 }}
-                        className={`absolute bottom-3 left-3 text-xs font-bold px-3 py-1.5 rounded-full z-10 shadow-lg ${product.stock === 0
-                            ? 'bg-red-500 text-white'
-                            : product.stock <= 10
-                                ? 'bg-yellow-500 text-white'
-                                : 'bg-green-500 text-white'
+                        className={`absolute bottom-3 left-3 text-xs font-bold px-3 py-1.5 rounded-full z-10 shadow-lg ${product.stockStatus === 'coming-soon' ? 'bg-blue-500 text-white' :
+                            product.stockStatus === 'out-of-stock' || product.stock === 0 ? 'bg-red-500 text-white' :
+                                product.stock <= 10 ? 'bg-yellow-500 text-white' :
+                                    'bg-green-500 text-white'
                             }`}
                     >
-                        {product.stock === 0 ? 'Out of Stock' : product.stock <= 10 ? `Low Stock (${product.stock})` : 'In Stock'}
+                        {product.stockStatus === 'coming-soon' ? 'Coming Soon' :
+                            product.stockStatus === 'out-of-stock' || product.stock === 0 ? 'Out of Stock' :
+                                product.stock <= 10 ? `Low Stock (${product.stock})` : 'In Stock'}
                     </motion.div>
 
                     {/* Image with Zoom Effect */}
@@ -125,19 +126,38 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
                             )}
                         </div>
 
-                        <motion.button
-                            onClick={handleAddToCart}
-                            disabled={product.stock === 0}
-                            whileHover={product.stock > 0 ? { scale: 1.1, rotate: 5 } : {}}
-                            whileTap={product.stock > 0 ? { scale: 0.9 } : {}}
-                            animate={isAdding ? { scale: [1, 1.3, 1] } : {}}
-                            className={`p-3 rounded-full transition-all duration-300 shadow-lg ${product.stock === 0
+                        {/* Actions */}
+                        <div className="flex gap-2">
+                            {/* Buy Now - Disabled if out of stock or coming soon */}
+                            <motion.button
+                                onClick={(e) => {
+                                    handleAddToCart(e);
+                                }}
+                                disabled={product.stockStatus === 'out-of-stock' || product.stockStatus === 'coming-soon' || product.stock === 0}
+                                whileHover={product.stock > 0 && product.stockStatus !== 'out-of-stock' && product.stockStatus !== 'coming-soon' ? { scale: 1.05 } : {}}
+                                whileTap={product.stock > 0 && product.stockStatus !== 'out-of-stock' && product.stockStatus !== 'coming-soon' ? { scale: 0.95 } : {}}
+                                className={`px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all border ${product.stockStatus === 'coming-soon' || product.stockStatus === 'out-of-stock' || product.stock === 0
+                                    ? 'bg-gray-50 text-gray-400 border-gray-100 cursor-not-allowed hidden'
+                                    : 'bg-white text-gray-900 border-gray-200 hover:border-gray-300 hover:shadow-md'
+                                    }`}
+                            >
+                                Buy Now
+                            </motion.button>
+
+                            <motion.button
+                                onClick={handleAddToCart}
+                                disabled={product.stockStatus === 'out-of-stock' || product.stockStatus === 'coming-soon' || product.stock === 0}
+                                whileHover={product.stock > 0 ? { scale: 1.1, rotate: 5 } : {}}
+                                whileTap={product.stock > 0 ? { scale: 0.9 } : {}}
+                                animate={isAdding ? { scale: [1, 1.3, 1] } : {}}
+                                className={`p-3 rounded-full transition-all duration-300 shadow-lg ${product.stockStatus === 'coming-soon' || product.stockStatus === 'out-of-stock' || product.stock === 0
                                     ? 'bg-gray-300 cursor-not-allowed text-gray-500'
                                     : 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-blue-600/30 hover:shadow-blue-600/50'
-                                }`}
-                        >
-                            <ShoppingCart className="h-5 w-5" />
-                        </motion.button>
+                                    }`}
+                            >
+                                <ShoppingCart className="h-5 w-5" />
+                            </motion.button>
+                        </div>
                     </div>
                 </div>
             </div>

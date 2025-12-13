@@ -8,7 +8,8 @@ import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
 import PriceFilter from '@/components/PriceFilter';
 import { products } from '@/lib/data';
-import { Filter, X } from 'lucide-react';
+import { useAdmin } from '@/context/AdminContext';
+import { Filter, X, Flame } from 'lucide-react';
 
 function ProductsContent() {
     const searchParams = useSearchParams();
@@ -16,12 +17,16 @@ function ProductsContent() {
 
     const [filteredProducts, setFilteredProducts] = useState(products);
     const [selectedCategory, setSelectedCategory] = useState('All');
+    const [selectedSubCategory, setSelectedSubCategory] = useState('All');
+    const [showHotDeals, setShowHotDeals] = useState(false);
     const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
     const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState(initialSearch);
 
-    // Define specific category order
-    const categories = ['All', "Men's", "Women's", 'Boys', 'Girls', 'Accessories'];
+    // Get categories with hierarchy
+    const { categories: adminCategories, hotOffers } = useAdmin();
+    // Merge hardcoded categories with admin categories if needed, or just use adminCategories
+    // For now, let's use the list from data.ts but enhanced with admin context if available
 
     useEffect(() => {
         let result = products;
@@ -39,15 +44,26 @@ function ProductsContent() {
             result = result.filter(p => p.category === selectedCategory);
         }
 
+        // Filter by SubCategory
+        if (selectedSubCategory !== 'All') {
+            result = result.filter(p => p.subCategory === selectedSubCategory);
+        }
+
+        // Filter by Hot Deals
+        if (showHotDeals) {
+            result = result.filter(p => p.originalPrice && p.originalPrice > p.price);
+        }
+
         // Filter by Price
         result = result.filter(p => p.price >= priceRange[0] && p.price <= priceRange[1]);
 
         setFilteredProducts(result);
-    }, [selectedCategory, priceRange, searchQuery]);
+    }, [selectedCategory, selectedSubCategory, showHotDeals, priceRange, searchQuery]);
 
     // Auto-close mobile filter panel after selection
     const handleCategoryChange = (category: string) => {
         setSelectedCategory(category);
+        setSelectedSubCategory('All'); // Reset sub-category
         // Close mobile filter after a short delay to show selection
         setTimeout(() => {
             setIsMobileFilterOpen(false);
@@ -122,32 +138,79 @@ function ProductsContent() {
                             </div>
 
                             <div className="space-y-8">
-                                {/* Categories */}
+                                {/* Categories with Hierarchy */}
                                 <div>
                                     <h3 className="text-lg font-bold text-gray-900 mb-4">Categories</h3>
-                                    <div className="space-y-2">
-                                        {categories.map(category => (
-                                            <label key={category} className="flex items-center gap-3 cursor-pointer group">
-                                                <div className={`
-                                                    w-5 h-5 rounded border flex items-center justify-center transition-colors
-                                                    ${selectedCategory === category ? 'bg-blue-600 border-blue-600' : 'border-gray-300 group-hover:border-blue-500'}
-                                                `}>
-                                                    {selectedCategory === category && (
-                                                        <div className="w-2 h-2 bg-white rounded-full" />
+
+                                    {/* Hot Filter Button */}
+                                    <div className="mb-4">
+                                        <button
+                                            onClick={() => setShowHotDeals(!showHotDeals)}
+                                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all ${showHotDeals
+                                                    ? 'bg-red-50 text-red-600 border border-red-200 shadow-sm'
+                                                    : 'text-gray-600 hover:bg-gray-50 border border-transparent'
+                                                }`}
+                                        >
+                                            <div className={`p-1 rounded ${showHotDeals ? 'bg-red-100' : 'bg-gray-100'}`}>
+                                                <Flame className={`h-4 w-4 ${showHotDeals ? 'text-red-600' : 'text-gray-500'}`} />
+                                            </div>
+                                            <span className="font-bold text-sm">Hot Deals 🔥</span>
+                                        </button>
+                                    </div>
+
+                                    <div className="space-y-1">
+                                        {/* All Option */}
+                                        <button
+                                            onClick={() => handleCategoryChange('All')}
+                                            className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${selectedCategory === 'All'
+                                                    ? 'bg-blue-50 text-blue-700 font-bold'
+                                                    : 'text-gray-600 hover:bg-gray-50'
+                                                }`}
+                                        >
+                                            <span>All Categories</span>
+                                            {selectedCategory === 'All' && <div className="w-1.5 h-1.5 rounded-full bg-blue-600" />}
+                                        </button>
+
+                                        {/* Root Categories */}
+                                        {adminCategories.filter(c => !c.parentCategory).map(category => (
+                                            <div key={category.id} className="space-y-1">
+                                                <button
+                                                    onClick={() => handleCategoryChange(category.name)}
+                                                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors group ${selectedCategory === category.name
+                                                            ? 'bg-blue-50 text-blue-700 font-bold'
+                                                            : 'text-gray-600 hover:bg-gray-50'
+                                                        }`}
+                                                >
+                                                    <div className="flex items-center gap-2">
+                                                        {category.isHot && <Flame className="h-3 w-3 text-red-500" />}
+                                                        <span>{category.name}</span>
+                                                    </div>
+                                                    {adminCategories.some(c => c.parentCategory === category.id) && (
+                                                        <span className="text-xs text-gray-400">+</span>
                                                     )}
-                                                </div>
-                                                <input
-                                                    type="radio"
-                                                    name="category"
-                                                    value={category}
-                                                    checked={selectedCategory === category}
-                                                    onChange={(e) => handleCategoryChange(e.target.value)}
-                                                    className="hidden"
-                                                />
-                                                <span className={`text-sm ${selectedCategory === category ? 'text-blue-600 font-medium' : 'text-gray-600'}`}>
-                                                    {category}
-                                                </span>
-                                            </label>
+                                                </button>
+
+                                                {/* Sub Categories - Show if parent is selected or if a child is selected */}
+                                                {(selectedCategory === category.name || adminCategories.find(c => c.name === selectedCategory)?.parentCategory === category.id) && (
+                                                    <div className="pl-4 space-y-1 border-l-2 border-gray-100 ml-3">
+                                                        {adminCategories
+                                                            .filter(c => c.parentCategory === category.id)
+                                                            .map(sub => (
+                                                                <button
+                                                                    key={sub.id}
+                                                                    onClick={() => handleCategoryChange(sub.name)}
+                                                                    className={`w-full text-left px-3 py-1.5 rounded-md text-sm transition-colors ${selectedCategory === sub.name
+                                                                            ? 'text-blue-600 font-medium bg-blue-50/50'
+                                                                            : 'text-gray-500 hover:text-gray-700'
+                                                                        }`}
+                                                                >
+                                                                    {sub.name}
+                                                                </button>
+                                                            ))
+                                                        }
+                                                    </div>
+                                                )}
+                                            </div>
                                         ))}
                                     </div>
                                 </div>
@@ -164,6 +227,37 @@ function ProductsContent() {
 
                     {/* Product Grid */}
                     <div className="flex-1">
+                        {/* Sub Category Chips */}
+                        {selectedCategory !== 'All' &&
+                            adminCategories.find(c => c.name === selectedCategory)?.subCategories &&
+                            adminCategories.find(c => c.name === selectedCategory)!.subCategories!.length > 0 && (
+                                <div className="mb-6 overflow-x-auto pb-2">
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => setSelectedSubCategory('All')}
+                                            className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${selectedSubCategory === 'All'
+                                                ? 'bg-gray-900 text-white'
+                                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                                }`}
+                                        >
+                                            All {selectedCategory}
+                                        </button>
+                                        {adminCategories.find(c => c.name === selectedCategory)?.subCategories?.map(sub => (
+                                            <button
+                                                key={sub}
+                                                onClick={() => setSelectedSubCategory(sub)}
+                                                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${selectedSubCategory === sub
+                                                    ? 'bg-gray-900 text-white'
+                                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                                    }`}
+                                            >
+                                                {sub}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
                         {filteredProducts.length > 0 ? (
                             <motion.div
                                 layout

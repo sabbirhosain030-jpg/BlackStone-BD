@@ -52,16 +52,27 @@ export default function Navbar() {
                         </div>
 
                         {/* Desktop Navigation */}
-                        <div className="hidden md:flex space-x-8 items-center">
-                            {navLinks.map((link) => (
-                                <Link
-                                    key={link.href}
-                                    href={link.href}
-                                    className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                                >
-                                    {link.label}
-                                </Link>
-                            ))}
+                        <div className="hidden md:flex space-x-2 items-center">
+                            {navLinks.map((link) => {
+                                const isActive = pathname === link.href;
+                                return (
+                                    <Link
+                                        key={link.href}
+                                        href={link.href}
+                                        className={`relative px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${isActive ? 'text-blue-600' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50'
+                                            }`}
+                                    >
+                                        {isActive && (
+                                            <motion.div
+                                                layoutId="navbar-active"
+                                                className="absolute inset-0 bg-gradient-to-r from-blue-50 via-blue-100 to-blue-50 rounded-lg shadow-sm"
+                                                transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                                            />
+                                        )}
+                                        <span className="relative z-10">{link.label}</span>
+                                    </Link>
+                                );
+                            })}
                         </div>
 
                         {/* Icons */}

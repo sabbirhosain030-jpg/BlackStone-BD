@@ -108,27 +108,21 @@ export default function Hero() {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.7, duration: 0.8 }}
                             >
-                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                                     <Link
                                         href="/products"
-                                        className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 border border-transparent text-base font-bold rounded-full text-white shadow-lg shadow-blue-500/50 hover:shadow-blue-500/70 transition-all md:text-lg group"
+                                        className="inline-flex items-center justify-center px-8 py-4 bg-gray-900 border border-gray-700 text-base font-serif font-bold text-white shadow-xl hover:bg-gray-800 transition-all md:text-lg min-w-[180px] tracking-wide"
                                     >
-                                        Shop Now
-                                        <motion.span
-                                            className="ml-2"
-                                            animate={{ x: [0, 5, 0] }}
-                                            transition={{ duration: 1.5, repeat: Infinity }}
-                                        >
-                                            <ArrowRight className="h-5 w-5" />
-                                        </motion.span>
+                                        <span className="font-serif">SHOP NOW</span>
+                                        <ArrowRight className="ml-3 h-5 w-5" />
                                     </Link>
                                 </motion.div>
-                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                                     <Link
                                         href="/categories"
-                                        className="inline-flex items-center justify-center px-8 py-4 border-2 border-white/30 backdrop-blur-sm text-base font-bold rounded-full text-white hover:bg-white/10 transition-all md:text-lg"
+                                        className="inline-flex items-center justify-center px-8 py-4 border border-white/40 bg-white/5 backdrop-blur-sm text-base font-serif font-bold text-white hover:bg-white/10 transition-all md:text-lg min-w-[180px] tracking-wide"
                                     >
-                                        Explore Categories
+                                        <span className="font-serif">COLLECTIONS</span>
                                     </Link>
                                 </motion.div>
                             </motion.div>
@@ -141,7 +135,7 @@ export default function Hero() {
                             initial={{ opacity: 0, x: 50 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.5, duration: 0.8 }}
-                            className="hidden lg:block h-[500px]"
+                            className="block h-[400px] lg:h-[500px] w-full mt-8 lg:mt-0"
                         >
                             {hotProducts.length > 0 ? (
                                 <ProductCarousel

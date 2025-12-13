@@ -2,7 +2,9 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Facebook, Instagram, Mail, Phone, MapPin, Heart } from 'lucide-react';
+import { Facebook, Instagram, Mail, Phone, MapPin, Heart, Youtube } from 'lucide-react';
+import { useAdmin } from '@/context/AdminContext';
+import { useState } from 'react';
 
 // X (Twitter) icon component
 const XIcon = ({ className }: { className?: string }) => (
@@ -12,11 +14,26 @@ const XIcon = ({ className }: { className?: string }) => (
 );
 
 export default function Footer() {
+    const { settings, addSubscriber } = useAdmin();
+    const [email, setEmail] = useState('');
+    const [isSubscribed, setIsSubscribed] = useState(false);
+
+    const handleSubscribe = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (email) {
+            addSubscriber(email);
+            setIsSubscribed(true);
+            setEmail('');
+            setTimeout(() => setIsSubscribed(false), 3000);
+        }
+    };
+
     const socialIcons = [
-        { Icon: Facebook, href: '#', label: 'Facebook' },
-        { Icon: XIcon, href: '#', label: 'X (Twitter)' },
-        { Icon: Instagram, href: '#', label: 'Instagram' },
-    ];
+        { Icon: Facebook, href: settings.socialLinks.facebook, label: 'Facebook' },
+        { Icon: XIcon, href: settings.socialLinks.twitter, label: 'X (Twitter)' },
+        { Icon: Instagram, href: settings.socialLinks.instagram, label: 'Instagram' },
+        { Icon: Youtube, href: settings.socialLinks.youtube, label: 'YouTube' },
+    ].filter(icon => icon.href); // Only show icons with links
 
     return (
         <footer className="bg-gradient-to-b from-gray-900 to-black text-white pt-16 pb-8">
@@ -35,7 +52,7 @@ export default function Footer() {
                         transition={{ duration: 0.3 }}
                     >
                         <Link href="/" className="text-2xl font-bold text-white tracking-tight mb-4 block">
-                            BlackStone<span className="text-blue-500">BD</span>
+                            {settings.siteName}<span className="text-blue-500">BD</span>
                         </Link>
                         <p className="text-gray-400 text-sm leading-relaxed mb-6">
                             Your premium destination for quality products. We deliver excellence right to your doorstep with our secure cash on delivery service.
@@ -45,6 +62,8 @@ export default function Footer() {
                                 <motion.a
                                     key={label}
                                     href={href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     whileHover={{ scale: 1.2, rotate: 360 }}
                                     whileTap={{ scale: 0.9 }}
                                     transition={{ duration: 0.4 }}
@@ -81,28 +100,31 @@ export default function Footer() {
                         </ul>
                     </motion.div>
 
-                    {/* Customer Service */}
+                    {/* Newsletter */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6, delay: 0.2 }}
                     >
-                        <h3 className="text-lg font-semibold mb-6">Customer Service</h3>
-                        <ul className="space-y-4 text-sm text-gray-400">
-                            {[
-                                { text: 'FAQ', href: '/faq' },
-                                { text: 'Shipping Policy', href: '/shipping' },
-                                { text: 'Returns & Exchanges', href: '/returns' },
-                                { text: 'Privacy Policy', href: '/privacy' },
-                            ].map((link) => (
-                                <motion.li key={link.text} whileHover={{ x: 5 }}>
-                                    <Link href={link.href} className="hover:text-blue-500 transition-colors inline-block">
-                                        {link.text}
-                                    </Link>
-                                </motion.li>
-                            ))}
-                        </ul>
+                        <h3 className="text-lg font-semibold mb-6">Join Our Family</h3>
+                        <p className="text-gray-400 text-sm mb-4">Subscribe to get the latest updates and exclusive offers.</p>
+                        <form onSubmit={handleSubscribe} className="space-y-3">
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="Enter your email"
+                                className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-500"
+                                required
+                            />
+                            <button
+                                type="submit"
+                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+                            >
+                                {isSubscribed ? 'Subscribed!' : 'Subscribe'}
+                            </button>
+                        </form>
                     </motion.div>
 
                     {/* Contact Info */}
@@ -119,21 +141,21 @@ export default function Footer() {
                                 whileHover={{ scale: 1.05 }}
                             >
                                 <MapPin className="h-5 w-5 mr-3 flex-shrink-0 text-blue-500" />
-                                <span>123 Commerce St, Dhaka, Bangladesh</span>
+                                <span>{settings.address}</span>
                             </motion.li>
                             <motion.li
                                 className="flex items-center"
                                 whileHover={{ scale: 1.05 }}
                             >
                                 <Phone className="h-5 w-5 mr-3 flex-shrink-0 text-blue-500" />
-                                <span>+880 1234-567890</span>
+                                <span>{settings.contactPhone}</span>
                             </motion.li>
                             <motion.li
                                 className="flex items-center"
                                 whileHover={{ scale: 1.05 }}
                             >
                                 <Mail className="h-5 w-5 mr-3 flex-shrink-0 text-blue-500" />
-                                <span>support@blackstonebd.com</span>
+                                <span>{settings.contactEmail}</span>
                             </motion.li>
                         </ul>
                     </motion.div>
@@ -148,7 +170,7 @@ export default function Footer() {
                     transition={{ duration: 0.8, delay: 0.4 }}
                 >
                     <div className="text-center text-sm text-gray-500">
-                        <p>&copy; {new Date().getFullYear()} BlackStone BD. All rights reserved.</p>
+                        <p>&copy; {new Date().getFullYear()} {settings.siteName}. All rights reserved.</p>
                     </div>
 
                     {/* Developer Credit */}

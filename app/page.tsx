@@ -9,18 +9,33 @@ import AnimatedSection from '@/components/AnimatedSection';
 import HotOffersBanner from '@/components/HotOffersBanner';
 import HotOffersSection from '@/components/HotOffersSection';
 import TrendingFashion from '@/components/TrendingFashion';
-import { getFeaturedProducts, getNewArrivals, getBestSellingProducts } from '@/lib/data';
 import { useAdmin } from '@/context/AdminContext';
 import Link from 'next/link';
 import { ArrowRight, Shield, Truck, RefreshCw, Award, Flame } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Home() {
-    const featuredProducts = getFeaturedProducts();
-    const newArrivals = getNewArrivals();
-    const bestSellingProducts = getBestSellingProducts();
     const { hotOffers, products } = useAdmin();
     const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+
+    // Smart Product Sections Logic
+    // 1. Filter out Hot Offers from other sections (Exclusivity)
+    const regularProducts = products.filter(p => !p.isHotOffer);
+
+    // 2. New Arrivals (Sorted by date, newest first)
+    const newArrivals = [...regularProducts]
+        .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
+        .slice(0, 8);
+
+    // 3. Featured Collection (Manually marked as featured)
+    const featuredProducts = regularProducts
+        .filter(p => p.isFeatured)
+        .slice(0, 8);
+
+    // 4. Best Selling (Sorted by totalSales, highest first)
+    const bestSellingProducts = [...regularProducts]
+        .sort((a, b) => (b.totalSales || 0) - (a.totalSales || 0))
+        .slice(0, 8);
 
     const features = [
         {

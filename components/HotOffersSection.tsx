@@ -32,6 +32,7 @@ function CountdownTimer({ endDate }: CountdownTimerProps) {
                 });
             } else {
                 setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+                // Optional: Trigger a refresh or callback here if needed when timer hits zero
             }
         };
 
@@ -160,7 +161,7 @@ export default function HotOffersSection() {
                                     <Clock className="h-5 w-5" />
                                     <span className="font-semibold">{currentOffer.title} - Ends Soon!</span>
                                 </div>
-                                <CountdownTimer endDate={currentOffer.endDate} />
+                                <CountdownTimer endDate={currentOffer.timerEndDate || currentOffer.endDate} />
                             </motion.div>
                         )}
 
@@ -241,14 +242,15 @@ export default function HotOffersSection() {
                                 Amazing deals are being prepared just for you. Stay tuned for exclusive hot offers!
                             </p>
 
-                            <div className="flex items-center justify-center gap-2">
+                            <div className="flex items-center justify-center gap-3">
                                 {[...Array(3)].map((_, i) => (
                                     <motion.div
                                         key={i}
-                                        className="h-3 w-3 bg-orange-500 rounded-full"
+                                        className="h-3 w-3 bg-gradient-to-r from-orange-400 to-red-500 rounded-full shadow-lg"
                                         animate={{
                                             scale: [1, 1.5, 1],
                                             opacity: [0.5, 1, 0.5],
+                                            y: [0, -5, 0]
                                         }}
                                         transition={{
                                             duration: 1.5,

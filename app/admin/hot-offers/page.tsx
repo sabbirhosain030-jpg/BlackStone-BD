@@ -7,16 +7,17 @@ import Image from 'next/image';
 import { hotOffers as initialOffers } from '@/lib/data';
 import { HotOffer } from '@/types';
 import StatsCard from '@/components/admin/StatsCard';
+import { useAdmin } from '@/context/AdminContext';
 
 export default function AdminHotOffersPage() {
-    const [offers, setOffers] = useState<HotOffer[]>(initialOffers);
+    const { hotOffers, addHotOffer, updateHotOffer, deleteHotOffer, toggleHotOfferStatus, products } = useAdmin();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingOffer, setEditingOffer] = useState<HotOffer | null>(null);
     const [formData, setFormData] = useState<Partial<HotOffer>>({});
 
     // Calculate stats
-    const totalOffers = offers.length;
-    const activeOffers = offers.filter(o => o.isActive).length;
+    const totalOffers = hotOffers.length;
+    const activeOffers = hotOffers.filter(o => o.isActive).length;
 
     const stats = [
         { label: 'Total Offers', value: totalOffers.toString(), icon: Megaphone, color: 'bg-orange-500', trend: '+5%' },
@@ -25,14 +26,12 @@ export default function AdminHotOffersPage() {
 
     const handleDelete = (id: string) => {
         if (confirm('Are you sure you want to delete this offer?')) {
-            setOffers(offers.filter(o => o.id !== id));
+            deleteHotOffer(id);
         }
     };
 
     const handleToggleActive = (id: string) => {
-        setOffers(offers.map(o =>
-            o.id === id ? { ...o, isActive: !o.isActive } : o
-        ));
+        toggleHotOfferStatus(id);
     };
 
     const handleEdit = (offer: HotOffer) => {
@@ -57,14 +56,23 @@ export default function AdminHotOffersPage() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Date Validation
+        if (formData.startDate && formData.endDate) {
+            if (new Date(formData.startDate) > new Date(formData.endDate)) {
+                alert('Start Date cannot be after End Date');
+                return;
+            }
+        }
+
         if (editingOffer) {
-            setOffers(offers.map(o => o.id === editingOffer.id ? { ...o, ...formData } as HotOffer : o));
+            updateHotOffer({ ...editingOffer, ...formData } as HotOffer);
         } else {
             const newOffer = {
                 ...formData,
-                id: (offers.length + 1).toString(),
+                id: (hotOffers.length + 1).toString(),
             } as HotOffer;
-            setOffers([...offers, newOffer]);
+            addHotOffer(newOffer);
         }
         setIsModalOpen(false);
     };
@@ -117,7 +125,7 @@ export default function AdminHotOffersPage() {
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {offers.map((offer, index) => (
+                            {hotOffers.map((offer, index) => (
                                 <motion.tr
                                     key={offer.id}
                                     initial={{ opacity: 0, x: -20 }}
@@ -215,71 +223,123 @@ export default function AdminHotOffersPage() {
 
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">Offer Title</label>
                                 <input
                                     type="text"
                                     value={formData.title || ''}
                                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="Summer Sale"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    placeholder="e.g. Summer Super Sale"
                                     required
                                 />
                             </div>
+
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">Description</label>
                                 <textarea
                                     rows={3}
                                     value={formData.description || ''}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="Offer details..."
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    placeholder="Enter offer details..."
                                     required
                                 />
                             </div>
-                            <div className="grid grid-cols-2 gap-4">
+
+                            <div className="grid grid-cols-2 gap-6">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Discount</label>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Discount Label</label>
                                     <input
                                         type="text"
                                         value={formData.discount || ''}
                                         onChange={(e) => setFormData({ ...formData, discount: e.target.value })}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                        placeholder="50% OFF"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                        placeholder="e.g. 50% OFF"
                                         required
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Image URL</label>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Image URL</label>
                                     <input
                                         type="text"
                                         value={formData.image || ''}
                                         onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                         placeholder="https://..."
                                     />
                                 </div>
                             </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
-                                    <input
-                                        type="date"
-                                        value={formData.startDate || ''}
-                                        onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                        required
-                                    />
+
+                            <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                <h4 className="text-sm font-semibold text-gray-900 mb-4">Duration & Timer Settings</h4>
+                                <div className="grid grid-cols-2 gap-6 mb-4">
+                                    <div>
+                                        <label className="block text-xs font-medium text-gray-500 mb-1">Start Date</label>
+                                        <input
+                                            type="date"
+                                            value={formData.startDate || ''}
+                                            onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                                            className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-medium text-gray-500 mb-1">End Date</label>
+                                        <input
+                                            type="date"
+                                            value={formData.endDate || ''}
+                                            onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                                            className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            required
+                                        />
+                                    </div>
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">End Date</label>
-                                    <input
-                                        type="date"
-                                        value={formData.endDate || ''}
-                                        onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                        required
-                                    />
+                                <div className="border-t border-gray-200 pt-4">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Countdown Timer Target</label>
+                                    <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                                        <input
+                                            type="datetime-local"
+                                            value={formData.timerEndDate || ''}
+                                            onChange={(e) => setFormData({ ...formData, timerEndDate: e.target.value })}
+                                            className="w-full sm:w-auto flex-1 px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        />
+                                        <p className="text-xs text-gray-500 max-w-xs">
+                                            Set a specific date and time for the countdown timer to end. If left empty, the timer will not be displayed (or will default to End Date).
+                                        </p>
+                                    </div>
                                 </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Associated Products</label>
+                                <div className="max-h-48 overflow-y-auto border border-gray-300 rounded-lg p-2 space-y-2">
+                                    {products.map(product => (
+                                        <label key={product.id} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                checked={formData.productIds?.includes(product.id) || false}
+                                                onChange={(e) => {
+                                                    const currentIds = formData.productIds || [];
+                                                    if (e.target.checked) {
+                                                        setFormData({ ...formData, productIds: [...currentIds, product.id] });
+                                                    } else {
+                                                        setFormData({ ...formData, productIds: currentIds.filter(id => id !== product.id) });
+                                                    }
+                                                }}
+                                                className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                                            />
+                                            <div className="flex items-center gap-2">
+                                                <img
+                                                    src={product.images[0]}
+                                                    alt={product.name}
+                                                    className="w-8 h-8 rounded object-cover"
+                                                />
+                                                <span className="text-sm text-gray-700">{product.name}</span>
+                                            </div>
+                                        </label>
+                                    ))}
+                                </div>
+                                <p className="mt-1 text-xs text-gray-500">Select products to feature in this hot offer.</p>
                             </div>
 
                             <div className="flex gap-4 justify-end pt-4 border-t border-gray-100">
