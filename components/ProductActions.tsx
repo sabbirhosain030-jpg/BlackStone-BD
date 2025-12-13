@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Product } from '@/types';
 import { Star, Truck, ShieldCheck, RefreshCw, Minus, Plus, ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import { useRouter } from 'next/navigation';
 
 interface ProductActionsProps {
     product: Product;
@@ -12,6 +13,7 @@ interface ProductActionsProps {
 export default function ProductActions({ product }: ProductActionsProps) {
     const [quantity, setQuantity] = useState(1);
     const { addToCart } = useCart();
+    const router = useRouter();
 
     const incrementQuantity = () => setQuantity(q => q + 1);
     const decrementQuantity = () => setQuantity(q => Math.max(1, q - 1));
@@ -81,12 +83,12 @@ export default function ProductActions({ product }: ProductActionsProps) {
                     <button
                         onClick={() => {
                             addToCart(product, quantity);
-                            // In a real app: router.push('/checkout');
+                            router.push('/checkout');
                         }}
                         disabled={product.stockStatus === 'out-of-stock' || product.stockStatus === 'coming-soon' || product.stock === 0}
                         className={`flex-1 font-bold py-3 px-8 rounded-lg flex items-center justify-center transition-colors shadow-lg ${product.stockStatus === 'coming-soon' || product.stockStatus === 'out-of-stock' || product.stock === 0
-                                ? 'bg-gray-100 text-gray-400 cursor-not-allowed hidden'
-                                : 'bg-white text-blue-600 border-2 border-blue-600 hover:bg-blue-50'
+                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed hidden'
+                            : 'bg-white text-blue-600 border-2 border-blue-600 hover:bg-blue-50'
                             }`}
                     >
                         Buy Now
@@ -96,8 +98,8 @@ export default function ProductActions({ product }: ProductActionsProps) {
                         onClick={handleAddToCart}
                         disabled={product.stockStatus === 'out-of-stock' || product.stockStatus === 'coming-soon' || product.stock === 0}
                         className={`flex-1 font-bold py-3 px-8 rounded-lg flex items-center justify-center transition-colors shadow-lg ${product.stockStatus === 'coming-soon' || product.stockStatus === 'out-of-stock' || product.stock === 0
-                                ? 'bg-gray-300 cursor-not-allowed text-gray-500'
-                                : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/20'
+                            ? 'bg-gray-300 cursor-not-allowed text-gray-500'
+                            : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/20'
                             }`}
                     >
                         <ShoppingCart className="mr-2 h-5 w-5" />
