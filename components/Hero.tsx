@@ -12,15 +12,15 @@ export default function Hero() {
     const showCarousel = hotProducts.length > 0 || newArrivals.length > 0;
 
     return (
-        <div className="relative bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 overflow-hidden">
+        <div className="relative bg-gradient-to-br from-premium-black via-[#1a1500] to-premium-black overflow-hidden">
             {/* Animated Background Pattern */}
             <div className="absolute inset-0">
                 <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1600&auto=format&fit=crop')] bg-cover bg-center opacity-10"></div>
-                <div className="absolute inset-0 bg-gradient-to-r from-gray-900/95 via-blue-900/90 to-gray-900/95"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-premium-black/95 via-[#1a1500]/90 to-premium-black/95"></div>
 
                 {/* Animated Floating Elements */}
                 <motion.div
-                    className="absolute top-20 left-10 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20"
+                    className="absolute top-20 left-10 w-72 h-72 bg-premium-gold rounded-full mix-blend-multiply filter blur-xl opacity-10"
                     animate={{
                         y: [0, -20, 0],
                         scale: [1, 1.1, 1],
@@ -32,7 +32,7 @@ export default function Hero() {
                     }}
                 />
                 <motion.div
-                    className="absolute bottom-20 right-10 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20"
+                    className="absolute bottom-20 right-10 w-72 h-72 bg-amber-700 rounded-full mix-blend-multiply filter blur-xl opacity-10"
                     animate={{
                         y: [0, 20, 0],
                         scale: [1, 1.2, 1],
@@ -59,15 +59,15 @@ export default function Hero() {
                                 initial={{ opacity: 0, scale: 0.5 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ delay: 0.2, duration: 0.5 }}
-                                className="inline-flex items-center gap-2 bg-blue-500/20 backdrop-blur-sm border border-blue-500/30 rounded-full px-4 py-2 mb-6"
+                                className="inline-flex items-center gap-2 bg-premium-gold/10 backdrop-blur-sm border border-premium-gold/30 rounded-full px-4 py-2 mb-6"
                             >
-                                <Sparkles className="h-4 w-4 text-blue-400" />
-                                <span className="text-blue-300 text-sm font-medium">Premium Quality Products</span>
+                                <Sparkles className="h-4 w-4 text-premium-gold" />
+                                <span className="text-premium-gold text-sm font-medium">Premium Quality Products</span>
                             </motion.div>
 
                             {/* Heading */}
                             <motion.h1
-                                className="text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight mb-6"
+                                className="text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight mb-6 font-playfair"
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3, duration: 0.8 }}
@@ -75,7 +75,7 @@ export default function Hero() {
                                 Elevate Your{' '}
                                 <br />
                                 <motion.span
-                                    className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"
+                                    className="bg-gradient-to-r from-premium-gold to-amber-300 bg-clip-text text-transparent"
                                     animate={{
                                         backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
                                     }}

@@ -5,9 +5,9 @@ import { Product, CartItem } from '@/types';
 
 interface CartContextType {
     items: CartItem[];
-    addToCart: (product: Product, quantity?: number) => void;
-    removeFromCart: (productId: string) => void;
-    updateQuantity: (productId: string, quantity: number) => void;
+    addToCart: (product: Product, quantity?: number, selectedSize?: string, selectedColor?: string) => void;
+    removeFromCart: (productId: string, selectedSize?: string, selectedColor?: string) => void;
+    updateQuantity: (productId: string, quantity: number, selectedSize?: string, selectedColor?: string) => void;
     clearCart: () => void;
     cartCount: number;
     cartTotal: number;
@@ -39,35 +39,52 @@ export function CartProvider({ children }: { children: ReactNode }) {
         }
     }, [items, isLoaded]);
 
-    const addToCart = (product: Product, quantity: number = 1) => {
+    const addToCart = (product: Product, quantity: number = 1, selectedSize?: string, selectedColor?: string) => {
         setItems(currentItems => {
-            const existingItem = currentItems.find(item => item.id === product.id);
+            // Find existing item with same ID, same Size AND same Color
+            const existingItem = currentItems.find(
+                item => item.id === product.id &&
+                    item.selectedSize === selectedSize &&
+                    item.selectedColor === selectedColor
+            );
 
             if (existingItem) {
                 return currentItems.map(item =>
-                    item.id === product.id
+                    item.id === product.id &&
+                        item.selectedSize === selectedSize &&
+                        item.selectedColor === selectedColor
                         ? { ...item, quantity: item.quantity + quantity }
                         : item
                 );
             }
 
-            return [...currentItems, { ...product, quantity }];
+            return [...currentItems, { ...product, quantity, selectedSize, selectedColor }];
         });
     };
 
-    const removeFromCart = (productId: string) => {
-        setItems(currentItems => currentItems.filter(item => item.id !== productId));
+    const removeFromCart = (productId: string, selectedSize?: string, selectedColor?: string) => {
+        setItems(currentItems =>
+            currentItems.filter(item =>
+                !(item.id === productId &&
+                    item.selectedSize === selectedSize &&
+                    item.selectedColor === selectedColor)
+            )
+        );
     };
 
-    const updateQuantity = (productId: string, quantity: number) => {
+    const updateQuantity = (productId: string, quantity: number, selectedSize?: string, selectedColor?: string) => {
         if (quantity <= 0) {
-            removeFromCart(productId);
+            removeFromCart(productId, selectedSize, selectedColor);
             return;
         }
 
         setItems(currentItems =>
             currentItems.map(item =>
-                item.id === productId ? { ...item, quantity } : item
+                item.id === productId &&
+                    item.selectedSize === selectedSize &&
+                    item.selectedColor === selectedColor
+                    ? { ...item, quantity }
+                    : item
             )
         );
     };

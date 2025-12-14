@@ -41,32 +41,33 @@ export default function Navbar() {
 
     return (
         <>
-            <nav className="bg-white sticky top-0 z-50 border-b border-gray-100">
+            <nav className="bg-premium-black sticky top-0 z-50 border-b border-gray-800 transition-all duration-300">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between h-16 items-center">
+                    <div className="flex justify-between h-20 items-center">
                         {/* Logo */}
                         <div className="flex-shrink-0 flex items-center">
-                            <Link href="/" className="text-2xl font-bold text-gray-900 tracking-tight">
-                                BlackStone<span className="text-blue-600">BD</span>
+                            <Link href="/" className="text-3xl font-bold font-playfair tracking-wide text-white group">
+                                BlackStone<span className="text-premium-gold group-hover:text-premium-gold-light transition-colors">BD</span>
                             </Link>
                         </div>
 
                         {/* Desktop Navigation */}
-                        <div className="hidden md:flex space-x-2 items-center">
+                        <div className="hidden md:flex space-x-4 items-center">
                             {navLinks.map((link) => {
                                 const isActive = pathname === link.href;
                                 return (
                                     <Link
                                         key={link.href}
                                         href={link.href}
-                                        className={`relative px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${isActive ? 'text-blue-600' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50'
+                                        className={`relative px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${isActive ? 'text-premium-black bg-premium-gold' : 'text-gray-300 hover:text-premium-gold hover:bg-white/5'
                                             }`}
                                     >
                                         {isActive && (
                                             <motion.div
                                                 layoutId="navbar-active"
-                                                className="absolute inset-0 bg-gradient-to-r from-blue-50 via-blue-100 to-blue-50 rounded-lg shadow-sm"
+                                                className="absolute inset-0 bg-premium-gold rounded-full shadow-[0_0_15px_rgba(212,175,55,0.4)]"
                                                 transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                                                style={{ zIndex: -1 }}
                                             />
                                         )}
                                         <span className="relative z-10">{link.label}</span>
@@ -76,25 +77,25 @@ export default function Navbar() {
                         </div>
 
                         {/* Icons */}
-                        <div className="flex items-center space-x-4 sm:space-x-6">
+                        <div className="flex items-center space-x-6">
                             <button
                                 onClick={() => setIsSearchOpen(true)}
-                                className="text-gray-500 hover:text-blue-600 transition-colors"
+                                className="text-gray-300 hover:text-premium-gold transition-colors transform hover:scale-110 duration-200"
                                 aria-label="Search"
                             >
                                 <Search className="h-6 w-6" />
                             </button>
-                            <Link href="/cart" className="text-gray-500 hover:text-blue-600 transition-colors relative">
+                            <Link href="/cart" className="text-gray-300 hover:text-premium-gold transition-colors relative transform hover:scale-110 duration-200">
                                 <ShoppingCart className="h-6 w-6" />
                                 {cartCount > 0 && (
-                                    <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                                    <span className="absolute -top-2 -right-2 bg-premium-gold text-premium-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                                         {cartCount}
                                     </span>
                                 )}
                             </Link>
                             <button
                                 onClick={() => setIsMobileMenuOpen(true)}
-                                className="md:hidden text-gray-500 hover:text-blue-600 transition-colors"
+                                className="md:hidden text-gray-300 hover:text-premium-gold transition-colors"
                                 aria-label="Open menu"
                             >
                                 <Menu className="h-6 w-6" />
@@ -114,7 +115,7 @@ export default function Navbar() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setIsMobileMenuOpen(false)}
-                            className="fixed inset-0 bg-black/50 z-50 md:hidden"
+                            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 md:hidden"
                         />
 
                         {/* Mobile Menu Drawer */}
@@ -122,16 +123,16 @@ export default function Navbar() {
                             initial={{ x: '100%' }}
                             animate={{ x: 0 }}
                             exit={{ x: '100%' }}
-                            transition={{ type: 'tween', duration: 0.3 }}
-                            className="fixed top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-white shadow-2xl z-50 md:hidden"
+                            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                            className="fixed top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-premium-charcoal border-l border-gray-800 shadow-2xl z-50 md:hidden"
                         >
-                            <div className="flex flex-col h-full">
+                            <div className="flex flex-col h-full text-white">
                                 {/* Header */}
-                                <div className="flex justify-between items-center p-6 border-b border-gray-100">
-                                    <h2 className="text-xl font-bold text-gray-900">Menu</h2>
+                                <div className="flex justify-between items-center p-6 border-b border-gray-800">
+                                    <h2 className="text-2xl font-bold font-playfair text-premium-gold">Menu</h2>
                                     <button
                                         onClick={() => setIsMobileMenuOpen(false)}
-                                        className="text-gray-500 hover:text-gray-700 transition-colors"
+                                        className="text-gray-400 hover:text-white transition-colors"
                                         aria-label="Close menu"
                                     >
                                         <X className="h-6 w-6" />
@@ -140,7 +141,7 @@ export default function Navbar() {
 
                                 {/* Navigation Links */}
                                 <nav className="flex-1 overflow-y-auto py-6">
-                                    <div className="space-y-1 px-4">
+                                    <div className="space-y-2 px-4">
                                         {navLinks.map((link, index) => (
                                             <motion.div
                                                 key={link.href}
@@ -150,7 +151,10 @@ export default function Navbar() {
                                             >
                                                 <Link
                                                     href={link.href}
-                                                    className="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg font-medium transition-colors"
+                                                    className={`flex items-center px-4 py-3 rounded-lg font-medium transition-all duration-200 ${pathname === link.href
+                                                            ? 'bg-gradient-to-r from-premium-gold/20 to-transparent text-premium-gold border-l-4 border-premium-gold'
+                                                            : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                                                        }`}
                                                     onClick={() => setIsMobileMenuOpen(false)}
                                                 >
                                                     {link.label}
@@ -161,11 +165,11 @@ export default function Navbar() {
                                 </nav>
 
                                 {/* Footer */}
-                                <div className="p-6 border-t border-gray-100">
+                                <div className="p-6 border-t border-gray-800 bg-premium-black/50">
                                     <Link
                                         href="/cart"
                                         onClick={() => setIsMobileMenuOpen(false)}
-                                        className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+                                        className="flex items-center justify-center bg-premium-gold hover:bg-premium-gold-dark text-premium-black font-bold py-3 px-6 rounded-lg transition-colors shadow-lg shadow-premium-gold/20"
                                     >
                                         <ShoppingCart className="h-5 w-5 mr-2" />
                                         View Cart {cartCount > 0 && `(${cartCount})`}

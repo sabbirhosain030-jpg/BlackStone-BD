@@ -3,8 +3,11 @@
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Send, Clock, MessageCircle } from 'lucide-react';
 import { useState } from 'react';
+import Link from 'next/link';
+import { useAdmin } from '@/context/AdminContext';
 
 export default function ContactPage() {
+    const { settings } = useAdmin();
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -59,40 +62,41 @@ export default function ContactPage() {
         {
             icon: MapPin,
             title: 'Visit Us',
-            details: ['123 Commerce Street', 'Dhaka 1000, Bangladesh'],
-            color: 'text-blue-600',
-            bgColor: 'bg-blue-50',
+            details: [settings?.address?.street || '', `${settings?.address?.city || ''}, ${settings?.address?.country || ''}`],
+            color: 'text-blue-400',
+            bgColor: 'bg-blue-900/10',
         },
         {
             icon: Phone,
             title: 'Call Us',
-            details: ['+880 1234-567890', '+880 9876-543210'],
-            color: 'text-green-600',
-            bgColor: 'bg-green-50',
+            details: [settings?.contact?.primaryPhone || '', settings?.contact?.secondaryPhone || ''],
+            color: 'text-green-400',
+            bgColor: 'bg-green-900/10',
         },
         {
             icon: Mail,
             title: 'Email Us',
-            details: ['support@blackstonebd.com', 'info@blackstonebd.com'],
-            color: 'text-purple-600',
-            bgColor: 'bg-purple-50',
+            details: [settings?.contact?.supportEmail || '', settings?.contact?.infoEmail || ''],
+            color: 'text-purple-400',
+            bgColor: 'bg-purple-900/10',
         },
         {
             icon: Clock,
             title: 'Business Hours',
-            details: ['Saturday - Thursday: 9AM - 9PM', 'Friday: Closed'],
-            color: 'text-orange-600',
-            bgColor: 'bg-orange-50',
+            // Display simplified hours or link to details
+            details: ['See full hours below', settings?.businessHours?.['friday']?.closed ? 'Friday: Closed' : 'Open Everyday'],
+            color: 'text-orange-400',
+            bgColor: 'bg-orange-900/10',
         },
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+        <div className="min-h-screen bg-premium-black text-white">
             {/* Hero Section */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20"
+                className="bg-gradient-to-r from-black via-premium-charcoal to-black text-white py-20 border-b border-gray-800"
             >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                     <motion.div
@@ -100,12 +104,26 @@ export default function ContactPage() {
                         animate={{ scale: 1 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <MessageCircle className="h-16 w-16 mx-auto mb-6" />
-                        <h1 className="text-5xl font-bold mb-4">Get in Touch</h1>
-                        <p className="text-xl text-blue-100 max-w-2xl mx-auto">
+                        <MessageCircle className="h-16 w-16 mx-auto mb-6 text-premium-gold" />
+                        <h1 className="text-5xl font-bold mb-4 font-playfair">Get in Touch</h1>
+                        <p className="text-xl text-gray-400 max-w-2xl mx-auto">
                             Have a question or need assistance? We&apos;re here to help! Reach out to us and we&apos;ll get back to you as soon as possible.
                         </p>
                     </motion.div>
+                </div>
+                <div className="absolute top-8 left-8">
+                    <Link href="/about">
+                        <motion.button
+                            whileHover={{ scale: 1.1, x: -5 }}
+                            whileTap={{ scale: 0.9 }}
+                            className="bg-black/50 hover:bg-premium-gold text-white hover:text-black p-3 rounded-full border border-gray-700 hover:border-premium-gold transition-all backdrop-blur-sm group"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:-translate-x-1 transition-transform">
+                                <path d="M19 12H5" />
+                                <path d="M12 19l-7-7 7-7" />
+                            </svg>
+                        </motion.button>
+                    </Link>
                 </div>
             </motion.div>
 
@@ -124,14 +142,14 @@ export default function ContactPage() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1 * index }}
                             whileHover={{ y: -5, scale: 1.02 }}
-                            className="bg-white rounded-xl shadow-lg p-6 border border-gray-100"
+                            className="bg-premium-charcoal rounded-xl shadow-lg p-6 border border-gray-800 hover:border-premium-gold transition-colors"
                         >
-                            <div className={`${info.bgColor} ${info.color} w-12 h-12 rounded-lg flex items-center justify-center mb-4`}>
+                            <div className={`bg-black/50 border border-gray-700 ${info.color} w-12 h-12 rounded-lg flex items-center justify-center mb-4`}>
                                 <info.icon className="h-6 w-6" />
                             </div>
-                            <h3 className="text-lg font-bold text-gray-900 mb-2">{info.title}</h3>
+                            <h3 className="text-lg font-bold text-white mb-2 font-playfair">{info.title}</h3>
                             {info.details.map((detail, idx) => (
-                                <p key={idx} className="text-gray-600 text-sm">
+                                <p key={idx} className="text-gray-400 text-sm">
                                     {detail}
                                 </p>
                             ))}
@@ -146,9 +164,9 @@ export default function ContactPage() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.3 }}
-                        className="bg-white rounded-xl shadow-lg p-8 border border-gray-100"
+                        className="bg-premium-charcoal rounded-xl shadow-lg p-8 border border-gray-800"
                     >
-                        <h2 className="text-3xl font-bold text-gray-900 mb-6">Send us a Message</h2>
+                        <h2 className="text-3xl font-bold text-white mb-6 font-playfair">Send us a Message</h2>
 
                         {submitStatus === 'success' && (
                             <motion.div
@@ -163,7 +181,7 @@ export default function ContactPage() {
 
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div>
-                                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                                <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
                                     Full Name *
                                 </label>
                                 <input
@@ -173,14 +191,14 @@ export default function ContactPage() {
                                     required
                                     value={formData.name}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    className="w-full px-4 py-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent transition-all text-white placeholder-gray-600"
                                     placeholder="John Doe"
                                 />
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
                                         Email Address *
                                     </label>
                                     <input
@@ -190,13 +208,13 @@ export default function ContactPage() {
                                         required
                                         value={formData.email}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                        className="w-full px-4 py-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent transition-all text-white placeholder-gray-600"
                                         placeholder="john@example.com"
                                     />
                                 </div>
 
                                 <div>
-                                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label htmlFor="phone" className="block text-sm font-medium text-gray-300 mb-2">
                                         Phone Number
                                     </label>
                                     <input
@@ -205,14 +223,14 @@ export default function ContactPage() {
                                         name="phone"
                                         value={formData.phone}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                        className="w-full px-4 py-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent transition-all text-white placeholder-gray-600"
                                         placeholder="+880 1234-567890"
                                     />
                                 </div>
                             </div>
 
                             <div>
-                                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
+                                <label htmlFor="subject" className="block text-sm font-medium text-gray-300 mb-2">
                                     Subject *
                                 </label>
                                 <input
@@ -222,13 +240,13 @@ export default function ContactPage() {
                                     required
                                     value={formData.subject}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    className="w-full px-4 py-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent transition-all text-white placeholder-gray-600"
                                     placeholder="How can we help you?"
                                 />
                             </div>
 
                             <div>
-                                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                                <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2">
                                     Message *
                                 </label>
                                 <textarea
@@ -238,7 +256,7 @@ export default function ContactPage() {
                                     value={formData.message}
                                     onChange={handleChange}
                                     rows={6}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
+                                    className="w-full px-4 py-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent transition-all resize-none text-white placeholder-gray-600"
                                     placeholder="Tell us more about your inquiry..."
                                 />
                             </div>
@@ -248,7 +266,7 @@ export default function ContactPage() {
                                 disabled={isSubmitting}
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
-                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full bg-premium-gold hover:bg-white text-premium-black font-bold py-4 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {isSubmitting ? (
                                     <>
@@ -273,9 +291,9 @@ export default function ContactPage() {
                         className="space-y-6"
                     >
                         {/* Map */}
-                        <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 h-[400px]">
+                        <div className="bg-premium-charcoal rounded-xl shadow-lg overflow-hidden border border-gray-800 h-[400px]">
                             <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.9067890123456!2d90.4125181!3d23.7808875!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDQ2JzUxLjIiTiA5MMKwMjQnNDUuMSJF!5e0!3m2!1sen!2sbd!4v1234567890123"
+                                src={`https://www.google.com/maps?q=${settings?.location?.lat || 23.7808875},${settings?.location?.lng || 90.4125181}&hl=es&z=14&output=embed`}
                                 width="100%"
                                 height="100%"
                                 style={{ border: 0 }}
@@ -287,20 +305,20 @@ export default function ContactPage() {
                         </div>
 
                         {/* FAQ Section */}
-                        <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl shadow-lg p-8 border border-gray-100">
-                            <h3 className="text-2xl font-bold text-gray-900 mb-4">Quick Answers</h3>
+                        <div className="bg-premium-charcoal rounded-xl shadow-lg p-8 border border-gray-800">
+                            <h3 className="text-2xl font-bold text-white mb-4 font-playfair">Quick Answers</h3>
                             <div className="space-y-4">
                                 <div>
-                                    <h4 className="font-semibold text-gray-900 mb-1">What are your delivery areas?</h4>
-                                    <p className="text-gray-600 text-sm">We deliver across Bangladesh with cash on delivery service.</p>
+                                    <h4 className="font-semibold text-premium-gold mb-1">What are your delivery areas?</h4>
+                                    <p className="text-gray-400 text-sm">We deliver across Bangladesh with cash on delivery service.</p>
                                 </div>
                                 <div>
-                                    <h4 className="font-semibold text-gray-900 mb-1">How long does delivery take?</h4>
-                                    <p className="text-gray-600 text-sm">Typically 2-5 business days depending on your location.</p>
+                                    <h4 className="font-semibold text-premium-gold mb-1">How long does delivery take?</h4>
+                                    <p className="text-gray-400 text-sm">Typically 2-5 business days depending on your location.</p>
                                 </div>
                                 <div>
-                                    <h4 className="font-semibold text-gray-900 mb-1">Do you accept returns?</h4>
-                                    <p className="text-gray-600 text-sm">Yes! We have a 7-day return policy for most products.</p>
+                                    <h4 className="font-semibold text-premium-gold mb-1">Do you accept returns?</h4>
+                                    <p className="text-gray-400 text-sm">Yes! We have a 7-day return policy for most products.</p>
                                 </div>
                             </div>
                         </div>

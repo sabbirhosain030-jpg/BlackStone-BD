@@ -22,7 +22,7 @@ export default function HotOffersBanner() {
             initial={{ y: -100 }}
             animate={{ y: 0 }}
             exit={{ y: -100 }}
-            className="relative bg-gradient-to-r from-red-600 via-orange-500 to-red-600 text-white overflow-hidden"
+            className="relative bg-gradient-to-r from-premium-black via-[#B8860B] to-premium-black text-white overflow-hidden border-b border-premium-gold/30"
         >
             <div className="relative h-12 sm:h-10 flex items-center">
                 {/* Scrolling Text */}
@@ -39,8 +39,8 @@ export default function HotOffersBanner() {
                 >
                     {[...offers, ...offers, ...offers].map((offer, index) => (
                         <div key={index} className="flex items-center mx-4 sm:mx-8">
-                            <Flame className="h-4 w-4 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
-                            <span className="font-bold text-xs sm:text-sm">{offer}</span>
+                            <Flame className="h-4 w-4 sm:h-4 sm:w-4 mr-2 flex-shrink-0 text-premium-black fill-premium-black" />
+                            <span className="font-bold text-xs sm:text-sm text-premium-black">{offer}</span>
                         </div>
                     ))}
                 </motion.div>

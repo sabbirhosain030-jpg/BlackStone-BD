@@ -69,24 +69,24 @@ export default function OrderSuccessPage() {
 
     return (
         <>
-            <div className="min-h-screen flex flex-col bg-gray-50">
+            <div className="min-h-screen flex flex-col bg-premium-black">
                 <div className="no-print">
                     <Navbar />
                 </div>
 
                 <main className="flex-grow max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
                     {/* Success Message */}
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-12 mb-8 no-print">
+                    <div className="bg-premium-charcoal rounded-2xl shadow-lg shadow-black/50 border border-gray-800 p-8 md:p-12 mb-8 no-print">
                         <div className="text-center">
                             <div className="flex justify-center mb-6">
-                                <div className="bg-green-100 rounded-full p-4">
-                                    <CheckCircle className="h-16 w-16 text-green-600" />
+                                <div className="bg-green-500/10 rounded-full p-4 border border-green-500/20">
+                                    <CheckCircle className="h-16 w-16 text-green-500" />
                                 </div>
                             </div>
-                            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                            <h1 className="text-3xl md:text-4xl font-bold font-playfair text-white mb-4">
                                 Order Placed Successfully!
                             </h1>
-                            <p className="text-gray-600 text-lg mb-8">
+                            <p className="text-gray-300 text-lg mb-8">
                                 Thank you for your order. We&apos;ll contact you shortly to confirm your delivery details.
                             </p>
 
@@ -94,29 +94,29 @@ export default function OrderSuccessPage() {
                                 <button
                                     onClick={handleDownloadReceipt}
                                     disabled={isDownloading || !orderData}
-                                    className="flex items-center justify-center bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white font-bold py-3 px-8 rounded-lg transition-colors"
+                                    className="flex items-center justify-center bg-green-600 hover:bg-green-700 disabled:bg-green-900/50 text-white font-bold py-3 px-8 rounded-lg transition-colors border border-green-500/30"
                                 >
                                     <Download className="mr-2 h-5 w-5" />
                                     {isDownloading ? 'Generating PDF...' : 'Download Receipt'}
                                 </button>
                                 <Link
                                     href="/products"
-                                    className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-colors"
+                                    className="flex items-center justify-center bg-premium-gold hover:bg-white hover:text-premium-black text-premium-black font-bold py-3 px-8 rounded-lg transition-colors shadow-lg shadow-premium-gold/20"
                                 >
                                     <Package className="mr-2 h-5 w-5" />
                                     Continue Shopping
                                 </Link>
                                 <Link
                                     href="/"
-                                    className="flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-900 font-bold py-3 px-8 rounded-lg transition-colors"
+                                    className="flex items-center justify-center bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold py-3 px-8 rounded-lg transition-colors border border-gray-700"
                                 >
                                     <Home className="mr-2 h-5 w-5" />
                                     Back to Home
                                 </Link>
                             </div>
 
-                            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                                <p className="text-sm text-blue-900">
+                            <div className="p-4 bg-blue-900/20 border border-blue-500/20 rounded-lg">
+                                <p className="text-sm text-blue-200">
                                     <strong>What&apos;s Next?</strong> Our team will contact you within 24 hours to confirm your order and delivery schedule.
                                     You&apos;ll receive your order within 3-5 business days.
                                 </p>

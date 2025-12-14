@@ -1,6 +1,7 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProductActions from '@/components/ProductActions';
+import ProductImageGallery from '@/components/ProductImageGallery';
 import { getProductById, products } from '@/lib/data';
 import Link from 'next/link';
 
@@ -31,22 +32,14 @@ export default function ProductDetailsPage({ params }: { params: { id: string } 
     }
 
     return (
-        <div className="min-h-screen flex flex-col bg-gray-50">
+        <div className="min-h-screen flex flex-col bg-premium-black">
             <Navbar />
 
             <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div className="bg-premium-charcoal rounded-2xl shadow-sm border border-gray-800 overflow-hidden">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
                         {/* Image Gallery */}
-                        <div className="p-6 lg:p-8 bg-gray-50 flex items-center justify-center">
-                            <div className="aspect-square w-full max-w-md relative rounded-xl overflow-hidden bg-white shadow-sm">
-                                <img
-                                    src={product.images[0]}
-                                    alt={product.name}
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
-                        </div>
+                        <ProductImageGallery product={product} />
 
                         {/* Product Info */}
                         <div className="p-6 lg:p-8">

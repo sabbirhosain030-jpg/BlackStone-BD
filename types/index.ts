@@ -19,10 +19,14 @@ export interface Product {
     isDiscountManual?: boolean; // NEW - Manual discount override flag
     createdAt?: string; // NEW - Creation date for New Arrivals
     isDeleted?: boolean; // NEW - Soft delete flag
+    sizes?: string[]; // NEW - Available sizes for the product
+    colors?: string[]; // NEW - Available colors for filtering
 }
 
 export interface CartItem extends Product {
     quantity: number;
+    selectedSize?: string; // NEW - Selected size
+    selectedColor?: string; // NEW - Selected color
 }
 
 export interface Order {
@@ -85,9 +89,18 @@ export interface HotOffer {
 
 export interface SiteSettings {
     siteName: string;
-    contactEmail: string;
-    contactPhone: string;
-    address: string;
+    contact: {
+        primaryPhone: string;
+        secondaryPhone: string;
+        supportEmail: string;
+        infoEmail: string;
+    };
+    address: {
+        street: string;
+        city: string;
+        postalCode: string;
+        country: string;
+    };
     currency: string;
     socialLinks: {
         facebook?: string;
@@ -97,6 +110,18 @@ export interface SiteSettings {
     };
     deliveryChargeInsideDhaka: number;
     deliveryChargeOutsideDhaka: number;
+    location: {
+        lat: number;
+        lng: number;
+    };
+    businessHours: {
+        [key: string]: {
+            open: string;
+            close: string;
+            closed: boolean;
+        };
+    };
+    contactFormEmail: string;
 }
 
 export interface TrendingItem {

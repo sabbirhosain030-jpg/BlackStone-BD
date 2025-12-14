@@ -38,7 +38,7 @@ export default function AdminSubscribersPage() {
         <div>
             <div className="flex justify-between items-center mb-8">
                 <motion.h1
-                    className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
+                    className="text-3xl font-bold text-white font-playfair"
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                 >
@@ -48,7 +48,7 @@ export default function AdminSubscribersPage() {
                     onClick={handleExport}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-colors"
+                    className="flex items-center gap-2 bg-green-600/20 text-green-400 border border-green-500/30 hover:bg-green-600 hover:text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-colors"
                 >
                     <Download className="h-5 w-5" />
                     Export CSV
@@ -60,7 +60,7 @@ export default function AdminSubscribersPage() {
                     label="Total Subscribers"
                     value={subscribers.length.toString()}
                     icon={Users}
-                    color="bg-purple-500"
+                    color="bg-purple-900"
                     trend="+12%"
                     delay={0}
                 />
@@ -68,61 +68,61 @@ export default function AdminSubscribersPage() {
                     label="New this Month"
                     value="5"
                     icon={Mail}
-                    color="bg-blue-500"
+                    color="bg-blue-900"
                     trend="+5%"
                     delay={0.1}
                 />
             </div>
 
             <motion.div
-                className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
+                className="bg-premium-charcoal rounded-xl shadow-md border border-gray-800 overflow-hidden"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
             >
-                <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-                    <h2 className="text-lg font-bold text-gray-900">Subscriber List</h2>
+                <div className="p-6 border-b border-gray-800 flex justify-between items-center">
+                    <h2 className="text-lg font-bold text-white">Subscriber List</h2>
                     <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                         <input
                             type="text"
                             placeholder="Search email..."
-                            className="pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="pl-9 pr-4 py-2 bg-black border border-gray-800 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-premium-gold"
                         />
                     </div>
                 </div>
                 <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                    <table className="min-w-full divide-y divide-gray-800">
+                        <thead className="bg-black">
                             <tr>
-                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Email Address</th>
-                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Joined Date</th>
-                                <th className="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
+                                <th className="px-6 py-4 text-left text-xs font-bold text-premium-gold uppercase tracking-wider">Email Address</th>
+                                <th className="px-6 py-4 text-left text-xs font-bold text-premium-gold uppercase tracking-wider">Joined Date</th>
+                                <th className="px-6 py-4 text-right text-xs font-bold text-premium-gold uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
+                        <tbody className="divide-y divide-gray-800">
                             {subscribers.map((subscriber, index) => (
                                 <motion.tr
                                     key={subscriber.id}
                                     initial={{ opacity: 0, x: -20 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: index * 0.05 }}
-                                    whileHover={{ backgroundColor: '#f9fafb' }}
+                                    className="bg-premium-charcoal hover:bg-gray-800 transition-colors"
                                 >
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center">
-                                            <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3">
+                                            <div className="h-8 w-8 rounded-full bg-blue-900/30 flex items-center justify-center text-blue-400 mr-3 border border-blue-500/30">
                                                 <Mail className="h-4 w-4" />
                                             </div>
-                                            <span className="text-sm font-medium text-gray-900">{subscriber.email}</span>
+                                            <span className="text-sm font-medium text-white">{subscriber.email}</span>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
                                         {new Date(subscriber.joinedAt).toLocaleDateString()}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <button
                                             onClick={() => handleDelete(subscriber.id)}
-                                            className="text-red-600 hover:text-red-900 transition-colors"
+                                            className="text-red-400 hover:text-red-300 transition-colors"
                                         >
                                             <Trash2 className="h-4 w-4" />
                                         </button>
@@ -131,7 +131,7 @@ export default function AdminSubscribersPage() {
                             ))}
                             {subscribers.length === 0 && (
                                 <tr>
-                                    <td colSpan={3} className="px-6 py-8 text-center text-gray-500">
+                                    <td colSpan={3} className="px-6 py-8 text-center text-gray-400">
                                         No subscribers yet.
                                     </td>
                                 </tr>

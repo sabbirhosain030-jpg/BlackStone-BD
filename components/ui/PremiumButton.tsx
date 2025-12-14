@@ -28,9 +28,10 @@ export default function PremiumButton({
     const baseStyles = 'inline-flex items-center justify-center gap-2 font-semibold rounded-lg transition-all duration-300 shadow-md hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed';
 
     const variants = {
-        primary: 'bg-gradient-to-r from-gray-800 via-gray-900 to-gray-800 text-white hover:from-gray-900 hover:via-black hover:to-gray-900 border border-gray-700',
-        secondary: 'bg-gradient-to-r from-blue-600 via-blue-700 to-blue-600 text-white hover:from-blue-700 hover:via-blue-800 hover:to-blue-700 border border-blue-600',
-        outline: 'bg-white text-gray-900 border-2 border-gray-300 hover:border-gray-900 hover:bg-gray-50',
+        primary: 'bg-premium-black text-premium-gold border border-premium-gold hover:bg-premium-gold hover:text-premium-black',
+        secondary: 'bg-premium-gold text-premium-black border border-premium-gold hover:bg-white hover:text-premium-black hover:border-white',
+        outline: 'bg-transparent text-white border-2 border-premium-gold hover:bg-premium-gold hover:text-premium-black',
+        shop: 'bg-white text-black border border-white hover:bg-premium-gold hover:text-black hover:border-premium-gold uppercase tracking-widest',
     };
 
     const sizes = {

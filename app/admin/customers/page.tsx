@@ -37,14 +37,14 @@ export default function AdminCustomersPage() {
         <div>
             <div className="flex justify-between items-center mb-8">
                 <motion.h1
-                    className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
+                    className="text-3xl font-bold text-white font-playfair"
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                 >
                     Customers
                 </motion.h1>
                 <div className="flex gap-4">
-                    <button className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg flex items-center hover:bg-gray-50 transition-colors">
+                    <button className="bg-premium-charcoal border border-gray-700 text-gray-300 px-4 py-2 rounded-lg flex items-center hover:bg-gray-800 hover:text-white transition-colors shadow-sm">
                         <Filter className="h-5 w-5 mr-2" />
                         Filter
                     </button>
@@ -62,94 +62,101 @@ export default function AdminCustomersPage() {
             </div>
 
             <motion.div
-                className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
+                className="bg-premium-charcoal rounded-xl shadow-md border border-gray-800 overflow-hidden"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
             >
-                <div className="p-4 border-b border-gray-100">
+                <div className="p-4 border-b border-gray-800">
                     <div className="relative max-w-md">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
                         <input
                             type="text"
                             placeholder="Search customers..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full pl-10 pr-4 py-2 bg-black border border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-premium-gold focus:border-transparent text-white placeholder-gray-600 transition-all"
                         />
                     </div>
                 </div>
 
                 <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                    <table className="min-w-full divide-y divide-gray-800">
+                        <thead className="bg-black">
                             <tr>
-                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Customer</th>
-                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Contact</th>
-                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Orders</th>
-                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Total Spent</th>
-                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Joined</th>
+                                <th className="px-6 py-4 text-left text-xs font-bold text-premium-gold uppercase tracking-wider">Customer</th>
+                                <th className="px-6 py-4 text-left text-xs font-bold text-premium-gold uppercase tracking-wider">Contact</th>
+                                <th className="px-6 py-4 text-left text-xs font-bold text-premium-gold uppercase tracking-wider">Orders</th>
+                                <th className="px-6 py-4 text-left text-xs font-bold text-premium-gold uppercase tracking-wider">Total Spent</th>
+                                <th className="px-6 py-4 text-left text-xs font-bold text-premium-gold uppercase tracking-wider">Status</th>
+                                <th className="px-6 py-4 text-left text-xs font-bold text-premium-gold uppercase tracking-wider">Joined</th>
                             </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                            {filteredCustomers.map((customer, index) => (
-                                <motion.tr
-                                    key={customer.id}
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: index * 0.05 }}
-                                    whileHover={{ backgroundColor: '#f9fafb' }}
-                                    className="cursor-pointer"
-                                >
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="flex items-center">
-                                            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold">
-                                                {customer.name.charAt(0)}
-                                            </div>
-                                            <div className="ml-4">
-                                                <div className="text-sm font-medium text-gray-900">{customer.name}</div>
-                                                <div className="text-sm text-gray-500 flex items-center gap-1">
-                                                    <MapPin className="h-3 w-3" />
-                                                    {customer.address}
+                        <tbody className="divide-y divide-gray-800">
+                            {filteredCustomers.length === 0 ? (
+                                <tr>
+                                    <td colSpan={6} className="px-6 py-12 text-center text-gray-400">
+                                        No customers found.
+                                    </td>
+                                </tr>
+                            ) : (
+                                filteredCustomers.map((customer, index) => (
+                                    <motion.tr
+                                        key={customer.id}
+                                        initial={{ opacity: 0, x: -20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: index * 0.05 }}
+                                        className="bg-premium-charcoal hover:bg-gray-800 transition-colors cursor-pointer"
+                                    >
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="flex items-center">
+                                                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 border border-gray-600 flex items-center justify-center text-white font-bold">
+                                                    {customer.name.charAt(0)}
+                                                </div>
+                                                <div className="ml-4">
+                                                    <div className="text-sm font-medium text-white">{customer.name}</div>
+                                                    <div className="text-sm text-gray-400 flex items-center gap-1">
+                                                        <MapPin className="h-3 w-3" />
+                                                        {customer.address}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm text-gray-900 flex items-center gap-2">
-                                            <Mail className="h-4 w-4 text-gray-400" />
-                                            {customer.email}
-                                        </div>
-                                        <div className="text-sm text-gray-500 flex items-center gap-2 mt-1">
-                                            <Phone className="h-4 w-4 text-gray-400" />
-                                            {customer.phone}
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="flex items-center gap-2">
-                                            <ShoppingBag className="h-4 w-4 text-gray-400" />
-                                            <span className="text-sm text-gray-900">{customer.totalOrders} Orders</span>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        ৳{customer.totalSpent.toLocaleString()}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${customer.status === 'active'
-                                            ? 'bg-green-100 text-green-800'
-                                            : 'bg-red-100 text-red-800'
-                                            }`}>
-                                            {customer.status.charAt(0).toUpperCase() + customer.status.slice(1)}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <div className="flex items-center gap-2">
-                                            <Calendar className="h-4 w-4 text-gray-400" />
-                                            {new Date(customer.joinDate).toLocaleDateString()}
-                                        </div>
-                                    </td>
-                                </motion.tr>
-                            ))}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="text-sm text-gray-300 flex items-center gap-2">
+                                                <Mail className="h-4 w-4 text-gray-500" />
+                                                {customer.email}
+                                            </div>
+                                            <div className="text-sm text-gray-400 flex items-center gap-2 mt-1">
+                                                <Phone className="h-4 w-4 text-gray-500" />
+                                                {customer.phone}
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="flex items-center gap-2">
+                                                <ShoppingBag className="h-4 w-4 text-premium-gold" />
+                                                <span className="text-sm text-white">{customer.totalOrders} Orders</span>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-premium-gold">
+                                            ৳{customer.totalSpent.toLocaleString()}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full border ${customer.status === 'active'
+                                                ? 'bg-green-900/30 text-green-400 border-green-500/30'
+                                                : 'bg-red-900/30 text-red-400 border-red-500/30'
+                                                }`}>
+                                                {customer.status.charAt(0).toUpperCase() + customer.status.slice(1)}
+                                            </span>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
+                                            <div className="flex items-center gap-2">
+                                                <Calendar className="h-4 w-4 text-gray-500" />
+                                                {new Date(customer.joinDate).toLocaleDateString()}
+                                            </div>
+                                        </td>
+                                    </motion.tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
                 </div>

@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { DollarSign, Package, ShoppingBag, Users } from 'lucide-react';
+import Image from 'next/image';
 import { products, orders, customers } from '@/lib/data';
 import StatsCard from '@/components/admin/StatsCard';
 
@@ -33,7 +34,7 @@ export default function AdminDashboard() {
     return (
         <div>
             <motion.h1
-                className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-8"
+                className="text-3xl font-bold text-white mb-8 font-playfair"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
@@ -53,34 +54,34 @@ export default function AdminDashboard() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <motion.div
-                    className="bg-white p-6 rounded-xl shadow-sm border border-gray-100"
+                    className="bg-premium-charcoal p-6 rounded-xl shadow-sm border border-gray-800"
                     initial={{ opacity: 0, x: -50 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.5, duration: 0.6 }}
                 >
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">Recent Orders</h3>
+                    <h3 className="text-lg font-bold text-white mb-4 font-playfair">Recent Orders</h3>
                     <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
+                        <table className="min-w-full divide-y divide-gray-800">
                             <thead>
                                 <tr>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Order ID</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Customer</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Total</th>
                                 </tr>
                             </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
+                            <tbody className="divide-y divide-gray-800">
                                 {orders.slice(0, 5).map((order, index) => (
                                     <motion.tr
                                         key={order.id}
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ delay: 0.7 + index * 0.1 }}
-                                        whileHover={{ backgroundColor: '#f9fafb', scale: 1.01 }}
-                                        className="cursor-pointer"
+                                        whileHover={{ backgroundColor: '#0a0a0a', scale: 1.01 }}
+                                        className="cursor-pointer bg-premium-charcoal hover:bg-black transition-colors"
                                     >
-                                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">#{order.id}</td>
-                                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{order.customerName}</td>
+                                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-white">#{order.id}</td>
+                                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-400">{order.customerName}</td>
                                         <td className="px-4 py-3 whitespace-nowrap">
                                             <motion.span
                                                 className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(order.status)}`}
@@ -89,7 +90,7 @@ export default function AdminDashboard() {
                                                 {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                                             </motion.span>
                                         </td>
-                                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">৳{order.total.toLocaleString()}</td>
+                                        <td className="px-4 py-3 whitespace-nowrap text-sm text-premium-gold">৳{order.total.toLocaleString()}</td>
                                     </motion.tr>
                                 ))}
                             </tbody>
@@ -98,32 +99,37 @@ export default function AdminDashboard() {
                 </motion.div>
 
                 <motion.div
-                    className="bg-white p-6 rounded-xl shadow-sm border border-gray-100"
+                    className="bg-premium-charcoal p-6 rounded-xl shadow-sm border border-gray-800"
                     initial={{ opacity: 0, x: 50 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.5, duration: 0.6 }}
                 >
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">Top Products</h3>
+                    <h3 className="text-lg font-bold text-white mb-4 font-playfair">Top Products</h3>
                     <div className="space-y-4">
                         {products.slice(0, 4).map((product, index) => (
                             <motion.div
                                 key={product.id}
-                                className="flex items-center p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+                                className="flex items-center p-3 rounded-lg hover:bg-black transition-colors cursor-pointer bg-gray-900/30 border border-transparent hover:border-gray-800"
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.8 + index * 0.1 }}
                                 whileHover={{ x: 5, scale: 1.02 }}
                             >
-                                <div className="h-12 w-12 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden">
-                                    <img src={product.images[0]} alt={product.name} className="h-full w-full object-cover" />
+                                <div className="h-12 w-12 flex-shrink-0 bg-gray-900 rounded-lg overflow-hidden border border-gray-800 relative">
+                                    <Image
+                                        src={product.images[0]}
+                                        alt={product.name}
+                                        fill
+                                        className="object-cover"
+                                    />
                                 </div>
                                 <div className="ml-4 flex-1">
-                                    <h4 className="text-sm font-medium text-gray-900">{product.name}</h4>
-                                    <p className="text-xs text-gray-500">{product.category}</p>
+                                    <h4 className="text-sm font-medium text-white">{product.name}</h4>
+                                    <p className="text-xs text-premium-gold">{product.category}</p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-sm font-medium text-gray-900">{product.reviews} Sales</p>
-                                    <p className={`text-xs ${product.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                    <p className="text-sm font-medium text-white">{product.reviews} Sales</p>
+                                    <p className={`text-xs ${product.stock > 0 ? 'text-green-500' : 'text-red-500'}`}>
                                         {product.stock > 0 ? 'In Stock' : 'Out of Stock'}
                                     </p>
                                 </div>

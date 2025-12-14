@@ -9,17 +9,23 @@ import { LogOut } from 'lucide-react';
 function AdminLayoutContent({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const pathname = usePathname();
-    const { isAuthenticated, logout } = useAuth();
+    const { isAuthenticated, logout, isLoading } = useAuth(); // Destructure isLoading
 
     useEffect(() => {
-        // Don't redirect on login page
+        // Don't modify redirect logic too much, rely on middleware for hard protection
+        // But keep client-side check for smoother UX
+        if (isLoading) return;
+
         if (pathname === '/admin/login') return;
 
-        // Check if user is not authenticated and redirect to login
         if (!isAuthenticated) {
             router.push('/admin/login');
         }
-    }, [isAuthenticated, router, pathname]);
+    }, [isAuthenticated, isLoading, router, pathname]);
+
+    if (isLoading) {
+        return <div className="min-h-screen bg-premium-black flex items-center justify-center text-premium-gold">Loading...</div>;
+    }
 
     // Allow login page to render without authentication
     if (pathname === '/admin/login') {
@@ -31,31 +37,31 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
         return null;
     }
 
-    const handleLogout = () => {
-        logout();
+    const handleLogout = async () => {
+        await logout();
         router.push('/admin/login');
     };
 
     return (
-        <div className="flex min-h-screen bg-gray-100">
+        <div className="flex min-h-screen bg-premium-black">
             <AdminSidebar />
             <div className="flex-1 overflow-auto">
-                <header className="bg-white shadow-sm h-16 flex items-center justify-between px-8">
-                    <h2 className="text-xl font-semibold text-gray-800">Dashboard</h2>
+                <header className="bg-premium-charcoal shadow-md border-b border-gray-800 h-16 flex items-center justify-between px-8">
+                    <h2 className="text-xl font-bold text-white font-playfair">Dashboard</h2>
                     <div className="flex items-center space-x-4">
-                        <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+                        <div className="h-8 w-8 rounded-full bg-premium-gold flex items-center justify-center text-premium-black font-bold border border-white/10">
                             A
                         </div>
                         <button
                             onClick={handleLogout}
-                            className="flex items-center gap-2 px-3 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors text-sm font-medium"
+                            className="flex items-center gap-2 px-3 py-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20 transition-colors text-sm font-medium border border-red-500/20"
                         >
                             <LogOut className="h-4 w-4" />
                             Logout
                         </button>
                     </div>
                 </header>
-                <main className="p-8">
+                <main className="p-8 bg-premium-black text-white">
                     {children}
                 </main>
             </div>

@@ -22,21 +22,21 @@ export default function AdminSidebar() {
 
     return (
         <motion.div
-            className="w-64 bg-gradient-to-b from-gray-900 to-gray-950 min-h-screen text-white flex flex-col shadow-2xl"
+            className="w-64 bg-premium-charcoal border-r border-gray-800 min-h-screen text-white flex flex-col shadow-2xl"
             initial={{ x: -300 }}
             animate={{ x: 0 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
         >
             <motion.div
-                className="p-6 border-b border-gray-800"
+                className="p-6 border-b border-gray-800 bg-black/20"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
             >
-                <Link href="/admin" className="text-2xl font-bold tracking-tight">
-                    BlackStone<span className="text-blue-500">BD</span>
+                <Link href="/admin" className="text-2xl font-bold tracking-tight font-playfair">
+                    BlackStone<span className="text-premium-gold">BD</span>
                 </Link>
-                <p className="text-xs text-gray-400 mt-1">Admin Panel</p>
+                <p className="text-xs text-gray-500 mt-1 uppercase tracking-wider">Admin Panel</p>
             </motion.div>
 
             <nav className="flex-1 p-4 space-y-2">
@@ -54,8 +54,8 @@ export default function AdminSidebar() {
                             <Link href={item.href}>
                                 <motion.div
                                     className={`flex items-center px-4 py-3 rounded-lg transition-all ${isActive
-                                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/50'
-                                        : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                                        ? 'bg-premium-gold text-premium-black font-bold shadow-lg shadow-premium-gold/20'
+                                        : 'text-gray-400 hover:bg-gray-800 hover:text-white'
                                         }`}
                                     whileHover={{ x: 5, scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
@@ -64,7 +64,7 @@ export default function AdminSidebar() {
                                         animate={isActive ? { rotate: 360 } : {}}
                                         transition={{ duration: 0.6 }}
                                     >
-                                        <Icon className="h-5 w-5 mr-3" />
+                                        <Icon className={`h-5 w-5 mr-3 ${isActive ? 'text-premium-black' : 'text-premium-gold'}`} />
                                     </motion.div>
                                     {item.label}
                                 </motion.div>
@@ -75,13 +75,13 @@ export default function AdminSidebar() {
             </nav>
 
             <motion.div
-                className="p-4 border-t border-gray-800"
+                className="p-4 border-t border-gray-800 bg-black/20"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.9 }}
             >
                 <motion.button
-                    className="flex items-center w-full px-4 py-3 text-red-400 hover:bg-gray-800 hover:text-red-300 rounded-lg transition-colors"
+                    className="flex items-center w-full px-4 py-3 text-red-500 hover:bg-red-500/10 hover:text-red-400 rounded-lg transition-colors"
                     whileHover={{ x: 5, scale: 1.02 }}
                     whileTap={{ scale: 0.95 }}
                 >

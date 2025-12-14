@@ -72,14 +72,14 @@ export default function CheckoutPage() {
 
     if (items.length === 0) {
         return (
-            <div className="min-h-screen flex flex-col bg-gray-50">
+            <div className="min-h-screen flex flex-col bg-premium-black">
                 <Navbar />
-                <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                    <div className="max-w-3xl mx-auto">
-                        <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Checkout</h1>
-                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
-                            <p className="text-gray-500 text-lg mb-6">Your cart is empty. Add some products before checking out.</p>
-                            <Link href="/products" className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-colors">
+                <main className="flex-grow flex items-center justify-center p-4">
+                    <div className="max-w-xl w-full text-center">
+                        <div className="bg-premium-charcoal rounded-2xl shadow-lg border border-gray-800 p-12">
+                            <h2 className="text-2xl font-bold text-white mb-4 font-playfair">Your cart is empty</h2>
+                            <p className="text-gray-400 mb-8">Please add some products to your cart before proceeding to checkout.</p>
+                            <Link href="/products" className="inline-block bg-premium-gold hover:bg-white text-premium-black font-bold py-3 px-8 rounded-full transition-all hover:scale-105 shadow-lg shadow-premium-gold/20">
                                 Browse Products
                             </Link>
                         </div>
@@ -91,41 +91,44 @@ export default function CheckoutPage() {
     }
 
     return (
-        <div className="min-h-screen flex flex-col bg-gray-50">
+        <div className="min-h-screen flex flex-col bg-premium-black">
             <Navbar />
 
             <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div className="max-w-3xl mx-auto">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Checkout</h1>
+                <div className="max-w-4xl mx-auto">
+                    <h1 className="text-3xl md:text-4xl font-bold text-premium-gold mb-8 text-center font-playfair">Checkout</h1>
 
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                        <div className="p-6 md:p-8">
+                    <div className="bg-premium-charcoal rounded-2xl shadow-lg border border-gray-800 overflow-hidden">
+                        <div className="p-6 md:p-10">
                             <form onSubmit={handleSubmit} className="space-y-8">
                                 {/* Contact Information */}
                                 <div>
-                                    <h2 className="text-xl font-semibold text-gray-900 mb-4">Contact Information</h2>
+                                    <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2 border-b border-gray-800 pb-2">
+                                        <div className="w-8 h-8 rounded-full bg-premium-gold text-premium-black flex items-center justify-center text-sm font-bold">1</div>
+                                        Contact Information
+                                    </h2>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
-                                            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
+                                            <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-1">Email Address *</label>
                                             <input
                                                 type="email"
                                                 id="email"
                                                 required
                                                 value={formData.email}
                                                 onChange={handleChange}
-                                                className="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 px-4 py-2 border"
+                                                className="w-full bg-black border border-gray-800 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-premium-gold focus:border-transparent transition-all placeholder-gray-600"
                                                 placeholder="you@example.com"
                                             />
                                         </div>
                                         <div>
-                                            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number *</label>
+                                            <label htmlFor="phone" className="block text-sm font-medium text-gray-400 mb-1">Phone Number *</label>
                                             <input
                                                 type="tel"
                                                 id="phone"
                                                 required
                                                 value={formData.phone}
                                                 onChange={handleChange}
-                                                className="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 px-4 py-2 border"
+                                                className="w-full bg-black border border-gray-800 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-premium-gold focus:border-transparent transition-all placeholder-gray-600"
                                                 placeholder="+880 1234-567890"
                                             />
                                         </div>
@@ -134,63 +137,66 @@ export default function CheckoutPage() {
 
                                 {/* Shipping Address */}
                                 <div>
-                                    <h2 className="text-xl font-semibold text-gray-900 mb-4">Shipping Address</h2>
+                                    <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2 border-b border-gray-800 pb-2">
+                                        <div className="w-8 h-8 rounded-full bg-premium-gold text-premium-black flex items-center justify-center text-sm font-bold">2</div>
+                                        Shipping Address
+                                    </h2>
                                     <div className="grid grid-cols-1 gap-6">
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div>
-                                                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">First Name *</label>
+                                                <label htmlFor="firstName" className="block text-sm font-medium text-gray-400 mb-1">First Name *</label>
                                                 <input
                                                     type="text"
                                                     id="firstName"
                                                     required
                                                     value={formData.firstName}
                                                     onChange={handleChange}
-                                                    className="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 px-4 py-2 border"
+                                                    className="w-full bg-black border border-gray-800 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-premium-gold focus:border-transparent transition-all"
                                                 />
                                             </div>
                                             <div>
-                                                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">Last Name *</label>
+                                                <label htmlFor="lastName" className="block text-sm font-medium text-gray-400 mb-1">Last Name *</label>
                                                 <input
                                                     type="text"
                                                     id="lastName"
                                                     required
                                                     value={formData.lastName}
                                                     onChange={handleChange}
-                                                    className="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 px-4 py-2 border"
+                                                    className="w-full bg-black border border-gray-800 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-premium-gold focus:border-transparent transition-all"
                                                 />
                                             </div>
                                         </div>
                                         <div>
-                                            <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">Address *</label>
+                                            <label htmlFor="address" className="block text-sm font-medium text-gray-400 mb-1">Address *</label>
                                             <input
                                                 type="text"
                                                 id="address"
                                                 required
                                                 value={formData.address}
                                                 onChange={handleChange}
-                                                className="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 px-4 py-2 border"
+                                                className="w-full bg-black border border-gray-800 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-premium-gold focus:border-transparent transition-all placeholder-gray-600"
                                                 placeholder="123 Main St, Apt 4B"
                                             />
                                         </div>
                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                             <div>
-                                                <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">City *</label>
+                                                <label htmlFor="city" className="block text-sm font-medium text-gray-400 mb-1">City *</label>
                                                 <input
                                                     type="text"
                                                     id="city"
                                                     required
                                                     value={formData.city}
                                                     onChange={handleChange}
-                                                    className="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 px-4 py-2 border"
+                                                    className="w-full bg-black border border-gray-800 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-premium-gold focus:border-transparent transition-all"
                                                 />
                                             </div>
                                             <div>
-                                                <label htmlFor="district" className="block text-sm font-medium text-gray-700 mb-1">District *</label>
+                                                <label htmlFor="district" className="block text-sm font-medium text-gray-400 mb-1">District *</label>
                                                 <select
                                                     id="district"
                                                     value={formData.district}
                                                     onChange={handleChange}
-                                                    className="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 px-4 py-2 border"
+                                                    className="w-full bg-black border border-gray-800 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-premium-gold focus:border-transparent transition-all"
                                                 >
                                                     <option>Dhaka</option>
                                                     <option>Chittagong</option>
@@ -200,13 +206,13 @@ export default function CheckoutPage() {
                                                 </select>
                                             </div>
                                             <div>
-                                                <label htmlFor="zip" className="block text-sm font-medium text-gray-700 mb-1">Zip Code</label>
+                                                <label htmlFor="zip" className="block text-sm font-medium text-gray-400 mb-1">Zip Code</label>
                                                 <input
                                                     type="text"
                                                     id="zip"
                                                     value={formData.zip}
                                                     onChange={handleChange}
-                                                    className="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 px-4 py-2 border"
+                                                    className="w-full bg-black border border-gray-800 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-premium-gold focus:border-transparent transition-all"
                                                 />
                                             </div>
                                         </div>
@@ -215,39 +221,42 @@ export default function CheckoutPage() {
 
                                 {/* Delivery Location */}
                                 <div>
-                                    <h2 className="text-xl font-semibold text-gray-900 mb-4">Delivery Location</h2>
+                                    <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2 border-b border-gray-800 pb-2">
+                                        <div className="w-8 h-8 rounded-full bg-premium-gold text-premium-black flex items-center justify-center text-sm font-bold">3</div>
+                                        Delivery Location
+                                    </h2>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div
-                                            className={`border rounded-lg p-4 cursor-pointer flex items-center transition-all ${formData.location === 'inside'
-                                                    ? 'border-blue-500 bg-blue-50 ring-1 ring-blue-500'
-                                                    : 'border-gray-200 hover:border-blue-200'
+                                            className={`border rounded-xl p-6 cursor-pointer flex items-center transition-all ${formData.location === 'inside'
+                                                ? 'border-premium-gold bg-premium-gold/10 ring-1 ring-premium-gold'
+                                                : 'border-gray-700 bg-black/30 hover:border-gray-500'
                                                 }`}
                                             onClick={() => setFormData({ ...formData, location: 'inside' })}
                                         >
-                                            <div className={`w-5 h-5 rounded-full border flex items-center justify-center mr-3 ${formData.location === 'inside' ? 'border-blue-600' : 'border-gray-400'
+                                            <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center mr-4 flex-shrink-0 ${formData.location === 'inside' ? 'border-premium-gold' : 'border-gray-500'
                                                 }`}>
-                                                {formData.location === 'inside' && <div className="w-2.5 h-2.5 rounded-full bg-blue-600" />}
+                                                {formData.location === 'inside' && <div className="w-3 h-3 rounded-full bg-premium-gold" />}
                                             </div>
                                             <div>
-                                                <span className="block font-medium text-gray-900">Inside Dhaka</span>
-                                                <span className="text-sm text-gray-500">Delivery Charge: ৳{settings.deliveryChargeInsideDhaka}</span>
+                                                <span className="block font-bold text-white text-lg">Inside Dhaka</span>
+                                                <span className="text-sm text-gray-400">Delivery Charge: <span className="text-premium-gold font-bold">৳{settings.deliveryChargeInsideDhaka}</span></span>
                                             </div>
                                         </div>
 
                                         <div
-                                            className={`border rounded-lg p-4 cursor-pointer flex items-center transition-all ${formData.location === 'outside'
-                                                    ? 'border-blue-500 bg-blue-50 ring-1 ring-blue-500'
-                                                    : 'border-gray-200 hover:border-blue-200'
+                                            className={`border rounded-xl p-6 cursor-pointer flex items-center transition-all ${formData.location === 'outside'
+                                                ? 'border-premium-gold bg-premium-gold/10 ring-1 ring-premium-gold'
+                                                : 'border-gray-700 bg-black/30 hover:border-gray-500'
                                                 }`}
                                             onClick={() => setFormData({ ...formData, location: 'outside' })}
                                         >
-                                            <div className={`w-5 h-5 rounded-full border flex items-center justify-center mr-3 ${formData.location === 'outside' ? 'border-blue-600' : 'border-gray-400'
+                                            <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center mr-4 flex-shrink-0 ${formData.location === 'outside' ? 'border-premium-gold' : 'border-gray-500'
                                                 }`}>
-                                                {formData.location === 'outside' && <div className="w-2.5 h-2.5 rounded-full bg-blue-600" />}
+                                                {formData.location === 'outside' && <div className="w-3 h-3 rounded-full bg-premium-gold" />}
                                             </div>
                                             <div>
-                                                <span className="block font-medium text-gray-900">Outside Dhaka</span>
-                                                <span className="text-sm text-gray-500">Delivery Charge: ৳{settings.deliveryChargeOutsideDhaka}</span>
+                                                <span className="block font-bold text-white text-lg">Outside Dhaka</span>
+                                                <span className="text-sm text-gray-400">Delivery Charge: <span className="text-premium-gold font-bold">৳{settings.deliveryChargeOutsideDhaka}</span></span>
                                             </div>
                                         </div>
                                     </div>
@@ -255,50 +264,55 @@ export default function CheckoutPage() {
 
                                 {/* Payment Method */}
                                 <div>
-                                    <h2 className="text-xl font-semibold text-gray-900 mb-4">Payment Method</h2>
-                                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-center">
-                                        <Banknote className="h-6 w-6 text-blue-600 mr-3" />
+                                    <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2 border-b border-gray-800 pb-2">
+                                        <div className="w-8 h-8 rounded-full bg-premium-gold text-premium-black flex items-center justify-center text-sm font-bold">4</div>
+                                        Payment Method
+                                    </h2>
+                                    <div className="bg-gradient-to-r from-gray-900 to-black border border-gray-700 rounded-xl p-6 flex items-center shadow-inner">
+                                        <div className="p-3 bg-premium-gold/20 rounded-lg mr-4 text-premium-gold">
+                                            <Banknote className="h-8 w-8" />
+                                        </div>
                                         <div>
-                                            <span className="block font-medium text-blue-900">Cash on Delivery (COD)</span>
-                                            <span className="block text-sm text-blue-700">Pay when you receive your order.</span>
+                                            <span className="block font-bold text-white text-lg">Cash on Delivery (COD)</span>
+                                            <span className="block text-sm text-gray-400">Pay securely when you receive your order at your doorstep.</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Order Summary */}
-                                <div className="border-t border-gray-100 pt-6">
-                                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Order Summary</h3>
-                                    <div className="space-y-2 mb-4">
-                                        <div className="flex justify-between text-sm text-gray-600">
+                                <div className="bg-black/50 rounded-xl p-6 border border-gray-800">
+                                    <h3 className="text-lg font-bold text-premium-gold mb-4 font-playfair">Order Summary</h3>
+                                    <div className="space-y-3 mb-6">
+                                        <div className="flex justify-between text-sm text-gray-400">
                                             <span>Subtotal ({items.length} items)</span>
-                                            <span>৳{cartTotal.toLocaleString()}</span>
+                                            <span className="text-white">৳{cartTotal.toLocaleString()}</span>
                                         </div>
-                                        <div className="flex justify-between text-sm text-gray-600">
+                                        <div className="flex justify-between text-sm text-gray-400">
                                             <span>Shipping</span>
-                                            <span>৳{shipping.toLocaleString()}</span>
+                                            <span className="text-white">৳{shipping.toLocaleString()}</span>
                                         </div>
                                     </div>
-                                    <div className="flex justify-between items-center text-lg font-bold text-gray-900 pt-4 border-t border-gray-100">
+                                    <div className="flex justify-between items-center text-xl font-bold text-white pt-4 border-t border-gray-700">
                                         <span>Total Amount</span>
-                                        <span>৳{total.toLocaleString()}</span>
+                                        <span className="text-premium-gold">৳{total.toLocaleString()}</span>
                                     </div>
                                 </div>
 
                                 <button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-bold py-4 px-8 rounded-lg transition-colors shadow-lg shadow-blue-600/20 text-lg"
+                                    className="w-full bg-premium-gold hover:bg-white disabled:bg-gray-700 disabled:text-gray-500 text-premium-black font-bold py-4 px-8 rounded-lg transition-all shadow-lg shadow-premium-gold/20 text-lg uppercase tracking-widest hover:scale-[1.02]"
                                 >
                                     {isSubmitting ? 'Processing...' : 'Place Order'}
                                 </button>
 
                                 <div className="flex items-center justify-center space-x-6 text-sm text-gray-500">
-                                    <div className="flex items-center">
-                                        <ShieldCheck className="h-4 w-4 mr-1" />
-                                        Secure
+                                    <div className="flex items-center gap-1">
+                                        <ShieldCheck className="h-4 w-4 text-premium-gold" />
+                                        Secure Checkout
                                     </div>
-                                    <div className="flex items-center">
-                                        <Truck className="h-4 w-4 mr-1" />
+                                    <div className="flex items-center gap-1">
+                                        <Truck className="h-4 w-4 text-premium-gold" />
                                         Fast Delivery
                                     </div>
                                 </div>

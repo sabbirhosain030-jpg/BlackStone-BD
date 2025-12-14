@@ -36,7 +36,7 @@ export default function Footer() {
     ].filter(icon => icon.href); // Only show icons with links
 
     return (
-        <footer className="bg-gradient-to-b from-gray-900 to-black text-white pt-16 pb-8">
+        <footer className="bg-premium-charcoal text-white pt-16 pb-8 border-t border-gray-800">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <motion.div
                     className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12"
@@ -51,11 +51,11 @@ export default function Footer() {
                         whileHover={{ scale: 1.02 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <Link href="/" className="text-2xl font-bold text-white tracking-tight mb-4 block">
-                            {settings.siteName}<span className="text-blue-500">BD</span>
+                        <Link href="/" className="text-3xl font-bold font-playfair tracking-wide text-white mb-4 block">
+                            BlackStone<span className="text-premium-gold">BD</span>
                         </Link>
-                        <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                            Your premium destination for quality products. We deliver excellence right to your doorstep with our secure cash on delivery service.
+                        <p className="text-gray-400 text-sm leading-relaxed mb-6 font-light">
+                            Your premium destination for quality products. Experience excellence with our secure cash on delivery service.
                         </p>
                         <div className="flex space-x-4">
                             {socialIcons.map(({ Icon, href, label }, index) => (
@@ -64,10 +64,10 @@ export default function Footer() {
                                     href={href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    whileHover={{ scale: 1.2, rotate: 360 }}
+                                    whileHover={{ scale: 1.2, rotate: 360, color: '#D4AF37' }}
                                     whileTap={{ scale: 0.9 }}
                                     transition={{ duration: 0.4 }}
-                                    className="text-gray-400 hover:text-blue-500 transition-colors"
+                                    className="text-gray-400 hover:text-premium-gold transition-colors"
                                     aria-label={label}
                                 >
                                     <Icon className="h-5 w-5" />
@@ -83,7 +83,7 @@ export default function Footer() {
                         viewport={{ once: true }}
                         transition={{ duration: 0.6, delay: 0.1 }}
                     >
-                        <h3 className="text-lg font-semibold mb-6">Quick Links</h3>
+                        <h3 className="text-lg font-playfair font-semibold mb-6 text-premium-gold">Quick Links</h3>
                         <ul className="space-y-4 text-sm text-gray-400">
                             {[
                                 { text: 'All Products', href: '/products' },
@@ -91,8 +91,8 @@ export default function Footer() {
                                 { text: 'About Us', href: '/about' },
                                 { text: 'Contact Us', href: '/contact' },
                             ].map((link) => (
-                                <motion.li key={link.text} whileHover={{ x: 5 }}>
-                                    <Link href={link.href} className="hover:text-blue-500 transition-colors inline-block">
+                                <motion.li key={link.text} whileHover={{ x: 5, color: '#D4AF37' }}>
+                                    <Link href={link.href} className="hover:text-premium-gold transition-colors inline-block">
                                         {link.text}
                                     </Link>
                                 </motion.li>
@@ -107,7 +107,7 @@ export default function Footer() {
                         viewport={{ once: true }}
                         transition={{ duration: 0.6, delay: 0.2 }}
                     >
-                        <h3 className="text-lg font-semibold mb-6">Join Our Family</h3>
+                        <h3 className="text-lg font-playfair font-semibold mb-6 text-premium-gold">Join Our Family</h3>
                         <p className="text-gray-400 text-sm mb-4">Subscribe to get the latest updates and exclusive offers.</p>
                         <form onSubmit={handleSubscribe} className="space-y-3">
                             <input
@@ -115,12 +115,12 @@ export default function Footer() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="Enter your email"
-                                className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-500"
+                                className="w-full px-4 py-2 bg-black border border-gray-800 rounded-none focus:ring-1 focus:ring-premium-gold focus:border-premium-gold text-white placeholder-gray-500 transition-all"
                                 required
                             />
                             <button
                                 type="submit"
-                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+                                className="w-full bg-premium-gold hover:bg-white hover:text-black text-black font-bold py-2 px-4 rounded-none transition-colors uppercase tracking-wider text-sm"
                             >
                                 {isSubscribed ? 'Subscribed!' : 'Subscribe'}
                             </button>
@@ -134,28 +134,28 @@ export default function Footer() {
                         viewport={{ once: true }}
                         transition={{ duration: 0.6, delay: 0.3 }}
                     >
-                        <h3 className="text-lg font-semibold mb-6">Contact Us</h3>
+                        <h3 className="text-lg font-playfair font-semibold mb-6 text-premium-gold">Contact Us</h3>
                         <ul className="space-y-4 text-sm text-gray-400">
                             <motion.li
                                 className="flex items-start"
-                                whileHover={{ scale: 1.05 }}
+                                whileHover={{ scale: 1.05, color: '#D4AF37' }}
                             >
-                                <MapPin className="h-5 w-5 mr-3 flex-shrink-0 text-blue-500" />
-                                <span>{settings.address}</span>
+                                <MapPin className="h-5 w-5 mr-3 flex-shrink-0 text-premium-gold" />
+                                <span>{settings?.address?.street}, {settings?.address?.city}</span>
                             </motion.li>
                             <motion.li
                                 className="flex items-center"
-                                whileHover={{ scale: 1.05 }}
+                                whileHover={{ scale: 1.05, color: '#D4AF37' }}
                             >
-                                <Phone className="h-5 w-5 mr-3 flex-shrink-0 text-blue-500" />
-                                <span>{settings.contactPhone}</span>
+                                <Phone className="h-5 w-5 mr-3 flex-shrink-0 text-premium-gold" />
+                                <span>{settings?.contact?.primaryPhone}</span>
                             </motion.li>
                             <motion.li
                                 className="flex items-center"
-                                whileHover={{ scale: 1.05 }}
+                                whileHover={{ scale: 1.05, color: '#D4AF37' }}
                             >
-                                <Mail className="h-5 w-5 mr-3 flex-shrink-0 text-blue-500" />
-                                <span>{settings.contactEmail}</span>
+                                <Mail className="h-5 w-5 mr-3 flex-shrink-0 text-premium-gold" />
+                                <span>{settings?.contact?.supportEmail}</span>
                             </motion.li>
                         </ul>
                     </motion.div>
@@ -191,9 +191,9 @@ export default function Footer() {
                                     ease: "easeInOut"
                                 }}
                             >
-                                <Heart className="h-4 w-4 text-red-500 fill-current" />
+                                <Heart className="h-4 w-4 text-premium-gold fill-current" />
                             </motion.span>
-                            <span className="text-blue-500 font-semibold">Sabbir Hosain</span>
+                            <span className="text-premium-gold font-semibold">Sabbir Hosain</span>
                         </p>
                     </motion.div>
                 </motion.div>

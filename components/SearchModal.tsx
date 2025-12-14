@@ -54,29 +54,29 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                         exit={{ opacity: 0, y: -50 }}
                         className="fixed top-0 left-0 right-0 z-50 p-4 sm:p-8"
                     >
-                        <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden">
-                            <form onSubmit={handleSearch} className="relative border-b border-gray-100">
-                                <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-6 w-6 text-gray-400" />
+                        <div className="max-w-3xl mx-auto bg-premium-charcoal border border-gray-800 rounded-2xl shadow-2xl overflow-hidden shadow-black/50">
+                            <form onSubmit={handleSearch} className="relative border-b border-gray-800">
+                                <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-6 w-6 text-premium-gold" />
                                 <input
                                     type="text"
                                     value={query}
                                     onChange={(e) => setQuery(e.target.value)}
-                                    placeholder="Search for products, categories..."
-                                    className="w-full pl-16 pr-16 py-6 text-lg text-gray-900 placeholder-gray-400 focus:outline-none"
+                                    placeholder="Search for premium products..."
+                                    className="w-full pl-16 pr-16 py-6 text-lg bg-transparent text-white placeholder-gray-500 focus:outline-none focus:bg-white/5 transition-colors font-playfair"
                                     autoFocus
                                 />
                                 <button
                                     type="button"
                                     onClick={onClose}
-                                    className="absolute right-6 top-1/2 -translate-y-1/2 p-2 hover:bg-gray-100 rounded-full transition-colors"
+                                    className="absolute right-6 top-1/2 -translate-y-1/2 p-2 hover:bg-white/10 rounded-full transition-colors group"
                                 >
-                                    <X className="h-5 w-5 text-gray-500" />
+                                    <X className="h-5 w-5 text-gray-500 group-hover:text-white" />
                                 </button>
                             </form>
 
                             {results.length > 0 && (
-                                <div className="p-4">
-                                    <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-2">
+                                <div className="p-4 bg-black/20">
+                                    <h3 className="text-xs font-semibold text-premium-gold uppercase tracking-wider mb-3 px-2">
                                         Quick Results
                                     </h3>
                                     <div className="space-y-2">
@@ -85,27 +85,27 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                                                 key={product.id}
                                                 href={`/products/${product.id}`}
                                                 onClick={onClose}
-                                                className="flex items-center gap-4 p-2 hover:bg-gray-50 rounded-lg transition-colors group"
+                                                className="flex items-center gap-4 p-2 hover:bg-white/5 rounded-lg transition-colors group border border-transparent hover:border-gray-800"
                                             >
-                                                <div className="h-12 w-12 rounded-md bg-gray-100 overflow-hidden flex-shrink-0">
+                                                <div className="h-12 w-12 rounded-md bg-gray-800 overflow-hidden flex-shrink-0 border border-gray-700">
                                                     <img src={product.images[0]} alt={product.name} className="h-full w-full object-cover" />
                                                 </div>
                                                 <div className="flex-1">
-                                                    <h4 className="text-sm font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
+                                                    <h4 className="text-sm font-medium text-gray-200 group-hover:text-premium-gold transition-colors font-playfair">
                                                         {product.name}
                                                     </h4>
                                                     <p className="text-xs text-gray-500">{product.category}</p>
                                                 </div>
-                                                <div className="text-sm font-bold text-gray-900">
+                                                <div className="text-sm font-bold text-premium-gold">
                                                     ৳{product.price.toLocaleString()}
                                                 </div>
                                             </Link>
                                         ))}
                                     </div>
-                                    <div className="mt-4 pt-4 border-t border-gray-100 text-center">
+                                    <div className="mt-4 pt-4 border-t border-gray-800 text-center">
                                         <button
                                             onClick={handleSearch}
-                                            className="text-sm font-medium text-blue-600 hover:text-blue-700 inline-flex items-center"
+                                            className="text-sm font-medium text-premium-gold hover:text-white inline-flex items-center transition-colors"
                                         >
                                             View all results <ArrowRight className="ml-1 h-4 w-4" />
                                         </button>
@@ -114,24 +114,24 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                             )}
 
                             {query.trim() && results.length === 0 && (
-                                <div className="p-8 text-center text-gray-500">
-                                    No results found for &quot;{query}&quot;
+                                <div className="p-8 text-center text-gray-500 font-playfair">
+                                    No premium items found for &quot;{query}&quot;
                                 </div>
                             )}
 
                             {/* Browse by Category Section */}
                             {!query.trim() && (
-                                <div className="p-6">
+                                <div className="p-6 bg-black/20">
                                     <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4 px-2">
                                         Browse by Category
                                     </h3>
                                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                         {[
                                             { name: "Men's", icon: User, color: 'from-slate-700 to-slate-900' },
-                                            { name: "Women's", icon: Heart, color: 'from-rose-400 to-rose-600' },
-                                            { name: 'Boys', icon: UserCircle, color: 'from-sky-500 to-sky-700' },
-                                            { name: 'Girls', icon: Users, color: 'from-pink-400 to-pink-600' },
-                                            { name: 'Accessories', icon: Gem, color: 'from-amber-500 to-amber-700' },
+                                            { name: "Women's", icon: Heart, color: 'from-rose-900 to-red-900' },
+                                            { name: 'Boys', icon: UserCircle, color: 'from-blue-900 to-indigo-900' },
+                                            { name: 'Girls', icon: Users, color: 'from-pink-900 to-purple-900' },
+                                            { name: 'Accessories', icon: Gem, color: 'from-amber-600 to-yellow-700' },
                                         ].map((category) => {
                                             const Icon = category.icon;
                                             return (
@@ -144,12 +144,12 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                                                     <motion.div
                                                         whileHover={{ scale: 1.05, y: -2 }}
                                                         whileTap={{ scale: 0.95 }}
-                                                        className="flex flex-col items-center p-4 bg-gradient-to-br hover:shadow-lg rounded-xl border border-gray-100 hover:border-transparent transition-all cursor-pointer"
+                                                        className="flex flex-col items-center p-4 bg-premium-charcoal border border-gray-800 hover:border-premium-gold/50 rounded-xl transition-all cursor-pointer shadow-lg hover:shadow-premium-gold/10"
                                                     >
-                                                        <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${category.color} flex items-center justify-center mb-2 shadow-md group-hover:shadow-lg transition-shadow`}>
-                                                            <Icon className="h-6 w-6 text-white" />
+                                                        <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${category.color} flex items-center justify-center mb-2 shadow-inner group-hover:shadow-lg transition-shadow border border-white/10`}>
+                                                            <Icon className="h-5 w-5 text-white/90" />
                                                         </div>
-                                                        <span className="text-xs font-medium text-gray-700 group-hover:text-gray-900 transition-colors">
+                                                        <span className="text-xs font-medium text-gray-400 group-hover:text-premium-gold transition-colors font-playfair tracking-wide">
                                                             {category.name}
                                                         </span>
                                                     </motion.div>

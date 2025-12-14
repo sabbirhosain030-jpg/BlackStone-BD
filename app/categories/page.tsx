@@ -5,7 +5,8 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CategoryCard from '@/components/CategoryCard';
 import AnimatedSection from '@/components/AnimatedSection';
-import { User, Heart, UserCircle, Users, Gem } from 'lucide-react';
+import Link from 'next/link';
+import { User, Heart, UserCircle, Users, Gem, ArrowRight } from 'lucide-react';
 
 const categories = [
     {
@@ -14,7 +15,7 @@ const categories = [
         icon: User,
         productCount: 24,
         href: "/products?category=Men's",
-        gradient: 'bg-gradient-to-br from-slate-700 to-slate-900',
+        gradient: 'bg-premium-charcoal border border-gray-700 hover:border-premium-gold',
     },
     {
         name: "Women's",
@@ -22,7 +23,7 @@ const categories = [
         icon: Heart,
         productCount: 32,
         href: "/products?category=Women's",
-        gradient: 'bg-gradient-to-br from-rose-400 to-rose-600',
+        gradient: 'bg-premium-charcoal border border-gray-700 hover:border-premium-gold',
     },
     {
         name: 'Boys',
@@ -30,7 +31,7 @@ const categories = [
         icon: UserCircle,
         productCount: 18,
         href: '/products?category=Boys',
-        gradient: 'bg-gradient-to-br from-sky-500 to-sky-700',
+        gradient: 'bg-premium-charcoal border border-gray-700 hover:border-premium-gold',
     },
     {
         name: 'Girls',
@@ -38,7 +39,7 @@ const categories = [
         icon: Users,
         productCount: 22,
         href: '/products?category=Girls',
-        gradient: 'bg-gradient-to-br from-pink-400 to-pink-600',
+        gradient: 'bg-premium-charcoal border border-gray-700 hover:border-premium-gold',
     },
     {
         name: 'Accessories',
@@ -46,21 +47,21 @@ const categories = [
         icon: Gem,
         productCount: 28,
         href: '/products?category=Accessories',
-        gradient: 'bg-gradient-to-br from-amber-500 to-amber-700',
+        gradient: 'bg-premium-charcoal border border-gray-700 hover:border-premium-gold',
     },
 ];
 
 
 export default function CategoriesPage() {
     return (
-        <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white">
+        <div className="min-h-screen flex flex-col bg-premium-black text-white">
             <Navbar />
 
             <main className="flex-grow">
                 {/* Hero Section */}
-                <section className="relative bg-gradient-to-r from-gray-900 via-blue-900 to-gray-900 text-white py-20 overflow-hidden">
+                <section className="relative bg-gradient-to-r from-black via-premium-charcoal to-black text-white py-20 overflow-hidden">
                     <div className="absolute inset-0 opacity-10">
-                        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC40Ij48cGF0aCBkPSJNMzYgMzRjMC0yIDItNCA0LTRzNCAxIDQgNHYyYzAgMi0yIDQtNCA0cy00LTItNC00di0yem0wLTMwYzAtMiAyLTQgNC00czQgMiA0IDR2MmMwIDItMiA0LTQgNC00cy00LTItNC00VjR6bS0yIDMyYzAtMiAyLTQgNC00czQgMiA0IDR2MmMwIDItMiA0LTQgNC00cy00LTItNC00di0yem0wLTMwYzAtMiAyLTQgNC00czQgMiA0IDR2MmMwIDItMiA0LTQgNC00cy00LTItNC00VjZ6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-20"></div>
+                        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC40Ij48cGF0aCBkPSJNMzYgMzRjMC0yIDItNCA0LTRzNCAxIDQgNHYyYzAgMi0yIDQtNCA0cy00LTItNC00di0yem0wLTMwYzAtMiAyLTQgNC00czQgMiA0IDR2MmMwIDItMiA0LTQgNC00cy00LTItNC00VjR6bS0yIDMyYzAtMiAyLTQgNC00cy00LTItNC00di0yem0wLTMwYzAtMiAyLTQgNC00czQgMiA0IDR2MmMwIDItMiA0LTQgNC00cy00LTItNC00VjZ6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-20"></div>
                     </div>
 
                     <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -70,15 +71,18 @@ export default function CategoriesPage() {
                             transition={{ duration: 0.8 }}
                         >
                             <motion.h1
-                                className="text-5xl md:text-6xl font-bold mb-6"
+                                className="text-5xl md:text-6xl font-bold mb-6 font-playfair flex items-center justify-center gap-4"
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.2, duration: 0.8 }}
                             >
-                                Explore Our <span className="text-blue-400">Categories</span>
+                                <Link href="/products" className="absolute left-8 top-12 p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all text-white border border-white/20 group">
+                                    <ArrowRight className="h-6 w-6 rotate-180 group-hover:-translate-x-1 transition-transform" />
+                                </Link>
+                                Explore Our <span className="text-premium-gold">Categories</span>
                             </motion.h1>
                             <motion.p
-                                className="text-xl text-gray-300 max-w-2xl mx-auto"
+                                className="text-xl text-gray-400 max-w-2xl mx-auto"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.4, duration: 0.8 }}
@@ -93,10 +97,10 @@ export default function CategoriesPage() {
                 <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <AnimatedSection>
                         <div className="text-center mb-16">
-                            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                            <h2 className="text-4xl font-bold text-white mb-4 font-playfair">
                                 Browse by Category
                             </h2>
-                            <p className="text-gray-600 text-lg">
+                            <p className="text-gray-400 text-lg">
                                 Find exactly what you&apos;re looking for
                             </p>
                         </div>
@@ -132,16 +136,16 @@ export default function CategoriesPage() {
 
                 {/* CTA Section */}
                 <AnimatedSection>
-                    <section className="py-20 bg-gradient-to-r from-blue-600 to-indigo-700">
+                    <section className="py-20 bg-premium-charcoal border-t border-gray-800">
                         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                             <motion.div
                                 whileInView={{ scale: [0.9, 1] }}
                                 transition={{ duration: 0.5 }}
                             >
-                                <h2 className="text-4xl font-bold text-white mb-6">
+                                <h2 className="text-4xl font-bold text-white mb-6 font-playfair">
                                     Can&apos;t Find What You&apos;re Looking For?
                                 </h2>
-                                <p className="text-xl text-blue-100 mb-8">
+                                <p className="text-xl text-gray-400 mb-8">
                                     Browse our entire collection or contact our support team
                                 </p>
                                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -149,7 +153,7 @@ export default function CategoriesPage() {
                                         href="/products"
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
-                                        className="px-8 py-4 bg-white text-blue-600 rounded-full font-bold shadow-lg hover:shadow-xl transition-shadow"
+                                        className="px-8 py-4 bg-premium-gold text-premium-black rounded-full font-bold shadow-lg hover:bg-white transition-colors"
                                     >
                                         View All Products
                                     </motion.a>
@@ -157,7 +161,7 @@ export default function CategoriesPage() {
                                         href="/contact"
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
-                                        className="px-8 py-4 border-2 border-white text-white rounded-full font-bold hover:bg-white/10 transition-colors"
+                                        className="px-8 py-4 border-2 border-premium-gold text-premium-gold rounded-full font-bold hover:bg-premium-gold hover:text-premium-black transition-colors"
                                     >
                                         Contact Us
                                     </motion.a>

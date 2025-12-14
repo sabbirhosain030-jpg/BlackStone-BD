@@ -1,46 +1,64 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, ReactNode } from 'react';
+import { SessionProvider, useSession, signIn, signOut } from "next-auth/react";
 
 interface AuthContextType {
     isAuthenticated: boolean;
-    login: (password: string) => boolean;
-    logout: () => void;
+    login: (password: string) => Promise<boolean>; // Changed to Promise
+    logout: () => Promise<void>; // Changed to Promise
+    isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const ADMIN_PASSWORD = 'admin123'; // In production, use environment variables
+function AuthContextWrapper({ children }: { children: ReactNode }) {
+    const { data: session, status } = useSession();
+    const isAuthenticated = status === 'authenticated';
+    const isLoading = status === 'loading';
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const login = async (password: string): Promise<boolean> => {
+        try {
+            const result = await signIn("credentials", {
+                username: "admin",
+                password: password,
+                redirect: false,
+            });
 
-    useEffect(() => {
-        // Check localStorage for existing session
-        const session = localStorage.getItem('admin_session');
-        if (session === 'authenticated') {
-            setIsAuthenticated(true);
+            if (result?.error) {
+                console.error("Login failed:", result.error);
+                return false;
+            }
+
+            if (result?.ok) {
+                return true;
+            }
+
+            return false;
+        } catch (error) {
+            console.error("Login unexpected error:", error);
+            return false;
         }
-    }, []);
-
-    const login = (password: string): boolean => {
-        if (password === ADMIN_PASSWORD) {
-            setIsAuthenticated(true);
-            localStorage.setItem('admin_session', 'authenticated');
-            return true;
-        }
-        return false;
     };
 
-    const logout = () => {
-        setIsAuthenticated(false);
-        localStorage.removeItem('admin_session');
+    const logout = async () => {
+        await signOut({ redirect: false });
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+        <AuthContext.Provider value={{ isAuthenticated, login, logout, isLoading }}>
             {children}
         </AuthContext.Provider>
+    );
+}
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+    return (
+        <SessionProvider>
+            <AuthContextWrapper>
+                {children}
+            </AuthContextWrapper>
+        </SessionProvider>
     );
 }
 

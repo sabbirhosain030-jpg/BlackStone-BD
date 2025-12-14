@@ -81,7 +81,7 @@ export default function AdminHotOffersPage() {
         <div>
             <div className="flex justify-between items-center mb-8">
                 <motion.h1
-                    className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
+                    className="text-3xl font-bold text-white font-playfair"
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                 >
@@ -91,7 +91,7 @@ export default function AdminHotOffersPage() {
                     onClick={handleAddNew}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-colors"
+                    className="flex items-center gap-2 bg-premium-gold hover:bg-white text-premium-black font-bold py-3 px-6 rounded-lg shadow-lg transition-colors"
                 >
                     <Plus className="h-5 w-5" />
                     Add New Offer
@@ -109,33 +109,33 @@ export default function AdminHotOffersPage() {
             </div>
 
             <motion.div
-                className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
+                className="bg-premium-charcoal rounded-xl shadow-md border border-gray-800 overflow-hidden"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
             >
                 <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                    <table className="min-w-full divide-y divide-gray-800">
+                        <thead className="bg-black">
                             <tr>
-                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Offer</th>
-                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Discount</th>
-                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Duration</th>
-                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
+                                <th className="px-6 py-4 text-left text-xs font-bold text-premium-gold uppercase tracking-wider">Offer</th>
+                                <th className="px-6 py-4 text-left text-xs font-bold text-premium-gold uppercase tracking-wider">Discount</th>
+                                <th className="px-6 py-4 text-left text-xs font-bold text-premium-gold uppercase tracking-wider">Duration</th>
+                                <th className="px-6 py-4 text-left text-xs font-bold text-premium-gold uppercase tracking-wider">Status</th>
+                                <th className="px-6 py-4 text-left text-xs font-bold text-premium-gold uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
+                        <tbody className="divide-y divide-gray-800">
                             {hotOffers.map((offer, index) => (
                                 <motion.tr
                                     key={offer.id}
                                     initial={{ opacity: 0, x: -20 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: index * 0.05 }}
-                                    whileHover={{ backgroundColor: '#f9fafb' }}
+                                    className="bg-premium-charcoal hover:bg-gray-800 transition-colors"
                                 >
                                     <td className="px-6 py-4">
                                         <div className="flex items-center">
-                                            <div className="h-10 w-10 flex-shrink-0 bg-orange-100 rounded-lg flex items-center justify-center text-orange-600 overflow-hidden">
+                                            <div className="h-10 w-10 flex-shrink-0 bg-gray-800 rounded-lg flex items-center justify-center text-premium-gold overflow-hidden">
                                                 {offer.image ? (
                                                     <img src={offer.image} alt={offer.title} className="h-full w-full object-cover" />
                                                 ) : (
@@ -143,21 +143,21 @@ export default function AdminHotOffersPage() {
                                                 )}
                                             </div>
                                             <div className="ml-4">
-                                                <div className="text-sm font-medium text-gray-900">{offer.title}</div>
-                                                <div className="text-xs text-gray-500">{offer.description}</div>
+                                                <div className="text-sm font-medium text-white">{offer.title}</div>
+                                                <div className="text-xs text-gray-400">{offer.description}</div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-orange-600">
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-premium-gold">
                                         {offer.discount}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
                                         {new Date(offer.startDate).toLocaleDateString()} - {new Date(offer.endDate).toLocaleDateString()}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <button
                                             onClick={() => handleToggleActive(offer.id)}
-                                            className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold transition-colors ${offer.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                                            className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold transition-colors ${offer.isActive ? 'bg-green-900/30 text-green-400 border border-green-500/30' : 'bg-gray-800 text-gray-400 border border-gray-700'
                                                 }`}
                                         >
                                             {offer.isActive ? (
@@ -176,7 +176,7 @@ export default function AdminHotOffersPage() {
                                             onClick={() => handleEdit(offer)}
                                             whileHover={{ scale: 1.1 }}
                                             whileTap={{ scale: 0.9 }}
-                                            className="text-blue-600 hover:text-blue-900 inline-flex items-center gap-1"
+                                            className="text-blue-400 hover:text-blue-300 inline-flex items-center gap-1"
                                         >
                                             <Edit className="h-4 w-4" />
                                             Edit
@@ -185,7 +185,7 @@ export default function AdminHotOffersPage() {
                                             onClick={() => handleDelete(offer.id)}
                                             whileHover={{ scale: 1.1 }}
                                             whileTap={{ scale: 0.9 }}
-                                            className="text-red-600 hover:text-red-900 inline-flex items-center gap-1"
+                                            className="text-red-400 hover:text-red-300 inline-flex items-center gap-1"
                                         >
                                             <Trash2 className="h-4 w-4" />
                                             Delete
@@ -203,44 +203,44 @@ export default function AdminHotOffersPage() {
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+                    className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
                     onClick={() => setIsModalOpen(false)}
                 >
                     <motion.div
                         initial={{ scale: 0.9, y: 20 }}
                         animate={{ scale: 1, y: 0 }}
                         onClick={(e) => e.stopPropagation()}
-                        className="bg-white rounded-2xl p-8 max-w-md w-full"
+                        className="bg-premium-charcoal border border-gray-800 rounded-2xl p-8 max-w-md w-full shadow-2xl"
                     >
                         <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-2xl font-bold text-gray-900">
+                            <h2 className="text-2xl font-bold text-white font-playfair">
                                 {editingOffer ? 'Edit Offer' : 'Add New Offer'}
                             </h2>
-                            <button onClick={() => setIsModalOpen(false)} className="text-gray-500 hover:text-gray-700">
+                            <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-white transition-colors">
                                 <X className="h-6 w-6" />
                             </button>
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Offer Title</label>
+                                <label className="block text-sm font-semibold text-gray-300 mb-2">Offer Title</label>
                                 <input
                                     type="text"
                                     value={formData.title || ''}
                                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    className="w-full px-4 py-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent text-white placeholder-gray-600 transition-all"
                                     placeholder="e.g. Summer Super Sale"
                                     required
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+                                <label className="block text-sm font-semibold text-gray-300 mb-2">Description</label>
                                 <textarea
                                     rows={3}
                                     value={formData.description || ''}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    className="w-full px-4 py-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent text-white placeholder-gray-600 transition-all"
                                     placeholder="Enter offer details..."
                                     required
                                 />
@@ -248,73 +248,73 @@ export default function AdminHotOffersPage() {
 
                             <div className="grid grid-cols-2 gap-6">
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Discount Label</label>
+                                    <label className="block text-sm font-semibold text-gray-300 mb-2">Discount Label</label>
                                     <input
                                         type="text"
                                         value={formData.discount || ''}
                                         onChange={(e) => setFormData({ ...formData, discount: e.target.value })}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                        className="w-full px-4 py-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent text-white placeholder-gray-600 transition-all"
                                         placeholder="e.g. 50% OFF"
                                         required
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Image URL</label>
+                                    <label className="block text-sm font-semibold text-gray-300 mb-2">Image URL</label>
                                     <input
                                         type="text"
                                         value={formData.image || ''}
                                         onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                        className="w-full px-4 py-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent text-white placeholder-gray-600 transition-all"
                                         placeholder="https://..."
                                     />
                                 </div>
                             </div>
 
-                            <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
-                                <h4 className="text-sm font-semibold text-gray-900 mb-4">Duration & Timer Settings</h4>
+                            <div className="p-4 bg-gray-900 rounded-xl border border-gray-800">
+                                <h4 className="text-sm font-semibold text-white mb-4">Duration & Timer Settings</h4>
                                 <div className="grid grid-cols-2 gap-6 mb-4">
                                     <div>
-                                        <label className="block text-xs font-medium text-gray-500 mb-1">Start Date</label>
+                                        <label className="block text-xs font-medium text-gray-400 mb-1">Start Date</label>
                                         <input
                                             type="date"
                                             value={formData.startDate || ''}
                                             onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                                            className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            className="w-full px-4 py-2 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent text-white"
                                             required
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-medium text-gray-500 mb-1">End Date</label>
+                                        <label className="block text-xs font-medium text-gray-400 mb-1">End Date</label>
                                         <input
                                             type="date"
                                             value={formData.endDate || ''}
                                             onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                                            className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            className="w-full px-4 py-2 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent text-white"
                                             required
                                         />
                                     </div>
                                 </div>
-                                <div className="border-t border-gray-200 pt-4">
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Countdown Timer Target</label>
+                                <div className="border-t border-gray-800 pt-4">
+                                    <label className="block text-sm font-medium text-gray-300 mb-2">Countdown Timer Target</label>
                                     <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
                                         <input
                                             type="datetime-local"
                                             value={formData.timerEndDate || ''}
                                             onChange={(e) => setFormData({ ...formData, timerEndDate: e.target.value })}
-                                            className="w-full sm:w-auto flex-1 px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            className="w-full sm:w-auto flex-1 px-4 py-2 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent text-white"
                                         />
                                         <p className="text-xs text-gray-500 max-w-xs">
-                                            Set a specific date and time for the countdown timer to end. If left empty, the timer will not be displayed (or will default to End Date).
+                                            Set a specific date and time for the countdown timer to end.
                                         </p>
                                     </div>
                                 </div>
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Associated Products</label>
-                                <div className="max-h-48 overflow-y-auto border border-gray-300 rounded-lg p-2 space-y-2">
+                                <label className="block text-sm font-medium text-gray-300 mb-2">Associated Products</label>
+                                <div className="max-h-48 overflow-y-auto border border-gray-800 rounded-lg p-2 space-y-2 bg-black">
                                     {products.map(product => (
-                                        <label key={product.id} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded cursor-pointer">
+                                        <label key={product.id} className="flex items-center gap-2 p-2 hover:bg-gray-900 rounded cursor-pointer transition-colors">
                                             <input
                                                 type="checkbox"
                                                 checked={formData.productIds?.includes(product.id) || false}
@@ -326,7 +326,7 @@ export default function AdminHotOffersPage() {
                                                         setFormData({ ...formData, productIds: currentIds.filter(id => id !== product.id) });
                                                     }
                                                 }}
-                                                className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                                                className="w-4 h-4 text-premium-gold rounded focus:ring-premium-gold bg-gray-900 border-gray-700"
                                             />
                                             <div className="flex items-center gap-2">
                                                 <img
@@ -334,7 +334,7 @@ export default function AdminHotOffersPage() {
                                                     alt={product.name}
                                                     className="w-8 h-8 rounded object-cover"
                                                 />
-                                                <span className="text-sm text-gray-700">{product.name}</span>
+                                                <span className="text-sm text-gray-300">{product.name}</span>
                                             </div>
                                         </label>
                                     ))}
@@ -342,17 +342,17 @@ export default function AdminHotOffersPage() {
                                 <p className="mt-1 text-xs text-gray-500">Select products to feature in this hot offer.</p>
                             </div>
 
-                            <div className="flex gap-4 justify-end pt-4 border-t border-gray-100">
+                            <div className="flex gap-4 justify-end pt-4 border-t border-gray-800">
                                 <button
                                     type="button"
                                     onClick={() => setIsModalOpen(false)}
-                                    className="px-6 py-3 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                                    className="px-6 py-3 border border-gray-700 rounded-lg font-medium text-gray-300 hover:bg-gray-800 transition-colors"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors"
+                                    className="px-6 py-3 bg-premium-gold hover:bg-white text-premium-black font-bold rounded-lg transition-colors"
                                 >
                                     {editingOffer ? 'Save Changes' : 'Add Offer'}
                                 </button>

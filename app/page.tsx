@@ -61,7 +61,7 @@ export default function Home() {
     ];
 
     return (
-        <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white">
+        <div className="min-h-screen flex flex-col bg-premium-black">
             {/* Hot Offers Banner */}
             <HotOffersBanner />
 
@@ -71,13 +71,13 @@ export default function Home() {
                 <Hero />
 
                 {/* BlackStone BD Animation Section */}
-                <AnimatedSection className="py-24 bg-gradient-to-br from-gray-900 via-blue-900 to-black relative overflow-hidden">
+                <AnimatedSection className="py-24 bg-gradient-to-br from-black via-premium-charcoal to-black relative overflow-hidden border-y border-gray-900">
                     {/* Animated Background Elements */}
                     <div className="absolute inset-0 overflow-hidden">
                         {[...Array(20)].map((_, i) => (
                             <motion.div
                                 key={i}
-                                className="absolute bg-blue-500/10 rounded-full blur-xl"
+                                className="absolute bg-premium-gold/5 rounded-full blur-xl"
                                 style={{
                                     width: Math.random() * 300 + 50,
                                     height: Math.random() * 300 + 50,
@@ -106,8 +106,8 @@ export default function Home() {
                             viewport={{ once: true }}
                             transition={{ duration: 0.8, type: "spring" }}
                         >
-                            <h2 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-400 to-white mb-6 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]">
-                                BlackStone<span className="text-blue-500">BD</span>
+                            <h2 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-premium-gold via-white to-premium-gold mb-6 drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+                                BlackStone<span className="text-premium-gold">BD</span>
                             </h2>
                         </motion.div>
 
@@ -116,7 +116,7 @@ export default function Home() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: 0.3, duration: 0.6 }}
-                            className="text-xl sm:text-2xl md:text-3xl text-blue-200 font-light tracking-wide px-4"
+                            className="text-xl sm:text-2xl md:text-3xl text-gray-400 font-light tracking-wide px-4 font-playfair"
                         >
                             Redefining Premium E-Commerce
                         </motion.p>
@@ -128,7 +128,7 @@ export default function Home() {
                     <AnimatedSection>
                         <div className="text-center mb-12">
                             <motion.h2
-                                className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
+                                className="text-4xl font-bold font-playfair text-white"
                                 initial={{ opacity: 0, y: -20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
@@ -136,7 +136,7 @@ export default function Home() {
                                 New Arrivals
                             </motion.h2>
                             <motion.p
-                                className="text-gray-600 mt-3 text-lg"
+                                className="text-gray-400 mt-3 text-lg"
                                 initial={{ opacity: 0 }}
                                 whileInView={{ opacity: 1 }}
                                 viewport={{ once: true }}
@@ -178,7 +178,7 @@ export default function Home() {
                             <motion.button
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
-                                className="px-8 py-3 bg-gray-900 text-white font-bold rounded-full hover:bg-gray-800 transition-colors shadow-lg hover:shadow-xl"
+                                className="px-8 py-3 bg-premium-gold text-premium-black font-bold rounded-full hover:bg-white transition-colors shadow-lg hover:shadow-xl"
                             >
                                 View New Arrivals only
                             </motion.button>
@@ -187,12 +187,12 @@ export default function Home() {
                 </section>
 
                 {/* 2. Featured Collection */}
-                <section className="py-20 bg-gray-50">
+                <section className="py-20 bg-premium-charcoal border-y border-gray-900">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <AnimatedSection>
                             <div className="text-center mb-12">
-                                <h2 className="text-4xl font-bold text-gray-900">Featured Collection</h2>
-                                <p className="text-gray-600 mt-3 text-lg">Handpicked favorites just for you</p>
+                                <h2 className="text-4xl font-bold font-playfair text-premium-gold">Featured Collection</h2>
+                                <p className="text-gray-400 mt-3 text-lg">Handpicked favorites just for you</p>
                             </div>
                         </AnimatedSection>
 
@@ -227,7 +227,7 @@ export default function Home() {
                                 <motion.button
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
-                                    className="px-8 py-3 bg-gray-900 text-white font-bold rounded-full hover:bg-gray-800 transition-colors shadow-lg"
+                                    className="px-8 py-3 bg-premium-black text-premium-gold border border-premium-gold font-bold rounded-full hover:bg-premium-gold hover:text-premium-black transition-colors shadow-lg"
                                 >
                                     View All Products
                                 </motion.button>
@@ -240,19 +240,19 @@ export default function Home() {
                 <HotOffersSection />
 
                 {/* 4. Best Selling Products */}
-                <section className="py-20 bg-gray-50">
+                <section className="py-20 bg-premium-black">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <AnimatedSection>
                             <div className="text-center mb-12">
                                 <motion.h2
-                                    className="text-4xl font-bold text-gray-900"
+                                    className="text-4xl font-bold font-playfair text-white"
                                     initial={{ opacity: 0, y: 20 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
                                 >
                                     Best Selling Products
                                 </motion.h2>
-                                <p className="text-gray-600 mt-3 text-lg">
+                                <p className="text-gray-400 mt-3 text-lg">
                                     Our most popular items loved by customers
                                 </p>
                             </div>
@@ -289,7 +289,7 @@ export default function Home() {
                                 <motion.button
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
-                                    className="px-8 py-3 bg-blue-600 text-white font-bold rounded-full hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl hover:shadow-blue-500/30"
+                                    className="px-8 py-3 bg-gradient-to-r from-premium-gold via-yellow-500 to-premium-gold text-premium-black font-bold rounded-full hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all shadow-lg"
                                 >
                                     View Best Selling Products
                                 </motion.button>
@@ -302,16 +302,16 @@ export default function Home() {
                 <TrendingFashion />
 
                 {/* Features Section */}
-                <AnimatedSection className="py-16 bg-white border-t border-gray-100">
+                <AnimatedSection className="py-16 bg-premium-charcoal border-t border-gray-800">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                             {features.map((feature) => (
-                                <div key={feature.title} className="text-center group">
-                                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-50 text-blue-600 mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                <div key={feature.title} className="text-center group p-6 rounded-xl hover:bg-premium-black/50 transition-colors">
+                                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-premium-black text-premium-gold mb-4 group-hover:bg-premium-gold group-hover:text-premium-black transition-colors border border-gray-800 group-hover:border-premium-gold">
                                         <feature.icon className="h-8 w-8" />
                                     </div>
-                                    <h3 className="text-lg font-bold text-gray-900 mb-2">{feature.title}</h3>
-                                    <p className="text-sm text-gray-600">{feature.description}</p>
+                                    <h3 className="text-lg font-bold text-white mb-2 font-playfair">{feature.title}</h3>
+                                    <p className="text-sm text-gray-400">{feature.description}</p>
                                 </div>
                             ))}
                         </div>

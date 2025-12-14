@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Flame, ArrowRight, Sparkles, Clock } from 'lucide-react';
+import { Flame, ArrowRight, Sparkles, Clock, Crown, ShoppingCart } from 'lucide-react';
 import ProductCard from './ProductCard';
 import { useAdmin } from '@/context/AdminContext';
 import { useState, useEffect } from 'react';
@@ -32,7 +32,6 @@ function CountdownTimer({ endDate }: CountdownTimerProps) {
                 });
             } else {
                 setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-                // Optional: Trigger a refresh or callback here if needed when timer hits zero
             }
         };
 
@@ -43,31 +42,31 @@ function CountdownTimer({ endDate }: CountdownTimerProps) {
     }, [endDate]);
 
     return (
-        <div className="flex justify-center gap-3 sm:gap-4">
+        <div className="flex justify-center gap-4 sm:gap-6">
             {[
                 { label: 'Days', value: timeLeft.days },
                 { label: 'Hours', value: timeLeft.hours },
                 { label: 'Mins', value: timeLeft.minutes },
                 { label: 'Secs', value: timeLeft.seconds },
             ].map((item) => (
-                <motion.div
-                    key={item.label}
-                    className="bg-white rounded-xl shadow-lg p-3 sm:p-4 min-w-[60px] sm:min-w-[80px]"
-                    initial={{ scale: 0.9 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: 'spring', stiffness: 300 }}
-                >
+                <div key={item.label} className="flex flex-col items-center">
                     <motion.div
-                        key={item.value}
-                        initial={{ scale: 1.2, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ duration: 0.3 }}
-                        className="text-2xl sm:text-3xl font-bold text-orange-600"
+                        className="bg-gradient-to-b from-red-900/40 to-black border border-orange-500/30 rounded-lg p-4 sm:p-5 min-w-[70px] sm:min-w-[90px] shadow-[0_0_15px_rgba(255,69,0,0.2)] relative overflow-hidden"
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
                     >
-                        {String(item.value).padStart(2, '0')}
+                        <motion.div
+                            className="absolute inset-0 bg-orange-500/10"
+                            animate={{ opacity: [0.1, 0.3, 0.1] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                        />
+                        <span className="relative z-10 text-3xl sm:text-4xl font-bold font-serif text-white block text-center drop-shadow-[0_0_10px_rgba(255,140,0,0.8)]">
+                            {String(item.value).padStart(2, '0')}
+                        </span>
                     </motion.div>
-                    <div className="text-xs text-gray-500 uppercase tracking-wider">{item.label}</div>
-                </motion.div>
+                    <span className="text-xs sm:text-sm text-orange-500 uppercase tracking-widest mt-2 font-bold">{item.label}</span>
+                </div>
             ))}
         </div>
     );
@@ -78,11 +77,7 @@ export default function HotOffersSection() {
 
     // Filter for active offers only
     const activeOffers = hotOffers.filter(offer => offer.isActive);
-
-    // Check if we have any active offers
     const hasActiveOffers = activeOffers.length > 0;
-
-    // Get the first active offer for the timer
     const currentOffer = activeOffers[0];
 
     // Get products that match hot offer criteria (products with original price > price)
@@ -91,24 +86,24 @@ export default function HotOffersSection() {
         : [];
 
     return (
-        <section className="py-20 bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 relative overflow-hidden">
-            {/* Animated Background Elements */}
+        <section className="py-24 bg-premium-black relative overflow-hidden border-y border-premium-gold/20">
+            {/* Premium Background Elements */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                {[...Array(15)].map((_, i) => (
+                <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-premium-gold/10 via-premium-charcoal/30 to-transparent opacity-60" />
+                {[...Array(6)].map((_, i) => (
                     <motion.div
                         key={i}
-                        className="absolute bg-orange-400/10 rounded-full blur-xl"
+                        className="absolute bg-premium-gold/5 rounded-full blur-3xl"
                         style={{
-                            width: Math.random() * 200 + 50,
-                            height: Math.random() * 200 + 50,
+                            width: Math.random() * 400 + 100,
+                            height: Math.random() * 400 + 100,
                             left: `${Math.random() * 100}%`,
                             top: `${Math.random() * 100}%`,
                         }}
                         animate={{
-                            y: [0, Math.random() * 50 - 25],
-                            x: [0, Math.random() * 50 - 25],
+                            y: [0, -30, 0],
+                            opacity: [0.1, 0.3, 0.1],
                             scale: [1, 1.1, 1],
-                            opacity: [0.2, 0.3, 0.2],
                         }}
                         transition={{
                             duration: Math.random() * 10 + 10,
@@ -122,27 +117,25 @@ export default function HotOffersSection() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Section Header */}
                 <motion.div
-                    className="text-center mb-8"
-                    initial={{ opacity: 0, y: 20 }}
+                    className="text-center mb-16"
+                    initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
+                    transition={{ duration: 0.8 }}
                 >
-                    <div className="flex items-center justify-center mb-4">
-                        <motion.div
-                            animate={{ rotate: [0, 10, -10, 10, 0] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                        >
-                            <Flame className="h-12 w-12 text-orange-600" />
-                        </motion.div>
+                    <div className="flex items-center justify-center gap-3 mb-4">
+                        <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-premium-gold" />
+                        <Crown className="h-8 w-8 text-premium-gold" />
+                        <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-premium-gold" />
                     </div>
-                    <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 bg-clip-text text-transparent mb-4">
-                        🔥 Hot Offers
+
+                    <h2 className="text-5xl md:text-6xl font-bold font-playfair text-white mb-6">
+                        <span className="text-premium-gold">Exclusive</span> Offers
                     </h2>
-                    <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+                    <p className="text-gray-400 text-lg font-light tracking-wide max-w-2xl mx-auto font-sans">
                         {hasActiveOffers
-                            ? "Don't miss out on these exclusive deals - limited time only!"
-                            : "Exciting offers are on the way!"}
+                            ? "Discover our premium selection at exceptional value."
+                            : "New exclusive collections arriving soon."}
                     </p>
                 </motion.div>
 
@@ -151,15 +144,16 @@ export default function HotOffersSection() {
                         {/* Countdown Timer */}
                         {currentOffer && (
                             <motion.div
-                                className="text-center mb-12"
-                                initial={{ opacity: 0, scale: 0.9 }}
+                                className="mb-20"
+                                initial={{ opacity: 0, scale: 0.95 }}
                                 whileInView={{ opacity: 1, scale: 1 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: 0.2 }}
                             >
-                                <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-700 px-4 py-2 rounded-full mb-4">
-                                    <Clock className="h-5 w-5" />
-                                    <span className="font-semibold">{currentOffer.title} - Ends Soon!</span>
+                                <div className="text-center mb-8">
+                                    <span className="inline-block px-6 py-2 border border-premium-gold/30 rounded-full bg-premium-gold/10 text-premium-gold font-medium tracking-widest text-sm uppercase">
+                                        Time Limited Offer
+                                    </span>
                                 </div>
                                 <CountdownTimer endDate={currentOffer.timerEndDate || currentOffer.endDate} />
                             </motion.div>
@@ -167,12 +161,14 @@ export default function HotOffersSection() {
 
                         {/* Active Offers Display */}
                         <motion.div
-                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
-                            viewport={{ once: true }}
+                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-16"
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true, margin: "-50px" }}
                             variants={{
                                 visible: {
                                     transition: {
-                                        staggerChildren: 0.1,
+                                        staggerChildren: 0.15,
                                     },
                                 },
                             }}
@@ -181,7 +177,7 @@ export default function HotOffersSection() {
                                 <motion.div
                                     key={product.id}
                                     variants={{
-                                        hidden: { opacity: 0, y: 20 },
+                                        hidden: { opacity: 0, y: 30 },
                                         visible: { opacity: 1, y: 0 },
                                     }}
                                 >
@@ -198,84 +194,32 @@ export default function HotOffersSection() {
                             viewport={{ once: true }}
                             transition={{ delay: 0.4 }}
                         >
-                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Link
-                                    href="/products?filter=hot-offers"
-                                    className="inline-flex items-center bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-bold px-8 py-4 rounded-full shadow-lg shadow-orange-500/30 transition-all"
+                            <Link href="/hot-offers">
+                                <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    className="px-12 py-4 bg-premium-gold text-premium-black font-bold uppercase tracking-widest rounded-full shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:bg-white transition-all border border-premium-gold"
                                 >
-                                    View All Hot Offers
-                                    <ArrowRight className="ml-2 h-5 w-5" />
-                                </Link>
-                            </motion.div>
+                                    View All Offers
+                                </motion.button>
+                            </Link>
                         </motion.div>
                     </>
                 ) : (
                     /* Coming Soon State */
                     <motion.div
-                        className="relative"
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
+                        className="relative max-w-3xl mx-auto text-center py-20 bg-premium-charcoal/50 rounded-2xl border border-gray-800"
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
                     >
-                        <div className="max-w-2xl mx-auto bg-white/80 backdrop-blur-sm rounded-3xl p-12 text-center border-2 border-dashed border-orange-300 shadow-xl">
-                            <motion.div
-                                className="mb-6"
-                                animate={{
-                                    y: [0, -10, 0],
-                                    rotate: [0, 5, -5, 0],
-                                }}
-                                transition={{
-                                    duration: 3,
-                                    repeat: Infinity,
-                                    ease: "easeInOut",
-                                }}
-                            >
-                                <Sparkles className="h-20 w-20 text-orange-500 mx-auto" />
-                            </motion.div>
-
-                            <h3 className="text-3xl font-bold text-gray-900 mb-4">
-                                Coming Soon!
-                            </h3>
-
-                            <p className="text-gray-600 text-lg mb-8">
-                                Amazing deals are being prepared just for you. Stay tuned for exclusive hot offers!
-                            </p>
-
-                            <div className="flex items-center justify-center gap-3">
-                                {[...Array(3)].map((_, i) => (
-                                    <motion.div
-                                        key={i}
-                                        className="h-3 w-3 bg-gradient-to-r from-orange-400 to-red-500 rounded-full shadow-lg"
-                                        animate={{
-                                            scale: [1, 1.5, 1],
-                                            opacity: [0.5, 1, 0.5],
-                                            y: [0, -5, 0]
-                                        }}
-                                        transition={{
-                                            duration: 1.5,
-                                            repeat: Infinity,
-                                            delay: i * 0.2,
-                                        }}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Decorative elements */}
-                        <motion.div
-                            className="absolute -top-6 -right-6 bg-orange-500 text-white font-bold py-2 px-4 rounded-full shadow-lg transform rotate-12"
-                            animate={{
-                                rotate: [12, 18, 12],
-                                scale: [1, 1.05, 1],
-                            }}
-                            transition={{
-                                duration: 2,
-                                repeat: Infinity,
-                            }}
-                        >
-                            🎁 Soon
-                        </motion.div>
+                        <Crown className="h-16 w-16 text-premium-gold mx-auto mb-6 opacity-80" />
+                        <h3 className="text-3xl font-playfair font-bold text-white mb-4">
+                            Preparing Exclusive Deals
+                        </h3>
+                        <p className="text-gray-400 font-light text-lg">
+                            Curating the finest selection for our upcoming showcase.
+                        </p>
                     </motion.div>
                 )}
             </div>
