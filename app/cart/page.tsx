@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Trash2, Plus, Minus, ArrowRight, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
 
 export default function CartPage() {
@@ -22,7 +23,7 @@ export default function CartPage() {
                             <ArrowRight className="h-10 w-10 text-premium-gold/50" />
                         </div>
                         <h2 className="text-2xl font-bold text-white mb-2 font-playfair">Your Cart is Empty</h2>
-                        <p className="text-gray-400 text-lg mb-8">Looks like you haven't added anything to your cart yet.</p>
+                        <p className="text-gray-400 text-lg mb-8">Looks like you haven&apos;t added anything to your cart yet.</p>
                         <Link href="/products" className="inline-flex items-center gap-2 bg-premium-gold hover:bg-white text-premium-black font-bold py-3 px-8 rounded-full transition-all hover:scale-105 shadow-lg shadow-premium-gold/20">
                             Start Shopping <ArrowRight className="h-4 w-4" />
                         </Link>
@@ -47,11 +48,13 @@ export default function CartPage() {
                             <div className="p-6 space-y-6">
                                 {items.map((item) => (
                                     <div key={`${item.id}-${item.selectedSize}-${item.selectedColor}`} className="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-gray-800 last:border-0 last:pb-0">
-                                        <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg border border-gray-700">
-                                            <img
+                                        <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg border border-gray-700 relative">
+                                            <Image
                                                 src={item.images[0]}
                                                 alt={item.name}
-                                                className="h-full w-full object-cover object-center"
+                                                fill
+                                                className="object-cover object-center"
+                                                unoptimized
                                             />
                                         </div>
 

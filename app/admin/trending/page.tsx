@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Plus, Edit, Trash2, Image as ImageIcon, ToggleLeft, ToggleRight, X, Sparkles } from 'lucide-react';
+import Image from 'next/image';
 import { useAdmin } from '@/context/AdminContext';
 import { TrendingItem } from '@/types';
 
@@ -88,7 +89,13 @@ export default function AdminTrendingPage() {
                     >
                         <div className="h-48 bg-gray-900 relative overflow-hidden">
                             {item.image ? (
-                                <img src={item.image} alt={item.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                <Image
+                                    src={item.image}
+                                    alt={item.title}
+                                    fill
+                                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                                    unoptimized
+                                />
                             ) : (
                                 <div className="flex items-center justify-center h-full text-gray-600">
                                     <ImageIcon className="h-12 w-12" />
