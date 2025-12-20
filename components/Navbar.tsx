@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingCart, Menu, Search, X } from 'lucide-react';
+import { ShoppingCart, Menu, Search, X, Heart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import { useFavorites } from '@/context/FavoritesContext';
 import { useState, useEffect } from 'react';
 import SearchModal from './SearchModal';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -10,6 +11,7 @@ import { usePathname } from 'next/navigation';
 
 export default function Navbar() {
     const { cartCount } = useCart();
+    const { favorites } = useFavorites();
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const pathname = usePathname();
@@ -77,7 +79,7 @@ export default function Navbar() {
                         </div>
 
                         {/* Icons */}
-                        <div className="flex items-center space-x-6">
+                        <div className="flex items-center space-x-4 sm:space-x-6">
                             <button
                                 onClick={() => setIsSearchOpen(true)}
                                 className="text-gray-300 hover:text-premium-gold transition-colors transform hover:scale-110 duration-200"
@@ -85,6 +87,25 @@ export default function Navbar() {
                             >
                                 <Search className="h-6 w-6" />
                             </button>
+
+                            {/* Favorites Button */}
+                            <Link
+                                href="/favorites"
+                                className="text-gray-300 hover:text-red-500 transition-colors relative transform hover:scale-110 duration-200 group"
+                                aria-label="Favorites"
+                            >
+                                <Heart className="h-6 w-6 group-hover:fill-current" />
+                                {favorites.length > 0 && (
+                                    <motion.span
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-lg"
+                                    >
+                                        {favorites.length}
+                                    </motion.span>
+                                )}
+                            </Link>
+
                             <Link href="/cart" className="text-gray-300 hover:text-premium-gold transition-colors relative transform hover:scale-110 duration-200">
                                 <ShoppingCart className="h-6 w-6" />
                                 {cartCount > 0 && (
@@ -152,8 +173,8 @@ export default function Navbar() {
                                                 <Link
                                                     href={link.href}
                                                     className={`flex items-center px-4 py-3 rounded-lg font-medium transition-all duration-200 ${pathname === link.href
-                                                            ? 'bg-gradient-to-r from-premium-gold/20 to-transparent text-premium-gold border-l-4 border-premium-gold'
-                                                            : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                                                        ? 'bg-gradient-to-r from-premium-gold/20 to-transparent text-premium-gold border-l-4 border-premium-gold'
+                                                        : 'text-gray-300 hover:bg-white/5 hover:text-white'
                                                         }`}
                                                     onClick={() => setIsMobileMenuOpen(false)}
                                                 >

@@ -7,6 +7,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
 import PriceFilter from '@/components/PriceFilter';
+import ProductViewToggle from '@/components/ProductViewToggle';
 import { products } from '@/lib/data';
 import { useAdmin } from '@/context/AdminContext';
 import { Filter, X, Flame, ArrowRight } from 'lucide-react';
@@ -24,6 +25,7 @@ function ProductsContent() {
     const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState(initialSearch);
     const [selectedColors, setSelectedColors] = useState<string[]>([]); // NEW
+    const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid'); // NEW - View toggle state
 
     // Get categories with hierarchy
     const { categories: adminCategories, hotOffers } = useAdmin();
@@ -253,45 +255,55 @@ function ProductsContent() {
 
                     {/* Product Grid */}
                     <div className="flex-1">
-                        {/* Sub Category Chips */}
-                        {selectedCategory !== 'All' &&
-                            adminCategories.find(c => c.name === selectedCategory)?.subCategories &&
-                            adminCategories.find(c => c.name === selectedCategory)!.subCategories!.length > 0 && (
-                                <div className="mb-6 overflow-x-auto pb-2">
-                                    <div className="flex gap-2">
-                                        <button
-                                            onClick={() => setSelectedSubCategory('All')}
-                                            className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${selectedSubCategory === 'All'
-                                                ? 'bg-premium-gold text-premium-black'
-                                                : 'bg-premium-charcoal text-gray-400 hover:bg-gray-900 border border-gray-800'
-                                                }`}
-                                        >
-                                            All {selectedCategory}
-                                        </button>
-                                        {adminCategories.find(c => c.name === selectedCategory)?.subCategories?.map(sub => (
+                        {/* View Toggle and Sub Category Chips Row */}
+                        <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+                            {/* Sub Category Chips */}
+                            {selectedCategory !== 'All' &&
+                                adminCategories.find(c => c.name === selectedCategory)?.subCategories &&
+                                adminCategories.find(c => c.name === selectedCategory)!.subCategories!.length > 0 && (
+                                    <div className="flex-1 overflow-x-auto pb-2">
+                                        <div className="flex gap-2">
                                             <button
-                                                key={sub}
-                                                onClick={() => setSelectedSubCategory(sub)}
-                                                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${selectedSubCategory === sub
+                                                onClick={() => setSelectedSubCategory('All')}
+                                                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${selectedSubCategory === 'All'
                                                     ? 'bg-premium-gold text-premium-black'
                                                     : 'bg-premium-charcoal text-gray-400 hover:bg-gray-900 border border-gray-800'
                                                     }`}
                                             >
-                                                {sub}
+                                                All {selectedCategory}
                                             </button>
-                                        ))}
+                                            {adminCategories.find(c => c.name === selectedCategory)?.subCategories?.map(sub => (
+                                                <button
+                                                    key={sub}
+                                                    onClick={() => setSelectedSubCategory(sub)}
+                                                    className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${selectedSubCategory === sub
+                                                        ? 'bg-premium-gold text-premium-black'
+                                                        : 'bg-premium-charcoal text-gray-400 hover:bg-gray-900 border border-gray-800'
+                                                        }`}
+                                                >
+                                                    {sub}
+                                                </button>
+                                            ))}
+                                        </div>
                                     </div>
-                                </div>
-                            )}
+                                )}
+
+                            {/* View Toggle */}
+                            <div className="ml-auto">
+                                <ProductViewToggle viewMode={viewMode} onViewChange={setViewMode} />
+                            </div>
+                        </div>
 
                         {filteredProducts.length > 0 ? (
                             <motion.div
                                 layout
-                                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+                                className={viewMode === 'grid'
+                                    ? 'grid grid-cols-2 lg:grid-cols-3 gap-6'
+                                    : 'grid grid-cols-1 gap-6'}
                             >
                                 <AnimatePresence>
                                     {filteredProducts.map((product, index) => (
-                                        <ProductCard key={product.id} product={product} index={index} />
+                                        <ProductCard key={product.id} product={product} index={index} viewMode={viewMode} />
                                     ))}
                                 </AnimatePresence>
                             </motion.div>

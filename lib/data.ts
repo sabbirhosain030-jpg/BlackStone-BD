@@ -370,7 +370,9 @@ export const siteSettings: SiteSettings = {
         thursday: { open: '09:00', close: '21:00', closed: false },
         friday: { open: '00:00', close: '00:00', closed: true }
     },
-    contactFormEmail: 'support@blackstonebd.com'
+    contactFormEmail: 'support@blackstonebd.com',
+    marketingDiscountPercentage: 10,
+    marketingModalEnabled: true,
 };
 
 export const trendingItems: TrendingItem[] = [

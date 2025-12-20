@@ -137,7 +137,12 @@ export default function AdminHotOffersPage() {
                                         <div className="flex items-center">
                                             <div className="h-10 w-10 flex-shrink-0 bg-gray-800 rounded-lg flex items-center justify-center text-premium-gold overflow-hidden">
                                                 {offer.image ? (
-                                                    <img src={offer.image} alt={offer.title} className="h-full w-full object-cover" />
+                                                    <Image
+                                                        src={offer.image}
+                                                        alt={offer.title}
+                                                        fill
+                                                        className="object-cover"
+                                                    />
                                                 ) : (
                                                     <Flame className="h-5 w-5" />
                                                 )}
@@ -246,6 +251,36 @@ export default function AdminHotOffersPage() {
                                 />
                             </div>
 
+                            <div className="p-4 bg-gray-900 rounded-xl border border-gray-800">
+                                <h4 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+                                    <span>📄</span> Exclusive Page Customization
+                                </h4>
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="block text-xs font-medium text-gray-400 mb-1">Page Title (Optional)</label>
+                                        <input
+                                            type="text"
+                                            value={formData.pageTitle || ''}
+                                            onChange={(e) => setFormData({ ...formData, pageTitle: e.target.value })}
+                                            className="w-full px-4 py-2 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent text-white placeholder-gray-600"
+                                            placeholder="e.g., Exclusive Hot Offers"
+                                        />
+                                        <p className="mt-1 text-xs text-gray-500">Custom heading for the /hot-offers page</p>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-medium text-gray-400 mb-1">Page Description (Optional)</label>
+                                        <textarea
+                                            rows={2}
+                                            value={formData.pageDescription || ''}
+                                            onChange={(e) => setFormData({ ...formData, pageDescription: e.target.value })}
+                                            className="w-full px-4 py-2 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent text-white placeholder-gray-600"
+                                            placeholder="e.g., Limited time deals and premium collection discounts"
+                                        />
+                                        <p className="mt-1 text-xs text-gray-500">Custom subtitle for the /hot-offers page</p>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div className="grid grid-cols-2 gap-6">
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-300 mb-2">Discount Label</label>
@@ -329,10 +364,12 @@ export default function AdminHotOffersPage() {
                                                 className="w-4 h-4 text-premium-gold rounded focus:ring-premium-gold bg-gray-900 border-gray-700"
                                             />
                                             <div className="flex items-center gap-2">
-                                                <img
+                                                <Image
                                                     src={product.images[0]}
                                                     alt={product.name}
-                                                    className="w-8 h-8 rounded object-cover"
+                                                    width={32}
+                                                    height={32}
+                                                    className="rounded object-cover"
                                                 />
                                                 <span className="text-sm text-gray-300">{product.name}</span>
                                             </div>

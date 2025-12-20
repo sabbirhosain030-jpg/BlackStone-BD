@@ -42,7 +42,7 @@ function CountdownTimer({ endDate }: CountdownTimerProps) {
     }, [endDate]);
 
     return (
-        <div className="flex justify-center gap-4 sm:gap-6">
+        <div className="flex justify-center gap-2 sm:gap-4 md:gap-6">
             {[
                 { label: 'Days', value: timeLeft.days },
                 { label: 'Hours', value: timeLeft.hours },
@@ -51,7 +51,7 @@ function CountdownTimer({ endDate }: CountdownTimerProps) {
             ].map((item) => (
                 <div key={item.label} className="flex flex-col items-center">
                     <motion.div
-                        className="bg-gradient-to-b from-red-900/40 to-black border border-orange-500/30 rounded-lg p-4 sm:p-5 min-w-[70px] sm:min-w-[90px] shadow-[0_0_15px_rgba(255,69,0,0.2)] relative overflow-hidden"
+                        className="bg-gradient-to-b from-red-900/40 to-black border border-orange-500/30 rounded-lg p-2 sm:p-4 md:p-5 min-w-[60px] sm:min-w-[70px] md:min-w-[90px] shadow-[0_0_15px_rgba(255,69,0,0.2)] relative overflow-hidden"
                         initial={{ opacity: 0, y: 10 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
@@ -61,11 +61,11 @@ function CountdownTimer({ endDate }: CountdownTimerProps) {
                             animate={{ opacity: [0.1, 0.3, 0.1] }}
                             transition={{ duration: 2, repeat: Infinity }}
                         />
-                        <span className="relative z-10 text-3xl sm:text-4xl font-bold font-serif text-white block text-center drop-shadow-[0_0_10px_rgba(255,140,0,0.8)]">
+                        <span className="relative z-10 text-2xl sm:text-3xl md:text-4xl font-bold font-serif text-white block text-center drop-shadow-[0_0_10px_rgba(255,140,0,0.8)]">
                             {String(item.value).padStart(2, '0')}
                         </span>
                     </motion.div>
-                    <span className="text-xs sm:text-sm text-orange-500 uppercase tracking-widest mt-2 font-bold">{item.label}</span>
+                    <span className="text-[10px] sm:text-xs md:text-sm text-orange-500 uppercase tracking-widest mt-1 sm:mt-2 font-bold">{item.label}</span>
                 </div>
             ))}
         </div>
@@ -159,16 +159,16 @@ export default function HotOffersSection() {
                             </motion.div>
                         )}
 
-                        {/* Active Offers Display */}
+                        {/* Products Grid */}
                         <motion.div
-                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-16"
+                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8"
                             initial="hidden"
                             whileInView="visible"
-                            viewport={{ once: true, margin: "-50px" }}
+                            viewport={{ once: true }}
                             variants={{
                                 visible: {
                                     transition: {
-                                        staggerChildren: 0.15,
+                                        staggerChildren: 0.1,
                                     },
                                 },
                             }}

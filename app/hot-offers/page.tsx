@@ -54,10 +54,16 @@ export default function HotOffersPage() {
                             <Crown className="h-12 w-12 text-premium-gold" />
                         </motion.div>
                         <h1 className="text-5xl md:text-6xl font-bold font-playfair mb-6">
-                            <span className="text-premium-gold">Exclusive</span> Hot Offers
+                            {activeHotOffers.length > 0 && activeHotOffers[0].pageTitle ? (
+                                <>{activeHotOffers[0].pageTitle}</>
+                            ) : (
+                                <><span className="text-premium-gold">Exclusive</span> Hot Offers</>
+                            )}
                         </h1>
                         <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-                            Limited time deals and premium collection discounts. Grab them while they last.
+                            {activeHotOffers.length > 0 && activeHotOffers[0].pageDescription
+                                ? activeHotOffers[0].pageDescription
+                                : 'Limited time deals and premium collection discounts. Grab them while they last.'}
                         </p>
                     </div>
                 </div>

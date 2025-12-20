@@ -85,6 +85,8 @@ export interface HotOffer {
     link?: string;
     timerEndDate?: string; // NEW - Countdown timer end date/time
     productIds?: string[]; // NEW - Associated product IDs
+    pageTitle?: string; // NEW - Custom title for /hot-offers page
+    pageDescription?: string; // NEW - Custom description for /hot-offers page
 }
 
 export interface SiteSettings {
@@ -122,6 +124,8 @@ export interface SiteSettings {
         };
     };
     contactFormEmail: string;
+    marketingDiscountPercentage: number; // NEW - Discount % for marketing modal
+    marketingModalEnabled: boolean; // NEW - Enable/disable marketing modal
 }
 
 export interface TrendingItem {

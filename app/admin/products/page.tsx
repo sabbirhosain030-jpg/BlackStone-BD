@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Plus, Edit, Trash2, Image as ImageIcon, X, Package, AlertTriangle, DollarSign, Upload, RefreshCcw, Archive } from 'lucide-react';
+import Image from 'next/image';
 import { Product } from '@/types';
 import StatsCard from '@/components/admin/StatsCard';
 import { useAdmin } from '@/context/AdminContext';
@@ -153,7 +154,12 @@ export default function AdminProductsPage() {
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
                                                 <div className="h-12 w-12 flex-shrink-0 bg-gray-800 rounded-lg overflow-hidden">
-                                                    <img src={product.images[0]} alt={product.name} className="h-full w-full object-cover" />
+                                                    <Image
+                                                        src={product.images[0]}
+                                                        alt={product.name}
+                                                        fill
+                                                        className="object-cover"
+                                                    />
                                                 </div>
                                                 <div className="ml-4">
                                                     <div className="text-sm font-medium text-white">{product.name}</div>
@@ -366,7 +372,12 @@ export default function AdminProductsPage() {
                                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
                                         {formData.images?.map((img, idx) => (
                                             <div key={idx} className="relative aspect-square rounded-lg overflow-hidden border border-gray-800 group">
-                                                <img src={img} alt={`Product ${idx + 1}`} className="w-full h-full object-cover" />
+                                                <Image
+                                                    src={img}
+                                                    alt={`Product ${idx + 1}`}
+                                                    fill
+                                                    className="object-cover"
+                                                />
                                                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                                     <button
                                                         type="button"
