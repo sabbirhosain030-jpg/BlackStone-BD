@@ -189,8 +189,8 @@ export default function MarketingPage() {
                             Pro Tip
                         </h4>
                         <p className="text-blue-300 text-sm">
-                            The modal uses browser session storage. Changes might stick if you've already seen the modal.
-                            Clear your cookies or use Incognito mode to test the "fresh" user experience.
+                            The modal uses browser session storage. Changes might stick if you&apos;ve already seen the modal.
+                            Clear your cookies or use Incognito mode to test the &quot;fresh&quot; user experience.
                         </p>
                     </div>
                 </motion.div>
