@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { Category, Product, Order, Customer, HotOffer, SiteSettings, TrendingItem, Subscriber } from '@/types';
 import {
     categories as initialCategories,
@@ -22,6 +22,7 @@ interface AdminContextType {
     settings: SiteSettings;
     trendingItems: TrendingItem[];
     subscribers: Subscriber[];
+    loading: boolean;
     addCategory: (category: Category) => void;
     updateCategory: (category: Category) => void;
     deleteCategory: (id: string) => void;
@@ -52,6 +53,39 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     const [settings, setSettings] = useState<SiteSettings>(initialSettings);
     const [trendingItems, setTrendingItems] = useState<TrendingItem[]>(initialTrendingItems);
     const [subscribers, setSubscribers] = useState<Subscriber[]>(mockSubscribers);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                const [catsRes, prodsRes, settingsRes] = await Promise.all([
+                    fetch('/api/categories'),
+                    fetch('/api/products'),
+                    fetch('/api/settings')
+                ]);
+
+                if (catsRes.ok) {
+                    const catsData = await catsRes.json();
+                    if (catsData.length > 0) setCategories(catsData);
+                }
+                if (prodsRes.ok) {
+                    const prodsData = await prodsRes.json();
+                    if (prodsData.length > 0) setProducts(prodsData);
+                }
+                if (settingsRes.ok) {
+                    const settingsData = await settingsRes.json();
+                    if (settingsData) setSettings(settingsData);
+                }
+            } catch (error) {
+                console.error("Failed to fetch admin data:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const addCategory = (category: Category) => {
         setCategories([...categories, category]);
@@ -121,6 +155,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
             settings,
             trendingItems,
             subscribers,
+            loading,
             addCategory,
             updateCategory,
             deleteCategory,
