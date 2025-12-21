@@ -6,11 +6,11 @@ import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
 import { useFavorites } from '@/context/FavoritesContext';
 import { useAdmin } from '@/context/AdminContext';
-import { Heart } from 'lucide-react';
+import { Heart, X } from 'lucide-react';
 import Link from 'next/link';
 
 export default function FavoritesPage() {
-    const { favorites } = useFavorites();
+    const { favorites, toggleFavorite } = useFavorites();
     const { products } = useAdmin();
 
     const favoriteProducts = products.filter(p => favorites.includes(p.id));
@@ -66,8 +66,20 @@ export default function FavoritesPage() {
                                         hidden: { opacity: 0, y: 20 },
                                         visible: { opacity: 1, y: 0 },
                                     }}
+                                    className="relative group"
                                 >
                                     <ProductCard product={product} index={index} />
+                                    {/* Remove from Favorites Button */}
+                                    <motion.button
+                                        initial={{ opacity: 0, scale: 0.8 }}
+                                        whileHover={{ scale: 1.1 }}
+                                        whileTap={{ scale: 0.9 }}
+                                        className="absolute top-3 right-3 z-10 bg-red-500 hover:bg-red-600 text-white rounded-full p-2.5 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                                        onClick={() => toggleFavorite(product.id)}
+                                        title="Remove from favorites"
+                                    >
+                                        <X className="h-5 w-5" />
+                                    </motion.button>
                                 </motion.div>
                             ))}
                         </motion.div>

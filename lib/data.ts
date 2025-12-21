@@ -371,8 +371,23 @@ export const siteSettings: SiteSettings = {
         friday: { open: '00:00', close: '00:00', closed: true }
     },
     contactFormEmail: 'support@blackstonebd.com',
-    marketingDiscountPercentage: 10,
-    marketingModalEnabled: true,
+    marketingModal: {
+        enabled: true,
+        title: "Exclusive Welcome Offer",
+        description: "Subscribe to our newsletter and get 10% off your first order!",
+        discountPercentage: 10,
+    },
+    appearance: {
+        showBanner: true,
+        bannerText: "Free shipping on all orders over ৳5000 | Premium Quality Guaranteed",
+        sections: {
+            hero: true,
+            hotOffers: true,
+            categories: true,
+            trending: true,
+            newArrivals: true,
+        },
+    },
 };
 
 export const trendingItems: TrendingItem[] = [

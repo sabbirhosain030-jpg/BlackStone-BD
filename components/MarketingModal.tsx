@@ -5,7 +5,8 @@ import { X, Gift } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAdmin } from '@/context/AdminContext';
 
-const STORAGE_KEY = 'blackstone_marketing_modal_seen';
+const STORAGE_KEY = 'blackstone_marketing_modal_dismissed';
+const SESSION_KEY = 'blackstone_modal_session';
 
 export default function MarketingModal() {
     const { settings, addSubscriber } = useAdmin();
@@ -14,11 +15,12 @@ export default function MarketingModal() {
     const [isSubmitted, setIsSubmitted] = useState(false);
 
     useEffect(() => {
-        // Check if modal has been seen before
-        const hasSeenModal = localStorage.getItem(STORAGE_KEY);
+        // Check if modal has been dismissed or user has subscribed in this session
+        const dismissedThisSession = sessionStorage.getItem(SESSION_KEY);
+        const hasSubscribed = localStorage.getItem(STORAGE_KEY);
 
-        // Show modal if enabled in settings and not seen before
-        if (settings.marketingModalEnabled !== false && !hasSeenModal) {
+        // Show modal if enabled in settings AND not dismissed this session AND not subscribed
+        if (settings.marketingModal.enabled && !dismissedThisSession && !hasSubscribed) {
             // Delay showing modal for better UX (2 seconds after page load)
             const timer = setTimeout(() => {
                 setIsOpen(true);
@@ -26,11 +28,13 @@ export default function MarketingModal() {
 
             return () => clearTimeout(timer);
         }
-    }, [settings.marketingModalEnabled]); // Modal will show on ANY page before subscription
+    }, [settings.marketingModal.enabled]); // Modal will show on EVERY page load until dismissed or subscribed
 
     const handleClose = () => {
         setIsOpen(false);
-        localStorage.setItem(STORAGE_KEY, 'true');
+        // Only save to sessionStorage so it doesn't show again in this session
+        // but WILL show again on next login/page refresh
+        sessionStorage.setItem(SESSION_KEY, 'true');
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -39,6 +43,10 @@ export default function MarketingModal() {
             addSubscriber(email);
             setIsSubmitted(true);
 
+            // Save to localStorage when user subscribes
+            // This prevents modal from showing even on new sessions
+            localStorage.setItem(STORAGE_KEY, 'true');
+
             // Close modal after showing success message
             setTimeout(() => {
                 handleClose();
@@ -46,7 +54,7 @@ export default function MarketingModal() {
         }
     };
 
-    const discountPercentage = settings.marketingDiscountPercentage || 10;
+    const discountPercentage = settings.marketingModal.discountPercentage;
 
     return (
         <AnimatePresence>

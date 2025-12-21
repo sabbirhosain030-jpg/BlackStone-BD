@@ -5,7 +5,7 @@ import { SessionProvider, useSession, signIn, signOut } from "next-auth/react";
 
 interface AuthContextType {
     isAuthenticated: boolean;
-    login: (password: string) => Promise<boolean>; // Changed to Promise
+    login: (username: string, password: string) => Promise<boolean>; // Changed to Promise
     logout: () => Promise<void>; // Changed to Promise
     isLoading: boolean;
 }
@@ -17,10 +17,10 @@ function AuthContextWrapper({ children }: { children: ReactNode }) {
     const isAuthenticated = status === 'authenticated';
     const isLoading = status === 'loading';
 
-    const login = async (password: string): Promise<boolean> => {
+    const login = async (username: string, password: string): Promise<boolean> => {
         try {
             const result = await signIn("credentials", {
-                username: "admin",
+                username: username,
                 password: password,
                 redirect: false,
             });

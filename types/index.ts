@@ -104,6 +104,7 @@ export interface SiteSettings {
         country: string;
     };
     currency: string;
+
     socialLinks: {
         facebook?: string;
         instagram?: string;
@@ -124,8 +125,24 @@ export interface SiteSettings {
         };
     };
     contactFormEmail: string;
-    marketingDiscountPercentage: number; // NEW - Discount % for marketing modal
-    marketingModalEnabled: boolean; // NEW - Enable/disable marketing modal
+    marketingModal: {
+        enabled: boolean;
+        title: string;
+        description: string;
+        discountPercentage: number;
+        imageUrl?: string;
+    };
+    appearance: {
+        showBanner: boolean;
+        bannerText: string;
+        sections: {
+            hero: boolean;
+            hotOffers: boolean;
+            categories: boolean;
+            trending: boolean;
+            newArrivals: boolean;
+        };
+    };
 }
 
 export interface TrendingItem {

@@ -24,17 +24,14 @@ export default function AdminLoginPage() {
         e.preventDefault();
         setError('');
 
-        if (username === 'admin') {
-            const success = await login(password);
+        if (username && password) {
+            const success = await login(username, password);
             if (success) {
                 router.push('/admin');
             } else {
                 setError('Invalid credentials');
                 setPassword('');
             }
-        } else {
-            setError('Invalid credentials');
-            setPassword('');
         }
     };
 
@@ -153,7 +150,7 @@ export default function AdminLoginPage() {
                     </motion.button>
 
                     <p className="text-center text-sm text-gray-500 mt-4">
-                        Default: admin / admin123
+                        Default: admin / admin
                     </p>
                 </form>
             </motion.div>

@@ -10,7 +10,7 @@ import PriceFilter from '@/components/PriceFilter';
 import ProductViewToggle from '@/components/ProductViewToggle';
 import { products } from '@/lib/data';
 import { useAdmin } from '@/context/AdminContext';
-import { Filter, X, Flame, ArrowRight } from 'lucide-react';
+import { Filter, X, Flame, ArrowRight, Gem } from 'lucide-react';
 import Link from 'next/link';
 
 function ProductsContent() {
@@ -121,14 +121,11 @@ function ProductsContent() {
             <Navbar />
 
             <div className="bg-premium-charcoal shadow-sm border-b border-gray-900">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
-                    <Link href="/" className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all text-white border border-white/20 group">
-                        <ArrowRight className="h-5 w-5 rotate-180 group-hover:-translate-x-1 transition-transform" />
-                    </Link>
-                    <h1 className="text-3xl font-bold font-playfair text-white text-center sm:text-left sm:ml-16">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <h1 className="text-3xl font-bold font-playfair text-white text-center sm:text-left">
                         {searchQuery ? `Search Results for "${searchQuery}"` : 'All Products'}
                     </h1>
-                    <p className="text-gray-400 mt-2">
+                    <p className="text-gray-400 mt-2 text-center sm:text-left">
                         Showing {filteredProducts.length} products
                     </p>
                 </div>
@@ -167,20 +164,21 @@ function ProductsContent() {
                                 <div>
                                     <h3 className="text-lg font-bold text-white mb-4">Categories</h3>
 
-                                    {/* Hot Filter Button */}
+                                    {/* Exclusive Offer Link */}
                                     <div className="mb-4">
-                                        <button
-                                            onClick={() => setShowHotDeals(!showHotDeals)}
-                                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all ${showHotDeals
-                                                ? 'bg-red-500/10 text-red-500 border border-red-500/50 shadow-sm'
-                                                : 'text-gray-400 hover:bg-gray-900 border border-transparent'
-                                                }`}
+                                        <Link
+                                            href="/hot-offers"
+                                            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all bg-premium-gold/20 text-premium-gold border border-premium-gold/50 shadow-sm shadow-premium-gold/20 hover:bg-premium-gold/30"
                                         >
-                                            <div className={`p-1 rounded ${showHotDeals ? 'bg-red-500/20' : 'bg-gray-800'}`}>
-                                                <Flame className={`h-4 w-4 ${showHotDeals ? 'text-red-500' : 'text-gray-400'}`} />
-                                            </div>
-                                            <span className="font-bold text-sm">Hot Deals 🔥</span>
-                                        </button>
+                                            <motion.div
+                                                className="p-1 rounded bg-premium-gold/30"
+                                                animate={{ scale: [1, 1.1, 1] }}
+                                                transition={{ duration: 1, repeat: Infinity }}
+                                            >
+                                                <Flame className="h-4 w-4 text-premium-gold" />
+                                            </motion.div>
+                                            <span className="font-bold text-sm">Exclusive Offer ✨</span>
+                                        </Link>
                                     </div>
 
                                     <div className="space-y-1">

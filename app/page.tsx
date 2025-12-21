@@ -15,7 +15,7 @@ import { ArrowRight, Shield, Truck, RefreshCw, Award, Flame } from 'lucide-react
 import { useState } from 'react';
 
 export default function Home() {
-    const { hotOffers, products } = useAdmin();
+    const { hotOffers, products, settings } = useAdmin();
     const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
     // Smart Product Sections Logic
@@ -124,75 +124,27 @@ export default function Home() {
                 </AnimatedSection>
 
                 {/* 1. New Arrivals Section */}
-                <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <AnimatedSection>
-                        <div className="text-center mb-12">
-                            <motion.h2
-                                className="text-4xl font-bold font-playfair text-white"
-                                initial={{ opacity: 0, y: -20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                            >
-                                New Arrivals
-                            </motion.h2>
-                            <motion.p
-                                className="text-gray-400 mt-3 text-lg"
-                                initial={{ opacity: 0 }}
-                                whileInView={{ opacity: 1 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: 0.2 }}
-                            >
-                                The latest additions to our store
-                            </motion.p>
-                        </div>
-                    </AnimatedSection>
-
-                    <motion.div
-                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, margin: '-50px' }}
-                        variants={{
-                            visible: {
-                                transition: {
-                                    staggerChildren: 0.1,
-                                },
-                            },
-                        }}
-                    >
-                        {newArrivals.map((product, index) => (
-                            <motion.div
-                                key={product.id}
-                                variants={{
-                                    hidden: { opacity: 0, y: 20 },
-                                    visible: { opacity: 1, y: 0 },
-                                }}
-                            >
-                                <ProductCard product={product} index={index} />
-                            </motion.div>
-                        ))}
-                    </motion.div>
-
-                    <div className="mt-12 text-center">
-                        <Link href="/products?sort=newest">
-                            <motion.button
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                className="px-8 py-3 bg-premium-gold text-premium-black font-bold rounded-full hover:bg-white transition-colors shadow-lg hover:shadow-xl"
-                            >
-                                View New Arrivals only
-                            </motion.button>
-                        </Link>
-                    </div>
-                </section>
-
-                {/* 2. Featured Collection */}
-                <section className="py-20 bg-premium-charcoal border-y border-gray-900">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {settings.appearance?.sections?.newArrivals !== false && (
+                    <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <AnimatedSection>
                             <div className="text-center mb-12">
-                                <h2 className="text-4xl font-bold font-playfair text-premium-gold">Featured Collection</h2>
-                                <p className="text-gray-400 mt-3 text-lg">Handpicked favorites just for you</p>
+                                <motion.h2
+                                    className="text-4xl font-bold font-playfair text-white"
+                                    initial={{ opacity: 0, y: -20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                >
+                                    New Arrivals
+                                </motion.h2>
+                                <motion.p
+                                    className="text-gray-400 mt-3 text-lg"
+                                    initial={{ opacity: 0 }}
+                                    whileInView={{ opacity: 1 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: 0.2 }}
+                                >
+                                    The latest additions to our store
+                                </motion.p>
                             </div>
                         </AnimatedSection>
 
@@ -200,7 +152,7 @@ export default function Home() {
                             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
                             initial="hidden"
                             whileInView="visible"
-                            viewport={{ once: true }}
+                            viewport={{ once: true, margin: '-50px' }}
                             variants={{
                                 visible: {
                                     transition: {
@@ -209,7 +161,7 @@ export default function Home() {
                                 },
                             }}
                         >
-                            {featuredProducts.map((product, index) => (
+                            {newArrivals.map((product, index) => (
                                 <motion.div
                                     key={product.id}
                                     variants={{
@@ -223,21 +175,75 @@ export default function Home() {
                         </motion.div>
 
                         <div className="mt-12 text-center">
-                            <Link href="/products">
+                            <Link href="/products?sort=newest">
                                 <motion.button
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
-                                    className="px-8 py-3 bg-premium-black text-premium-gold border border-premium-gold font-bold rounded-full hover:bg-premium-gold hover:text-premium-black transition-colors shadow-lg"
+                                    className="px-8 py-3 bg-premium-gold text-premium-black font-bold rounded-full hover:bg-white transition-colors shadow-lg hover:shadow-xl"
                                 >
-                                    View All Products
+                                    View New Arrivals only
                                 </motion.button>
                             </Link>
                         </div>
-                    </div>
-                </section>
+                    </section>
+                )}
+
+                {/* 2. Featured Collection */}
+                {settings.appearance?.sections?.categories !== false && (
+                    <section className="py-20 bg-premium-charcoal border-y border-gray-900">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <AnimatedSection>
+                                <div className="text-center mb-12">
+                                    <h2 className="text-4xl font-bold font-playfair text-premium-gold">Featured Collection</h2>
+                                    <p className="text-gray-400 mt-3 text-lg">Handpicked favorites just for you</p>
+                                </div>
+                            </AnimatedSection>
+
+                            <motion.div
+                                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+                                initial="hidden"
+                                whileInView="visible"
+                                viewport={{ once: true }}
+                                variants={{
+                                    visible: {
+                                        transition: {
+                                            staggerChildren: 0.1,
+                                        },
+                                    },
+                                }}
+                            >
+                                {featuredProducts.map((product, index) => (
+                                    <motion.div
+                                        key={product.id}
+                                        variants={{
+                                            hidden: { opacity: 0, y: 20 },
+                                            visible: { opacity: 1, y: 0 },
+                                        }}
+                                    >
+                                        <ProductCard product={product} index={index} />
+                                    </motion.div>
+                                ))}
+                            </motion.div>
+
+                            <div className="mt-12 text-center">
+                                <Link href="/products">
+                                    <motion.button
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        className="px-8 py-3 bg-premium-black text-premium-gold border border-premium-gold font-bold rounded-full hover:bg-premium-gold hover:text-premium-black transition-colors shadow-lg"
+                                    >
+                                        View All Products
+                                    </motion.button>
+                                </Link>
+                            </div>
+                        </div>
+                    </section>
+                )}
 
                 {/* 3. Hot Offer Section with Timer (Admin Controlled) */}
-                <HotOffersSection />
+                {settings.appearance?.sections?.hotOffers !== false && (
+                    <HotOffersSection />
+                )}
 
                 {/* 4. Best Selling Products */}
                 <section className="py-20 bg-premium-black">
@@ -299,7 +305,9 @@ export default function Home() {
                 </section>
 
                 {/* 5. Trending Fashion */}
-                <TrendingFashion />
+                {settings.appearance?.sections?.trending !== false && (
+                    <TrendingFashion />
+                )}
 
                 {/* Features Section */}
                 <AnimatedSection className="py-16 bg-premium-charcoal border-t border-gray-800">

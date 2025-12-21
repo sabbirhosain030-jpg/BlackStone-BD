@@ -71,15 +71,25 @@ export default function CategoriesPage() {
                             transition={{ duration: 0.8 }}
                         >
                             <motion.h1
-                                className="text-5xl md:text-6xl font-bold mb-6 font-playfair flex items-center justify-center gap-4"
+                                className="text-5xl md:text-6xl font-bold mb-6 font-playfair"
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.2, duration: 0.8 }}
                             >
-                                <Link href="/products" className="absolute left-8 top-12 p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all text-white border border-white/20 group">
-                                    <ArrowRight className="h-6 w-6 rotate-180 group-hover:-translate-x-1 transition-transform" />
-                                </Link>
-                                Explore Our <span className="text-premium-gold">Categories</span>
+                                {/* Mobile-friendly Back Button */}
+                                <div className="flex items-center justify-center gap-4 mb-4 md:mb-0">
+                                    <Link
+                                        href="/products"
+                                        className="flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all text-white border border-white/20 group text-base md:text-lg font-medium"
+                                    >
+                                        <ArrowRight className="h-5 w-5 md:h-6 md:w-6 rotate-180 group-hover:-translate-x-1 transition-transform" />
+                                        <span className="hidden sm:inline">Back to Products</span>
+                                        <span className="sm:hidden">Back</span>
+                                    </Link>
+                                </div>
+                                <div>
+                                    Explore Our <span className="text-premium-gold">Categories</span>
+                                </div>
                             </motion.h1>
                             <motion.p
                                 className="text-xl text-gray-400 max-w-2xl mx-auto"

@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { Save, Globe, Phone, Mail, MapPin, DollarSign, Facebook, Instagram, Twitter, Youtube, User, Lock } from 'lucide-react';
+import { Save, Globe, Phone, Mail, MapPin, DollarSign, Facebook, Instagram, Twitter, Youtube, User, Lock, Layout } from 'lucide-react';
 import { useAdmin } from '@/context/AdminContext';
 
 export default function AdminSettingsPage() {
@@ -11,6 +11,7 @@ export default function AdminSettingsPage() {
 
     const tabs = [
         { id: 'general', label: 'General Settings', icon: Globe },
+        { id: 'appearance', label: 'Site Appearance', icon: Layout },
         { id: 'social', label: 'Social Media', icon: Facebook },
         { id: 'profile', label: 'Admin Profile', icon: User },
     ];
@@ -129,6 +130,75 @@ export default function AdminSettingsPage() {
                                             className="w-full pl-8 pr-4 py-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent text-white"
                                         />
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === 'appearance' && (
+                        <div className="space-y-6">
+                            <h2 className="text-xl font-bold text-white mb-6 font-playfair">Site Appearance</h2>
+
+                            {/* Banner Settings */}
+                            <div className="bg-black/40 p-6 rounded-lg border border-gray-800">
+                                <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                                    <Layout className="h-5 w-5 text-premium-gold" />
+                                    Top Banner
+                                </h3>
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-gray-300">Show Announcement Banner</span>
+                                        <button
+                                            onClick={() => updateSettings({
+                                                ...settings,
+                                                appearance: { ...settings.appearance, showBanner: !settings.appearance?.showBanner }
+                                            })}
+                                            className={`w-12 h-6 rounded-full p-1 transition-colors duration-300 ${settings.appearance?.showBanner ? 'bg-premium-gold' : 'bg-gray-700'
+                                                }`}
+                                        >
+                                            <div className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-300 ${settings.appearance?.showBanner ? 'translate-x-6' : 'translate-x-0'
+                                                }`} />
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-400 mb-2">Banner Text</label>
+                                        <input
+                                            type="text"
+                                            value={settings.appearance?.bannerText || ''}
+                                            onChange={(e) => updateSettings({
+                                                ...settings,
+                                                appearance: { ...settings.appearance, bannerText: e.target.value }
+                                            })}
+                                            className="w-full px-4 py-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent text-white"
+                                            placeholder="Enter announcement text..."
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Homepage Sections */}
+                            <div className="bg-black/40 p-6 rounded-lg border border-gray-800">
+                                <h3 className="text-lg font-bold text-white mb-4">Homepage Sections</h3>
+                                <div className="space-y-3">
+                                    {Object.entries(settings.appearance?.sections || {}).map(([key, value]) => (
+                                        <div key={key} className="flex items-center justify-between p-3 bg-gray-900/50 rounded-lg border border-gray-800/50">
+                                            <span className="text-gray-300 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
+                                            <button
+                                                onClick={() => updateSettings({
+                                                    ...settings,
+                                                    appearance: {
+                                                        ...settings.appearance,
+                                                        sections: { ...settings.appearance.sections, [key]: !value }
+                                                    }
+                                                })}
+                                                className={`w-10 h-5 rounded-full p-0.5 transition-colors duration-300 ${value ? 'bg-green-500' : 'bg-gray-700'
+                                                    }`}
+                                            >
+                                                <div className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-300 ${value ? 'translate-x-5' : 'translate-x-0'
+                                                    }`} />
+                                            </button>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>

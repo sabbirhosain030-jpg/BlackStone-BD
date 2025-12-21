@@ -3,8 +3,11 @@ import { withAuth } from "next-auth/middleware"
 export default withAuth({
     callbacks: {
         authorized({ req, token }) {
+            // Allow access to login page without token
+            if (req.nextUrl.pathname === "/admin/login") {
+                return true;
+            }
             // Only allow if token exists (user is logged in)
-            // We can also check role here: return token?.role === "admin"
             return !!token;
         },
     },

@@ -51,16 +51,13 @@ function CountdownTimer({ endDate }: CountdownTimerProps) {
             ].map((item) => (
                 <div key={item.label} className="flex flex-col items-center">
                     <motion.div
-                        className="bg-gradient-to-b from-red-900/40 to-black border border-orange-500/30 rounded-lg p-2 sm:p-4 md:p-5 min-w-[60px] sm:min-w-[70px] md:min-w-[90px] shadow-[0_0_15px_rgba(255,69,0,0.2)] relative overflow-hidden"
+                        className="bg-gradient-to-b from-red-900/40 to-black border border-orange-500/30 rounded-lg p-2 sm:p-4 md:p-5 min-w-[60px] sm:min-w-[70px] md:min-w-[90px] shadow-[0_0_15px_rgba(255,69,0,0.2)] relative overflow-hidden will-change-transform"
                         initial={{ opacity: 0, y: 10 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
+                        transition={{ duration: 0.3 }}
                     >
-                        <motion.div
-                            className="absolute inset-0 bg-orange-500/10"
-                            animate={{ opacity: [0.1, 0.3, 0.1] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                        />
+                        <div className="absolute inset-0 bg-orange-500/10 animate-pulse" />
                         <span className="relative z-10 text-2xl sm:text-3xl md:text-4xl font-bold font-serif text-white block text-center drop-shadow-[0_0_10px_rgba(255,140,0,0.8)]">
                             {String(item.value).padStart(2, '0')}
                         </span>
@@ -87,26 +84,25 @@ export default function HotOffersSection() {
 
     return (
         <section className="py-24 bg-premium-black relative overflow-hidden border-y border-premium-gold/20">
-            {/* Premium Background Elements */}
+            {/* Premium Background Elements - Optimized */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-premium-gold/10 via-premium-charcoal/30 to-transparent opacity-60" />
-                {[...Array(6)].map((_, i) => (
+                {[...Array(3)].map((_, i) => (
                     <motion.div
                         key={i}
-                        className="absolute bg-premium-gold/5 rounded-full blur-3xl"
+                        className="absolute bg-premium-gold/5 rounded-full blur-3xl will-change-transform"
                         style={{
-                            width: Math.random() * 400 + 100,
-                            height: Math.random() * 400 + 100,
+                            width: Math.random() * 400 + 200,
+                            height: Math.random() * 400 + 200,
                             left: `${Math.random() * 100}%`,
                             top: `${Math.random() * 100}%`,
                         }}
                         animate={{
                             y: [0, -30, 0],
                             opacity: [0.1, 0.3, 0.1],
-                            scale: [1, 1.1, 1],
                         }}
                         transition={{
-                            duration: Math.random() * 10 + 10,
+                            duration: 15 + i * 5,
                             repeat: Infinity,
                             ease: "easeInOut",
                         }}

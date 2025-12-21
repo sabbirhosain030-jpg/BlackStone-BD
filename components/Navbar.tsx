@@ -41,6 +41,9 @@ export default function Navbar() {
         { href: '/contact', label: 'Contact' },
     ];
 
+    // Check if user is on login page
+    const isLoginPage = pathname === '/login';
+
     return (
         <>
             <nav className="bg-premium-black sticky top-0 z-50 border-b border-gray-800 transition-all duration-300">
@@ -105,6 +108,16 @@ export default function Navbar() {
                                     </motion.span>
                                 )}
                             </Link>
+
+                            {/* Login Link - Desktop */}
+                            {!isLoginPage && (
+                                <Link
+                                    href="/login"
+                                    className="hidden md:flex items-center gap-2 px-4 py-2 bg-premium-gold hover:bg-white text-premium-black font-medium rounded-full transition-all transform hover:scale-105 duration-200"
+                                >
+                                    Login
+                                </Link>
+                            )}
 
                             <Link href="/cart" className="text-gray-300 hover:text-premium-gold transition-colors relative transform hover:scale-110 duration-200">
                                 <ShoppingCart className="h-6 w-6" />
@@ -182,6 +195,23 @@ export default function Navbar() {
                                                 </Link>
                                             </motion.div>
                                         ))}
+
+                                        {/* Login Link - Mobile */}
+                                        {!isLoginPage && (
+                                            <motion.div
+                                                initial={{ opacity: 0, x: 20 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                transition={{ delay: navLinks.length * 0.05 }}
+                                            >
+                                                <Link
+                                                    href="/login"
+                                                    className="flex items-center px-4 py-3 rounded-lg font-medium transition-all duration-200 bg-premium-gold/20 text-premium-gold hover:bg-premium-gold/30 border border-premium-gold/30"
+                                                    onClick={() => setIsMobileMenuOpen(false)}
+                                                >
+                                                    Login to Account
+                                                </Link>
+                                            </motion.div>
+                                        )}
                                     </div>
                                 </nav>
 
