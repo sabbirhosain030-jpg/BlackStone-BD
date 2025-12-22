@@ -6,6 +6,7 @@ import { CartProvider } from "@/context/CartContext";
 import { AdminProvider } from "@/context/AdminContext";
 import { FavoritesProvider } from "@/context/FavoritesContext";
 import MarketingModal from "@/components/MarketingModal";
+import SessionWrapper from "@/components/SessionWrapper";
 
 const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: '--font-playfair' });
@@ -23,14 +24,16 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`${inter.variable} ${playfair.variable} font-sans bg-premium-black text-white`}>
-                <AdminProvider>
-                    <CartProvider>
-                        <FavoritesProvider>
-                            {children}
-                            <MarketingModal />
-                        </FavoritesProvider>
-                    </CartProvider>
-                </AdminProvider>
+                <SessionWrapper>
+                    <AdminProvider>
+                        <CartProvider>
+                            <FavoritesProvider>
+                                {children}
+                                <MarketingModal />
+                            </FavoritesProvider>
+                        </CartProvider>
+                    </AdminProvider>
+                </SessionWrapper>
             </body>
         </html>
     );

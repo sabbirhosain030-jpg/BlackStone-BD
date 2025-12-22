@@ -25,7 +25,19 @@ function ProductsContent() {
     const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState(initialSearch);
     const [selectedColors, setSelectedColors] = useState<string[]>([]); // NEW
-    const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid'); // NEW - View toggle state
+    const [viewMode, setViewMode] = useState<'grid' | 'list'>(() => {
+        // Load from localStorage on mount
+        if (typeof window !== 'undefined') {
+            const saved = localStorage.getItem('productViewMode');
+            return (saved as 'grid' | 'list') || 'grid';
+        }
+        return 'grid';
+    });
+
+    // Save view mode to localStorage when it changes
+    useEffect(() => {
+        localStorage.setItem('productViewMode', viewMode);
+    }, [viewMode]);
 
     // Get categories with hierarchy
     const { categories: adminCategories, hotOffers } = useAdmin();

@@ -179,6 +179,30 @@ export default function AdminCategoriesPage() {
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                        {!category.parentCategory && (
+                                            <motion.button
+                                                onClick={() => {
+                                                    setEditingCategory(null);
+                                                    setFormData({
+                                                        name: '',
+                                                        description: '',
+                                                        image: '',
+                                                        productCount: 0,
+                                                        subCategories: [],
+                                                        isHot: false,
+                                                        parentCategory: category.id
+                                                    });
+                                                    setIsModalOpen(true);
+                                                }}
+                                                whileHover={{ scale: 1.1 }}
+                                                whileTap={{ scale: 0.9 }}
+                                                className="text-green-400 hover:text-green-300 inline-flex items-center gap-1"
+                                                title="Add Subcategory"
+                                            >
+                                                <Plus className="h-4 w-4" />
+                                                Sub
+                                            </motion.button>
+                                        )}
                                         <motion.button
                                             onClick={() => handleEdit(category)}
                                             whileHover={{ scale: 1.1 }}
@@ -288,6 +312,93 @@ export default function AdminCategoriesPage() {
                                         placeholder="e.g. Pants, Shirts, Jackets"
                                     />
                                     <p className="mt-1 text-xs text-gray-500">Comma separated list of sub-categories</p>
+                                </div>
+                            )}
+
+                            {/* Measurement Guide Editor */}
+                            {!formData.parentCategory && (
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-300 mb-2">Size Measurement Guide (Optional)</label>
+                                    <div className="space-y-3 p-4 bg-black border border-gray-800 rounded-lg">
+                                        <p className="text-xs text-gray-500 mb-2">Add size measurements for this category</p>
+
+                                        {/* Add Size Button */}
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                const newSize = { name: '', chest: '', waist: '', length: '' };
+                                                setFormData({
+                                                    ...formData,
+                                                    measurementGuide: {
+                                                        sizes: [...(formData.measurementGuide?.sizes || []), newSize]
+                                                    }
+                                                });
+                                            }}
+                                            className="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded transition-colors"
+                                        >
+                                            + Add Size
+                                        </button>
+
+                                        {/* Size Inputs */}
+                                        {formData.measurementGuide?.sizes?.map((size, idx) => (
+                                            <div key={idx} className="grid grid-cols-5 gap-2 p-2 bg-gray-900 rounded border border-gray-800">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Size"
+                                                    value={size.name}
+                                                    onChange={(e) => {
+                                                        const newSizes = [...(formData.measurementGuide?.sizes || [])];
+                                                        newSizes[idx] = { ...newSizes[idx], name: e.target.value };
+                                                        setFormData({ ...formData, measurementGuide: { sizes: newSizes } });
+                                                    }}
+                                                    className="px-2 py-1 bg-gray-800 border border-gray-700 rounded text-white text-xs"
+                                                />
+                                                <input
+                                                    type="text"
+                                                    placeholder="Chest"
+                                                    value={size.chest || ''}
+                                                    onChange={(e) => {
+                                                        const newSizes = [...(formData.measurementGuide?.sizes || [])];
+                                                        newSizes[idx] = { ...newSizes[idx], chest: e.target.value };
+                                                        setFormData({ ...formData, measurementGuide: { sizes: newSizes } });
+                                                    }}
+                                                    className="px-2 py-1 bg-gray-800 border border-gray-700 rounded text-white text-xs"
+                                                />
+                                                <input
+                                                    type="text"
+                                                    placeholder="Waist"
+                                                    value={size.waist || ''}
+                                                    onChange={(e) => {
+                                                        const newSizes = [...(formData.measurementGuide?.sizes || [])];
+                                                        newSizes[idx] = { ...newSizes[idx], waist: e.target.value };
+                                                        setFormData({ ...formData, measurementGuide: { sizes: newSizes } });
+                                                    }}
+                                                    className="px-2 py-1 bg-gray-800 border border-gray-700 rounded text-white text-xs"
+                                                />
+                                                <input
+                                                    type="text"
+                                                    placeholder="Length"
+                                                    value={size.length || ''}
+                                                    onChange={(e) => {
+                                                        const newSizes = [...(formData.measurementGuide?.sizes || [])];
+                                                        newSizes[idx] = { ...newSizes[idx], length: e.target.value };
+                                                        setFormData({ ...formData, measurementGuide: { sizes: newSizes } });
+                                                    }}
+                                                    className="px-2 py-1 bg-gray-800 border border-gray-700 rounded text-white text-xs"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        const newSizes = formData.measurementGuide?.sizes?.filter((_, i) => i !== idx);
+                                                        setFormData({ ...formData, measurementGuide: { sizes: newSizes || [] } });
+                                                    }}
+                                                    className="text-red-400 hover:text-red-300 text-xs"
+                                                >
+                                                    Remove
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
 

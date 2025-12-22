@@ -15,12 +15,12 @@ export default function MarketingModal() {
     const [isSubmitted, setIsSubmitted] = useState(false);
 
     useEffect(() => {
-        // Check if modal has been dismissed or user has subscribed in this session
-        const dismissedThisSession = sessionStorage.getItem(SESSION_KEY);
+        // Check if user has subscribed (permanent dismissal)
         const hasSubscribed = localStorage.getItem(STORAGE_KEY);
 
-        // Show modal if enabled in settings AND not dismissed this session AND not subscribed
-        if (settings.marketingModal.enabled && !dismissedThisSession && !hasSubscribed) {
+        // Show modal if enabled in settings AND user hasn't subscribed
+        // Modal will reappear on every page navigation until user subscribes or we implement a different dismissal strategy
+        if (settings.marketingModal.enabled && !hasSubscribed) {
             // Delay showing modal for better UX (2 seconds after page load)
             const timer = setTimeout(() => {
                 setIsOpen(true);
@@ -28,13 +28,12 @@ export default function MarketingModal() {
 
             return () => clearTimeout(timer);
         }
-    }, [settings.marketingModal.enabled]); // Modal will show on EVERY page load until dismissed or subscribed
+    }, [settings.marketingModal.enabled]); // Modal will show on EVERY page navigation until user subscribes
 
     const handleClose = () => {
         setIsOpen(false);
-        // Only save to sessionStorage so it doesn't show again in this session
-        // but WILL show again on next login/page refresh
-        sessionStorage.setItem(SESSION_KEY, 'true');
+        // Modal will reappear on next page navigation since we're not storing dismissal
+        // User must subscribe to permanently dismiss
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -167,8 +166,17 @@ export default function MarketingModal() {
                                         </div>
                                     </div>
                                     <h3 className="text-2xl font-bold text-white mb-3 font-playfair">Thank You!</h3>
-                                    <p className="text-gray-400">
-                                        Check your email for your exclusive {discountPercentage}% discount code
+                                    <h3 className="text-2xl font-bold text-white mb-3 font-playfair">Thank You!</h3>
+                                    <p className="text-gray-400 mb-4">
+                                        Here is your exclusive {discountPercentage}% discount code:
+                                    </p>
+                                    <div className="bg-white/10 border border-premium-gold/50 rounded-lg p-4 mb-2">
+                                        <code className="text-2xl font-mono font-bold text-premium-gold tracking-widest">
+                                            {settings.marketingModal.couponCode || 'WELCOME10'}
+                                        </code>
+                                    </div>
+                                    <p className="text-xs text-gray-500">
+                                        Use this code at checkout
                                     </p>
                                 </motion.div>
                             )}

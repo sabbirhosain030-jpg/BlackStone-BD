@@ -59,7 +59,9 @@ export default function AdminHotOffersPage() {
 
         // Date Validation
         if (formData.startDate && formData.endDate) {
-            if (new Date(formData.startDate) > new Date(formData.endDate)) {
+            const start = new Date(formData.startDate);
+            const end = new Date(formData.endDate);
+            if (!isNaN(start.getTime()) && !isNaN(end.getTime()) && start > end) {
                 alert('Start Date cannot be after End Date');
                 return;
             }
@@ -135,7 +137,7 @@ export default function AdminHotOffersPage() {
                                 >
                                     <td className="px-6 py-4">
                                         <div className="flex items-center">
-                                            <div className="h-10 w-10 flex-shrink-0 bg-gray-800 rounded-lg flex items-center justify-center text-premium-gold overflow-hidden">
+                                            <div className="h-16 w-24 flex-shrink-0 bg-gray-800 rounded-lg flex items-center justify-center text-premium-gold overflow-hidden relative">
                                                 {offer.image ? (
                                                     <Image
                                                         src={offer.image}

@@ -153,13 +153,17 @@ export default function AdminProductsPage() {
                                     >
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
-                                                <div className="h-12 w-12 flex-shrink-0 bg-gray-800 rounded-lg overflow-hidden">
-                                                    <Image
-                                                        src={product.images[0]}
-                                                        alt={product.name}
-                                                        fill
-                                                        className="object-cover"
-                                                    />
+                                                <div className="h-12 w-12 flex-shrink-0 bg-gray-800 rounded-lg overflow-hidden flex items-center justify-center relative">
+                                                    {product.images && product.images.length > 0 ? (
+                                                        <Image
+                                                            src={product.images[0]}
+                                                            alt={product.name}
+                                                            fill
+                                                            className="object-cover"
+                                                        />
+                                                    ) : (
+                                                        <Package className="h-6 w-6 text-gray-600" />
+                                                    )}
                                                 </div>
                                                 <div className="ml-4">
                                                     <div className="text-sm font-medium text-white">{product.name}</div>

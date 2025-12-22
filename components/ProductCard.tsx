@@ -68,8 +68,8 @@ export default function ProductCard({ product, index = 0, viewMode = 'grid' }: P
                                 whileTap={{ scale: 0.9 }}
                                 onClick={handleToggleFavorite}
                                 className={`absolute top-3 right-3 z-20 p-2.5 rounded-full backdrop-blur-md transition-all shadow-lg ${favorited
-                                        ? 'bg-gradient-to-br from-red-500 to-pink-600 shadow-red-500/50'
-                                        : 'bg-black/40 hover:bg-black/60 shadow-black/50'
+                                    ? 'bg-gradient-to-br from-red-500 to-pink-600 shadow-red-500/50'
+                                    : 'bg-black/40 hover:bg-black/60 shadow-black/50'
                                     }`}
                             >
                                 <motion.div
@@ -113,7 +113,7 @@ export default function ProductCard({ product, index = 0, viewMode = 'grid' }: P
                             <Link href={`/products/${product.id}`}>
                                 <h3 className="text-white font-playfair font-bold text-xl mb-2 hover:text-premium-gold transition-colors line-clamp-1">{product.name}</h3>
                             </Link>
-                            <p className="text-gray-400 text-sm mb-4 line-clamp-2">{product.description}</p>
+                            <p className="text-gray-400 text-xs mb-3 line-clamp-1">{product.description}</p>
 
                             <div className="flex items-center gap-4 mt-auto">
                                 <div className="flex flex-col">

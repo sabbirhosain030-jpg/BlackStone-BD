@@ -27,10 +27,48 @@ export default function CheckoutPage() {
         location: 'inside', // 'inside' or 'outside'
     });
 
+    const [couponCode, setCouponCode] = useState('');
+    const [couponError, setCouponError] = useState('');
+    const [couponSuccess, setCouponSuccess] = useState('');
+    const [discount, setDiscount] = useState(0);
+    const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
+
     const shipping = items.length > 0
         ? (formData.location === 'inside' ? settings.deliveryChargeInsideDhaka : settings.deliveryChargeOutsideDhaka)
         : 0;
-    const total = cartTotal + shipping;
+    const total = cartTotal + shipping - discount;
+
+    const handleApplyCoupon = async () => {
+        if (!couponCode) return;
+        setCouponError('');
+        setCouponSuccess('');
+
+        try {
+            const res = await fetch('/api/coupons/validate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    code: couponCode,
+                    cartTotal,
+                    email: formData.email, // Send email for first-order check
+                    isFirstOrder: true // In a real app, verify this against DB. For now, assume true or rely on email check.
+                }),
+            });
+            const data = await res.json();
+
+            if (res.ok && data.valid) {
+                setDiscount(data.discountAmount);
+                setAppliedCoupon(data.couponcode);
+                setCouponSuccess(`Coupon applied! You saved ৳${data.discountAmount}`);
+            } else {
+                setCouponError(data.message || 'Invalid coupon');
+                setDiscount(0);
+                setAppliedCoupon(null);
+            }
+        } catch (err) {
+            setCouponError('Failed to validate coupon');
+        }
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({
@@ -57,6 +95,10 @@ export default function CheckoutPage() {
             ...formData,
             items: items,
             total: total,
+            subtotal: cartTotal,
+            shipping: shipping,
+            discount: discount,
+            couponCode: appliedCoupon,
             orderDate: new Date().toISOString(),
         };
 
@@ -279,6 +321,38 @@ export default function CheckoutPage() {
                                     </div>
                                 </div>
 
+                                {/* Coupon Code */}
+                                <div>
+                                    <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2 border-b border-gray-800 pb-2">
+                                        <div className="w-8 h-8 rounded-full bg-premium-gold text-premium-black flex items-center justify-center text-sm font-bold">%</div>
+                                        Disclaimer & Coupons
+                                    </h2>
+                                    <div className="bg-black/30 rounded-xl p-6 border border-gray-800">
+                                        <div className="flex flex-col md:flex-row gap-4">
+                                            <input
+                                                type="text"
+                                                value={couponCode}
+                                                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                                                placeholder="Enter Coupon Code"
+                                                className="flex-1 bg-black border border-gray-800 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-premium-gold focus:border-transparent transition-all placeholder-gray-600 uppercase tracking-wider"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={handleApplyCoupon}
+                                                className="bg-gray-800 hover:bg-premium-gold hover:text-premium-black text-white font-bold py-3 px-6 rounded-lg transition-all"
+                                            >
+                                                Apply
+                                            </button>
+                                        </div>
+                                        {couponError && <p className="text-red-400 text-sm mt-2">{couponError}</p>}
+                                        {couponSuccess && <p className="text-green-400 text-sm mt-2">{couponSuccess}</p>}
+
+                                        <p className="text-xs text-gray-500 mt-4">
+                                            * By placing this order, you agree to our Terms of Service and Privacy Policy.
+                                        </p>
+                                    </div>
+                                </div>
+
                                 {/* Order Summary */}
                                 <div className="bg-black/50 rounded-xl p-6 border border-gray-800">
                                     <h3 className="text-lg font-bold text-premium-gold mb-4 font-playfair">Order Summary</h3>
@@ -291,6 +365,12 @@ export default function CheckoutPage() {
                                             <span>Shipping</span>
                                             <span className="text-white">৳{shipping.toLocaleString()}</span>
                                         </div>
+                                        {discount > 0 && (
+                                            <div className="flex justify-between text-sm text-premium-gold">
+                                                <span>Discount</span>
+                                                <span>-৳{discount.toLocaleString()}</span>
+                                            </div>
+                                        )}
                                     </div>
                                     <div className="flex justify-between items-center text-xl font-bold text-white pt-4 border-t border-gray-700">
                                         <span>Total Amount</span>

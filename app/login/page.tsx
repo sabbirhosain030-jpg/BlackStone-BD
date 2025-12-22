@@ -58,14 +58,48 @@ export default function LoginPage() {
         }
 
         setIsSubmitting(true);
+        setErrors({});
 
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        try {
+            if (isLogin) {
+                // Login Logic
+                const { signIn } = await import('next-auth/react');
+                const result = await signIn('credentials', {
+                    redirect: false,
+                    email: formData.email,
+                    password: formData.password,
+                });
 
-        // Here you would integrate with your auth system
-        console.log('Form submitted:', { isLogin, ...formData });
+                if (result?.error) {
+                    setErrors({ form: 'Invalid email or password' });
+                } else {
+                    // Redirect or refresh
+                    window.location.href = '/';
+                }
+            } else {
+                // Sign Up Logic
+                const res = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData),
+                });
 
-        setIsSubmitting(false);
+                const data = await res.json();
+
+                if (!res.ok) {
+                    setErrors({ form: data.error || 'Registration failed' });
+                } else {
+                    // Auto login after signup? Or just switch to login
+                    alert('Account created! Please sign in.');
+                    setIsLogin(true);
+                }
+            }
+        } catch (error) {
+            console.error(error);
+            setErrors({ form: 'Something went wrong. Please try again.' });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const toggleMode = () => {
@@ -177,6 +211,12 @@ export default function LoginPage() {
 
                             {/* Form */}
                             <form onSubmit={handleSubmit} className="space-y-5">
+                                {/* General Error Message */}
+                                {errors.form && (
+                                    <div className="bg-red-900/40 border border-red-500/50 text-red-200 p-3 rounded-lg text-sm text-center">
+                                        {errors.form}
+                                    </div>
+                                )}
                                 <AnimatePresence mode="wait">
                                     {/* Name Field (Signup Only) */}
                                     {!isLogin && (
@@ -195,8 +235,8 @@ export default function LoginPage() {
                                                     onChange={handleInputChange}
                                                     placeholder="Full Name"
                                                     className={`w-full pl-12 pr-4 py-3.5 bg-black border-2 rounded-lg focus:outline-none transition-all ${errors.name
-                                                            ? 'border-red-500 focus:border-red-400'
-                                                            : 'border-gray-700 focus:border-premium-gold focus:ring-2 focus:ring-premium-gold/20'
+                                                        ? 'border-red-500 focus:border-red-400'
+                                                        : 'border-gray-700 focus:border-premium-gold focus:ring-2 focus:ring-premium-gold/20'
                                                         } text-white placeholder-gray-500`}
                                                 />
                                             </div>
@@ -224,8 +264,8 @@ export default function LoginPage() {
                                             onChange={handleInputChange}
                                             placeholder="Email Address"
                                             className={`w-full pl-12 pr-4 py-3.5 bg-black border-2 rounded-lg focus:outline-none transition-all ${errors.email
-                                                    ? 'border-red-500 focus:border-red-400'
-                                                    : 'border-gray-700 focus:border-premium-gold focus:ring-2 focus:ring-premium-gold/20'
+                                                ? 'border-red-500 focus:border-red-400'
+                                                : 'border-gray-700 focus:border-premium-gold focus:ring-2 focus:ring-premium-gold/20'
                                                 } text-white placeholder-gray-500`}
                                         />
                                     </div>
@@ -251,8 +291,8 @@ export default function LoginPage() {
                                             onChange={handleInputChange}
                                             placeholder="Password"
                                             className={`w-full pl-12 pr-12 py-3.5 bg-black border-2 rounded-lg focus:outline-none transition-all ${errors.password
-                                                    ? 'border-red-500 focus:border-red-400'
-                                                    : 'border-gray-700 focus:border-premium-gold focus:ring-2 focus:ring-premium-gold/20'
+                                                ? 'border-red-500 focus:border-red-400'
+                                                : 'border-gray-700 focus:border-premium-gold focus:ring-2 focus:ring-premium-gold/20'
                                                 } text-white placeholder-gray-500`}
                                         />
                                         <button

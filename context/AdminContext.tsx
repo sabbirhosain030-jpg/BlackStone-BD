@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { Category, Product, Order, Customer, HotOffer, SiteSettings, TrendingItem, Subscriber } from '@/types';
+import { Category, Product, Order, Customer, HotOffer, SiteSettings, TrendingItem, Subscriber, Coupon } from '@/types';
 import {
     categories as initialCategories,
     products as initialProducts,
@@ -22,6 +22,7 @@ interface AdminContextType {
     settings: SiteSettings;
     trendingItems: TrendingItem[];
     subscribers: Subscriber[];
+    coupons: Coupon[];
     loading: boolean;
     addCategory: (category: Category) => void;
     updateCategory: (category: Category) => void;
@@ -40,6 +41,9 @@ interface AdminContextType {
     updateHotOffer: (offer: HotOffer) => void;
     deleteHotOffer: (id: string) => void;
     toggleHotOfferStatus: (id: string) => void;
+    addCoupon: (coupon: Coupon) => void;
+    updateCoupon: (coupon: Coupon) => void;
+    deleteCoupon: (id: string) => void;
 }
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
@@ -53,16 +57,19 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     const [settings, setSettings] = useState<SiteSettings>(initialSettings);
     const [trendingItems, setTrendingItems] = useState<TrendingItem[]>(initialTrendingItems);
     const [subscribers, setSubscribers] = useState<Subscriber[]>(mockSubscribers);
+    const [coupons, setCoupons] = useState<Coupon[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const [catsRes, prodsRes, settingsRes] = await Promise.all([
+                const [catsRes, prodsRes, settingsRes, couponsRes, offersRes] = await Promise.all([
                     fetch('/api/categories'),
                     fetch('/api/products'),
-                    fetch('/api/settings')
+                    fetch('/api/settings'),
+                    fetch('/api/coupons'),
+                    fetch('/api/hot-offers')
                 ]);
 
                 if (catsRes.ok) {
@@ -76,6 +83,16 @@ export function AdminProvider({ children }: { children: ReactNode }) {
                 if (settingsRes.ok) {
                     const settingsData = await settingsRes.json();
                     if (settingsData) setSettings(settingsData);
+                }
+                if (couponsRes.ok) {
+                    const couponsData = await couponsRes.json();
+                    if (Array.isArray(couponsData)) setCoupons(couponsData);
+                }
+                if (offersRes.ok) {
+                    const offersData = await offersRes.json();
+                    if (Array.isArray(offersData) && offersData.length > 0) {
+                        setHotOffers(offersData);
+                    }
                 }
             } catch (error) {
                 console.error("Failed to fetch admin data:", error);
@@ -99,25 +116,70 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         setCategories(categories.filter(c => c.id !== id));
     };
 
-    const addProduct = (product: Product) => {
-        setProducts([...products, product]);
+    const addProduct = async (product: Product) => {
+        try {
+            const res = await fetch('/api/products', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(product),
+            });
+            if (res.ok) {
+                const newProduct = await res.json();
+                setProducts([...products, newProduct]);
+            }
+        } catch (error) {
+            console.error("Failed to add product:", error);
+        }
     };
 
-    const updateProduct = (updatedProduct: Product) => {
-        setProducts(products.map(p => p.id === updatedProduct.id ? updatedProduct : p));
+    const updateProduct = async (updatedProduct: Product) => {
+        try {
+            await fetch('/api/products', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedProduct),
+            });
+            setProducts(products.map(p => p.id === updatedProduct.id ? updatedProduct : p));
+        } catch (error) {
+            console.error("Failed to update product:", error);
+        }
     };
 
-    const deleteProduct = (id: string) => {
-        // Soft delete
-        setProducts(products.map(p => p.id === id ? { ...p, isDeleted: true } : p));
+    const deleteProduct = async (id: string) => {
+        try {
+            // Check if we want soft delete or hard delete. 
+            // The UI seems to have 'trash' view, suggesting soft delete.
+            // But if we want to PERSIST the soft delete, we typically update 'isDeleted: true'.
+            // Let's assume soft delete via PUT first.
+            const product = products.find(p => p.id === id);
+            if (product) {
+                const updated = { ...product, isDeleted: true };
+                await updateProduct(updated); // Reuse update logic which calls API
+            }
+        } catch (error) {
+            console.error("Failed to delete product:", error);
+        }
     };
 
-    const restoreProduct = (id: string) => {
-        setProducts(products.map(p => p.id === id ? { ...p, isDeleted: false } : p));
+    const restoreProduct = async (id: string) => {
+        const product = products.find(p => p.id === id);
+        if (product) {
+            const updated = { ...product, isDeleted: false };
+            await updateProduct(updated);
+        }
     };
 
-    const updateSettings = (newSettings: SiteSettings) => {
+    const updateSettings = async (newSettings: SiteSettings) => {
         setSettings(newSettings);
+        try {
+            await fetch('/api/settings', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newSettings),
+            });
+        } catch (error) {
+            console.error("Failed to persist settings:", error);
+        }
     };
 
     const addTrendingItem = (item: TrendingItem) => {
@@ -145,6 +207,46 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         setSubscribers(subscribers.filter(s => s.id !== id));
     };
 
+    const addCoupon = async (coupon: Coupon) => {
+        try {
+            const res = await fetch('/api/coupons', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(coupon),
+            });
+            if (res.ok) {
+                const newCoupon = await res.json();
+                setCoupons([...coupons, newCoupon]);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const updateCoupon = async (updatedCoupon: Coupon) => {
+        try {
+            await fetch('/api/coupons', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedCoupon),
+            });
+            setCoupons(coupons.map(c => c.id === updatedCoupon.id ? updatedCoupon : c));
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const deleteCoupon = async (id: string) => {
+        try {
+            await fetch(`/api/coupons?id=${id}`, {
+                method: 'DELETE',
+            });
+            setCoupons(coupons.filter(c => c.id !== id));
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return (
         <AdminContext.Provider value={{
             categories,
@@ -155,6 +257,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
             settings,
             trendingItems,
             subscribers,
+            coupons,
             loading,
             addCategory,
             updateCategory,
@@ -169,17 +272,60 @@ export function AdminProvider({ children }: { children: ReactNode }) {
             deleteTrendingItem,
             addSubscriber,
             deleteSubscriber,
-            addHotOffer: (offer: HotOffer) => {
-                setHotOffers([...hotOffers, offer]);
+            addCoupon,
+            updateCoupon,
+            deleteCoupon,
+
+            addHotOffer: async (offer: HotOffer) => {
+                try {
+                    const res = await fetch('/api/hot-offers', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(offer),
+                    });
+                    if (res.ok) {
+                        const newOffer = await res.json();
+                        setHotOffers([...hotOffers, newOffer]);
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
             },
-            updateHotOffer: (updatedOffer: HotOffer) => {
-                setHotOffers(hotOffers.map(o => o.id === updatedOffer.id ? updatedOffer : o));
+            updateHotOffer: async (updatedOffer: HotOffer) => {
+                try {
+                    await fetch('/api/hot-offers', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(updatedOffer),
+                    });
+                    setHotOffers(hotOffers.map(o => o.id === updatedOffer.id ? updatedOffer : o));
+                } catch (error) {
+                    console.error(error);
+                }
             },
-            deleteHotOffer: (id: string) => {
-                setHotOffers(hotOffers.filter(o => o.id !== id));
+            deleteHotOffer: async (id: string) => {
+                try {
+                    await fetch(`/api/hot-offers?id=${id}`, { method: 'DELETE' });
+                    setHotOffers(hotOffers.filter(o => o.id !== id));
+                } catch (error) {
+                    console.error(error);
+                }
             },
-            toggleHotOfferStatus: (id: string) => {
-                setHotOffers(hotOffers.map(o => o.id === id ? { ...o, isActive: !o.isActive } : o));
+            toggleHotOfferStatus: async (id: string) => {
+                const offer = hotOffers.find(o => o.id === id);
+                if (offer) {
+                    const updated = { ...offer, isActive: !offer.isActive };
+                    try {
+                        await fetch('/api/hot-offers', {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(updated),
+                        });
+                        setHotOffers(hotOffers.map(o => o.id === id ? updated : o));
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }
             }
         }}>
             {children}

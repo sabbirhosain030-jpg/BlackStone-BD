@@ -31,6 +31,7 @@ export interface CartItem extends Product {
 
 export interface Order {
     id: string;
+    userId?: string; // Optional - links to registered user, undefined for guest orders
     customerName: string;
     customerEmail: string;
     customerPhone: string;
@@ -44,8 +45,14 @@ export interface Order {
 
 export interface User {
     id: string;
-    username: string;
+    name: string;
+    email: string;
+    password?: string; // Optional for security, not sent to frontend
+    phone?: string;
+    address?: string;
+    profileImage?: string;
     role: 'admin' | 'customer';
+    createdAt?: string;
 }
 
 export interface Category {
@@ -59,6 +66,31 @@ export interface Category {
     isHot?: boolean; // NEW - Mark as "Hot" category in filters
     parentCategory?: string; // NEW - ID of parent category (null for main categories)
     subCategories?: string[]; // NEW - IDs of subcategories
+    measurementGuide?: {
+        sizes: {
+            name: string; // e.g., "S", "M", "L", "XL"
+            chest?: string; // e.g., "36-38 inches"
+            waist?: string;
+            length?: string;
+            shoulder?: string;
+            sleeve?: string;
+        }[];
+    };
+}
+
+export interface Coupon {
+    id: string;
+    code: string;
+    discountType: 'percentage' | 'fixed'; // 'percentage' or 'fixed'
+    discountValue: number;
+    minOrderAmount?: number;
+    maxDiscountAmount?: number;
+    usageLimit?: number;
+    usedCount: number;
+    startDate: string;
+    endDate: string;
+    isActive: boolean;
+    applicableTo?: 'all' | 'first-order' | 'shipping';
 }
 
 export interface Customer {
@@ -131,6 +163,7 @@ export interface SiteSettings {
         description: string;
         discountPercentage: number;
         imageUrl?: string;
+        couponCode?: string; // NEW - Code to show after subscription
     };
     appearance: {
         showBanner: boolean;

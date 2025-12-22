@@ -1,19 +1,22 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingCart, Menu, Search, X, Heart } from 'lucide-react';
+import { ShoppingCart, Menu, Search, X, Heart, User, LogOut, Package } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useFavorites } from '@/context/FavoritesContext';
 import { useState, useEffect } from 'react';
 import SearchModal from './SearchModal';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname } from 'next/navigation';
+import { useSession, signOut } from 'next-auth/react';
 
 export default function Navbar() {
     const { cartCount } = useCart();
     const { favorites } = useFavorites();
+    const { data: session } = useSession();
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [showProfileMenu, setShowProfileMenu] = useState(false);
     const pathname = usePathname();
 
     // Close mobile menu on route change
@@ -109,14 +112,63 @@ export default function Navbar() {
                                 )}
                             </Link>
 
-                            {/* Login Link - Desktop */}
-                            {!isLoginPage && (
-                                <Link
-                                    href="/login"
-                                    className="hidden md:flex items-center gap-2 px-4 py-2 bg-premium-gold hover:bg-white text-premium-black font-medium rounded-full transition-all transform hover:scale-105 duration-200"
-                                >
-                                    Login
-                                </Link>
+                            {/* Profile Icon / Login - Desktop */}
+                            {session ? (
+                                <div className="hidden md:block relative">
+                                    <button
+                                        onClick={() => setShowProfileMenu(!showProfileMenu)}
+                                        className="flex items-center gap-2 px-4 py-2 bg-premium-gold/10 hover:bg-premium-gold/20 text-premium-gold border border-premium-gold/30 font-medium rounded-full transition-all transform hover:scale-105 duration-200"
+                                    >
+                                        <User className="h-5 w-5" />
+                                        <span className="hidden lg:inline">{session.user?.name?.split(' ')[0]}</span>
+                                    </button>
+                                    <AnimatePresence>
+                                        {showProfileMenu && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: 10 }}
+                                                className="absolute right-0 mt-2 w-48 bg-premium-charcoal border border-gray-700 rounded-lg shadow-xl overflow-hidden"
+                                            >
+                                                <Link
+                                                    href="/profile"
+                                                    onClick={() => setShowProfileMenu(false)}
+                                                    className="flex items-center gap-2 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+                                                >
+                                                    <User className="h-4 w-4" />
+                                                    My Profile
+                                                </Link>
+                                                <Link
+                                                    href="/profile#orders"
+                                                    onClick={() => setShowProfileMenu(false)}
+                                                    className="flex items-center gap-2 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+                                                >
+                                                    <Package className="h-4 w-4" />
+                                                    Order History
+                                                </Link>
+                                                <button
+                                                    onClick={() => {
+                                                        setShowProfileMenu(false);
+                                                        signOut({ callbackUrl: '/' });
+                                                    }}
+                                                    className="w-full flex items-center gap-2 px-4 py-3 text-red-400 hover:bg-gray-800 hover:text-red-300 transition-colors"
+                                                >
+                                                    <LogOut className="h-4 w-4" />
+                                                    Logout
+                                                </button>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            ) : (
+                                !isLoginPage && (
+                                    <Link
+                                        href="/login"
+                                        className="hidden md:flex items-center gap-2 px-4 py-2 bg-premium-gold hover:bg-white text-premium-black font-medium rounded-full transition-all transform hover:scale-105 duration-200"
+                                    >
+                                        Login
+                                    </Link>
+                                )
                             )}
 
                             <Link href="/cart" className="text-gray-300 hover:text-premium-gold transition-colors relative transform hover:scale-110 duration-200">
@@ -196,21 +248,57 @@ export default function Navbar() {
                                             </motion.div>
                                         ))}
 
-                                        {/* Login Link - Mobile */}
-                                        {!isLoginPage && (
-                                            <motion.div
-                                                initial={{ opacity: 0, x: 20 }}
-                                                animate={{ opacity: 1, x: 0 }}
-                                                transition={{ delay: navLinks.length * 0.05 }}
-                                            >
-                                                <Link
-                                                    href="/login"
-                                                    className="flex items-center px-4 py-3 rounded-lg font-medium transition-all duration-200 bg-premium-gold/20 text-premium-gold hover:bg-premium-gold/30 border border-premium-gold/30"
-                                                    onClick={() => setIsMobileMenuOpen(false)}
+
+                                        {/* Profile / Login Links - Mobile */}
+                                        {session ? (
+                                            <>
+                                                <motion.div
+                                                    initial={{ opacity: 0, x: 20 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    transition={{ delay: navLinks.length * 0.05 }}
                                                 >
-                                                    Login to Account
-                                                </Link>
-                                            </motion.div>
+                                                    <Link
+                                                        href="/profile"
+                                                        className="flex items-center gap-2 px-4 py-3 rounded-lg font-medium transition-all duration-200 text-gray-300 hover:bg-white/5 hover:text-white"
+                                                        onClick={() => setIsMobileMenuOpen(false)}
+                                                    >
+                                                        <User className="h-5 w-5" />
+                                                        My Profile
+                                                    </Link>
+                                                </motion.div>
+                                                <motion.div
+                                                    initial={{ opacity: 0, x: 20 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    transition={{ delay: (navLinks.length + 1) * 0.05 }}
+                                                >
+                                                    <button
+                                                        onClick={() => {
+                                                            setIsMobileMenuOpen(false);
+                                                            signOut({ callbackUrl: '/' });
+                                                        }}
+                                                        className="w-full flex items-center gap-2 px-4 py-3 rounded-lg font-medium transition-all duration-200 text-red-400 hover:bg-red-900/20 hover:text-red-300"
+                                                    >
+                                                        <LogOut className="h-5 w-5" />
+                                                        Logout
+                                                    </button>
+                                                </motion.div>
+                                            </>
+                                        ) : (
+                                            !isLoginPage && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, x: 20 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    transition={{ delay: navLinks.length * 0.05 }}
+                                                >
+                                                    <Link
+                                                        href="/login"
+                                                        className="flex items-center px-4 py-3 rounded-lg font-medium transition-all duration-200 bg-premium-gold/20 text-premium-gold hover:bg-premium-gold/30 border border-premium-gold/30"
+                                                        onClick={() => setIsMobileMenuOpen(false)}
+                                                    >
+                                                        Login to Account
+                                                    </Link>
+                                                </motion.div>
+                                            )
                                         )}
                                     </div>
                                 </nav>
