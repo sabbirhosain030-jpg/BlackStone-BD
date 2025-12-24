@@ -27,35 +27,63 @@ export async function generatePDF(elementId: string, filename: string = 'order-r
     const element = document.getElementById(elementId);
 
     if (!element) {
-        throw new Error(`Element with id "${elementId}" not found`);
+        const errorMsg = `Element with id "${elementId}" not found. Please try again.`;
+        console.error(errorMsg);
+        alert(errorMsg);
+        throw new Error(errorMsg);
     }
 
     try {
-        // Capture the element as canvas
+        // Show loading indicator (if you want to add one, parent component can track this)
+        console.log('Generating PDF...');
+
+        // Capture the element as canvas with high quality settings
         const canvas = await html2canvas(element, {
-            scale: 2,
+            scale: 3, // Increased from 2 to 3 for better quality
             useCORS: true,
             logging: false,
-            backgroundColor: '#ffffff'
+            backgroundColor: '#ffffff',
+            windowWidth: element.scrollWidth,
+            windowHeight: element.scrollHeight,
         });
 
-        const imgData = canvas.toDataURL('image/png');
+        const imgData = canvas.toDataURL('image/png', 1.0); // Maximum quality
 
-        // Calculate PDF dimensions
+        // Calculate PDF dimensions (A4 size)
         const imgWidth = 210; // A4 width in mm
+        const pageHeight = 297; // A4 height in mm
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let heightLeft = imgHeight;
 
-        // Create PDF
+        // Create PDF with proper orientation
         const pdf = new jsPDF({
-            orientation: imgHeight > imgWidth ? 'portrait' : 'portrait',
+            orientation: 'portrait',
             unit: 'mm',
-            format: 'a4'
+            format: 'a4',
+            compress: true
         });
 
-        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+        let position = 0;
+
+        // Add image to first page
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
+        heightLeft -= pageHeight;
+
+        // Add new pages if content exceeds one page
+        while (heightLeft > 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
+            heightLeft -= pageHeight;
+        }
+
+        // Save the PDF
         pdf.save(filename);
+        console.log('PDF generated successfully!');
     } catch (error) {
+        const errorMsg = 'Failed to generate PDF. Please ensure your browser allows downloads and try again.';
         console.error('Error generating PDF:', error);
+        alert(errorMsg);
         throw error;
     }
 }

@@ -410,7 +410,38 @@ export const trendingItems: TrendingItem[] = [
 import { Order } from '@/types';
 
 // Reset Orders for Fresh Start
-export const orders: Order[] = [];
+export const orders: Order[] = [
+    {
+        id: '1001',
+        customerName: 'Demo User',
+        customerEmail: 'demo@example.com',
+        customerPhone: '+880 1712-345678',
+        customerAddress: 'House 123, Road 12, Dhanmondi, Dhaka',
+        items: [
+            {
+                id: 'm1',
+                name: 'Premium Cotton Panjabi',
+                description: 'Traditional Panjabi crafted from high-quality cotton. Perfect for festive occasions.',
+                price: 3500,
+                originalPrice: 4200,
+                category: "Men's",
+                images: ['https://images.unsplash.com/photo-1632204797047-9b2742969b74?q=80&w=1000&auto=format&fit=crop'],
+                stock: 50,
+                colors: ['White', 'Navy', 'Maroon'],
+                sizes: ['M', 'L', 'XL', 'XXL'],
+                rating: 4.8,
+                reviews: 24,
+                quantity: 1,
+                selectedSize: 'L',
+                selectedColor: 'White'
+            }
+        ],
+        total: 3560,
+        status: 'pending',
+        paymentMethod: 'cod',
+        createdAt: new Date().toISOString()
+    }
+];
 
 export const initialSubscribers = [
     { id: '1', email: 'john.doe@example.com', joinedAt: '2023-11-15T10:30:00Z' }

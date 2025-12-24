@@ -8,6 +8,51 @@ import { useAdmin } from '@/context/AdminContext';
 export default function AdminSettingsPage() {
     const { settings, updateSettings } = useAdmin();
     const [activeTab, setActiveTab] = useState('general');
+    const [passwordData, setPasswordData] = useState({ current: '', new: '', confirm: '' });
+    const [isChangingPassword, setIsChangingPassword] = useState(false);
+
+    const handleChangePassword = async () => {
+        if (!passwordData.current || !passwordData.new || !passwordData.confirm) {
+            alert('Please fill in all password fields');
+            return;
+        }
+
+        if (passwordData.new !== passwordData.confirm) {
+            alert('New passwords do not match');
+            return;
+        }
+
+        if (passwordData.new.length < 6) {
+            alert('Password must be at least 6 characters');
+            return;
+        }
+
+        setIsChangingPassword(true);
+        try {
+            const res = await fetch('/api/admin/change-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    currentPassword: passwordData.current,
+                    newPassword: passwordData.new
+                }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                alert(data.error || 'Failed to change password');
+            } else {
+                alert('Password changed successfully! Please login with new password next time.');
+                setPasswordData({ current: '', new: '', confirm: '' });
+            }
+        } catch (error) {
+            console.error(error);
+            alert('An error occurred');
+        } finally {
+            setIsChangingPassword(false);
+        }
+    };
 
     const tabs = [
         { id: 'general', label: 'General Settings', icon: Globe },
@@ -307,6 +352,8 @@ export default function AdminSettingsPage() {
                                             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
                                             <input
                                                 type="password"
+                                                value={passwordData.current}
+                                                onChange={(e) => setPasswordData({ ...passwordData, current: e.target.value })}
                                                 className="w-full pl-10 pr-4 py-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent text-white"
                                             />
                                         </div>
@@ -317,6 +364,8 @@ export default function AdminSettingsPage() {
                                             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
                                             <input
                                                 type="password"
+                                                value={passwordData.new}
+                                                onChange={(e) => setPasswordData({ ...passwordData, new: e.target.value })}
                                                 className="w-full pl-10 pr-4 py-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent text-white"
                                             />
                                         </div>
@@ -327,10 +376,19 @@ export default function AdminSettingsPage() {
                                             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
                                             <input
                                                 type="password"
+                                                value={passwordData.confirm}
+                                                onChange={(e) => setPasswordData({ ...passwordData, confirm: e.target.value })}
                                                 className="w-full pl-10 pr-4 py-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent text-white"
                                             />
                                         </div>
                                     </div>
+                                    <button
+                                        onClick={handleChangePassword}
+                                        disabled={isChangingPassword}
+                                        className="w-full bg-premium-gold hover:bg-white text-premium-black font-bold py-3 px-6 rounded-lg transition-colors disabled:opacity-50 mt-4"
+                                    >
+                                        {isChangingPassword ? 'Updating...' : 'Update Password'}
+                                    </button>
                                 </div>
                             </div>
                         </div>

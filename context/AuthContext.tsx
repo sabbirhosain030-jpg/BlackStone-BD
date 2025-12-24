@@ -17,26 +17,31 @@ function AuthContextWrapper({ children }: { children: ReactNode }) {
     const isAuthenticated = status === 'authenticated';
     const isLoading = status === 'loading';
 
-    const login = async (username: string, password: string): Promise<boolean> => {
+    const login = async (usernameOrEmail: string, password: string): Promise<boolean> => {
         try {
+            console.log("🔐 Attempting login with:", usernameOrEmail);
             const result = await signIn("credentials", {
-                username: username,
+                username: usernameOrEmail, // Pass to 'username' field in credentials, which NextAuth will handle
                 password: password,
                 redirect: false,
             });
 
+            console.log("📊 SignIn result:", result);
+
             if (result?.error) {
-                console.error("Login failed:", result.error);
+                console.error("❌ Login failed:", result.error);
                 return false;
             }
 
             if (result?.ok) {
+                console.log("✅ Login successful");
                 return true;
             }
 
+            console.warn("⚠️ Login result uncertain");
             return false;
         } catch (error) {
-            console.error("Login unexpected error:", error);
+            console.error("💥 Login unexpected error:", error);
             return false;
         }
     };

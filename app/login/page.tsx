@@ -62,7 +62,7 @@ export default function LoginPage() {
 
         try {
             if (isLogin) {
-                // Login Logic
+                // Login Logic - Works for both admin and customers
                 const { signIn } = await import('next-auth/react');
                 const result = await signIn('credentials', {
                     redirect: false,
@@ -72,9 +72,17 @@ export default function LoginPage() {
 
                 if (result?.error) {
                     setErrors({ form: 'Invalid email or password' });
-                } else {
-                    // Redirect or refresh
-                    window.location.href = '/';
+                } else if (result?.ok) {
+                    // Get session to check role
+                    const { useSession } = await import('next-auth/react');
+
+                    // Redirect based on role
+                    // Admin credentials: admin@blackstonebd.com / BlackStone2024!
+                    if (formData.email === 'admin@blackstonebd.com') {
+                        window.location.href = '/admin';
+                    } else {
+                        window.location.href = '/';
+                    }
                 }
             } else {
                 // Sign Up Logic

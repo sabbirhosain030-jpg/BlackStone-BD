@@ -13,10 +13,14 @@ import { useAdmin } from '@/context/AdminContext';
 import Link from 'next/link';
 import { ArrowRight, Shield, Truck, RefreshCw, Award, Flame } from 'lucide-react';
 import { useState } from 'react';
+import ProductViewToggle from '@/components/ProductViewToggle';
 
 export default function Home() {
     const { hotOffers, products, settings } = useAdmin();
     const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+    const [newArrivalsView, setNewArrivalsView] = useState<'grid' | 'list'>('grid');
+    const [featuredView, setFeaturedView] = useState<'grid' | 'list'>('grid');
+    const [bestSellingView, setBestSellingView] = useState<'grid' | 'list'>('grid');
 
     // Smart Product Sections Logic
     // 1. Filter out Hot Offers from other sections (Exclusivity)
@@ -127,29 +131,32 @@ export default function Home() {
                 {settings.appearance?.sections?.newArrivals !== false && (
                     <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <AnimatedSection>
-                            <div className="text-center mb-12">
-                                <motion.h2
-                                    className="text-4xl font-bold font-playfair text-white"
-                                    initial={{ opacity: 0, y: -20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                >
-                                    New Arrivals
-                                </motion.h2>
-                                <motion.p
-                                    className="text-gray-400 mt-3 text-lg"
-                                    initial={{ opacity: 0 }}
-                                    whileInView={{ opacity: 1 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: 0.2 }}
-                                >
-                                    The latest additions to our store
-                                </motion.p>
+                            <div className="flex justify-between items-center mb-12 flex-wrap gap-4">
+                                <div className="text-center sm:text-left">
+                                    <motion.h2
+                                        className="text-4xl font-bold font-playfair text-white"
+                                        initial={{ opacity: 0, y: -20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                    >
+                                        New Arrivals
+                                    </motion.h2>
+                                    <motion.p
+                                        className="text-gray-400 mt-3 text-lg"
+                                        initial={{ opacity: 0 }}
+                                        whileInView={{ opacity: 1 }}
+                                        viewport={{ once: true }}
+                                        transition={{ delay: 0.2 }}
+                                    >
+                                        The latest additions to our store
+                                    </motion.p>
+                                </div>
+                                <ProductViewToggle viewMode={newArrivalsView} onViewChange={setNewArrivalsView} />
                             </div>
                         </AnimatedSection>
 
                         <motion.div
-                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+                            className={newArrivalsView === 'grid' ? 'grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8' : 'flex flex-col gap-4'}
                             initial="hidden"
                             whileInView="visible"
                             viewport={{ once: true, margin: '-50px' }}
@@ -169,7 +176,7 @@ export default function Home() {
                                         visible: { opacity: 1, y: 0 },
                                     }}
                                 >
-                                    <ProductCard product={product} index={index} />
+                                    <ProductCard product={product} index={index} viewMode={newArrivalsView} />
                                 </motion.div>
                             ))}
                         </motion.div>
@@ -193,14 +200,17 @@ export default function Home() {
                     <section className="py-20 bg-premium-charcoal border-y border-gray-900">
                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                             <AnimatedSection>
-                                <div className="text-center mb-12">
-                                    <h2 className="text-4xl font-bold font-playfair text-premium-gold">Featured Collection</h2>
-                                    <p className="text-gray-400 mt-3 text-lg">Handpicked favorites just for you</p>
+                                <div className="flex justify-between items-center mb-12 flex-wrap gap-4">
+                                    <div className="text-center sm:text-left">
+                                        <h2 className="text-4xl font-bold font-playfair text-premium-gold">Featured Collection</h2>
+                                        <p className="text-gray-400 mt-3 text-lg">Handpicked favorites just for you</p>
+                                    </div>
+                                    <ProductViewToggle viewMode={featuredView} onViewChange={setFeaturedView} />
                                 </div>
                             </AnimatedSection>
 
                             <motion.div
-                                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+                                className={featuredView === 'grid' ? 'grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8' : 'flex flex-col gap-4'}
                                 initial="hidden"
                                 whileInView="visible"
                                 viewport={{ once: true }}
@@ -220,7 +230,7 @@ export default function Home() {
                                             visible: { opacity: 1, y: 0 },
                                         }}
                                     >
-                                        <ProductCard product={product} index={index} />
+                                        <ProductCard product={product} index={index} viewMode={featuredView} />
                                     </motion.div>
                                 ))}
                             </motion.div>
@@ -249,23 +259,26 @@ export default function Home() {
                 <section className="py-20 bg-premium-black">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <AnimatedSection>
-                            <div className="text-center mb-12">
-                                <motion.h2
-                                    className="text-4xl font-bold font-playfair text-white"
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                >
-                                    Best Selling Products
-                                </motion.h2>
-                                <p className="text-gray-400 mt-3 text-lg">
-                                    Our most popular items loved by customers
-                                </p>
+                            <div className="flex justify-between items-center mb-12 flex-wrap gap-4">
+                                <div className="text-center sm:text-left">
+                                    <motion.h2
+                                        className="text-4xl font-bold font-playfair text-white"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                    >
+                                        Best Selling Products
+                                    </motion.h2>
+                                    <p className="text-gray-400 mt-3 text-lg">
+                                        Our most popular items loved by customers
+                                    </p>
+                                </div>
+                                <ProductViewToggle viewMode={bestSellingView} onViewChange={setBestSellingView} />
                             </div>
                         </AnimatedSection>
 
                         <motion.div
-                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+                            className={bestSellingView === 'grid' ? 'grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8' : 'flex flex-col gap-4'}
                             initial="hidden"
                             whileInView="visible"
                             viewport={{ once: true, margin: '-50px' }}
@@ -285,7 +298,7 @@ export default function Home() {
                                         visible: { opacity: 1, y: 0 },
                                     }}
                                 >
-                                    <ProductCard product={product} index={index} />
+                                    <ProductCard product={product} index={index} viewMode={bestSellingView} />
                                 </motion.div>
                             ))}
                         </motion.div>

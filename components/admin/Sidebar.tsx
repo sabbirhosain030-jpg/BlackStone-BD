@@ -16,6 +16,7 @@ export default function AdminSidebar() {
         { href: '/admin/customers', label: 'Customers', icon: Users },
         { href: '/admin/hot-offers', label: 'Hot Offers', icon: TrendingUp },
         { href: '/admin/marketing', label: 'Marketing', icon: Megaphone },
+        { href: '/admin/subscribers', label: 'Subscribers', icon: Users },
         { href: '/admin/trending', label: 'Trending', icon: Sparkles },
         { href: '/admin/coupons', label: 'Coupons', icon: Tag },
         { href: '/admin/settings', label: 'Settings', icon: Settings },

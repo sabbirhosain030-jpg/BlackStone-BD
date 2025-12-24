@@ -10,7 +10,7 @@ export default function AdminLoginPage() {
     const router = useRouter();
     const { login, isAuthenticated } = useAuth();
     const [password, setPassword] = useState('');
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
 
@@ -23,15 +23,26 @@ export default function AdminLoginPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+        console.log("🔐 Admin login submit clicked");
+        console.log("📧 Email:", email);
+        console.log("🔑 Has password:", !!password);
 
-        if (username && password) {
-            const success = await login(username, password);
+        if (email && password) {
+            console.log("✅ Credentials present, calling login...");
+            const success = await login(email, password);
+            console.log("📊 Login result:", success);
+
             if (success) {
+                console.log("✅ Login successful! Redirecting to /admin");
                 router.push('/admin');
             } else {
-                setError('Invalid credentials');
+                console.log("❌ Login failed!");
+                setError('Invalid credentials. Try: admin@blackstonebd.com / BlackStone2024!');
                 setPassword('');
             }
+        } else {
+            console.log("⚠️ Missing email or password");
+            setError('Please enter both email and password');
         }
     };
 
@@ -88,19 +99,19 @@ export default function AdminLoginPage() {
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                        <label htmlFor="username" className="block text-sm font-medium text-gray-300 mb-2">
-                            Username
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+                            Email Address
                         </label>
                         <div className="relative">
                             <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
                             <input
-                                type="text"
-                                id="username"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
+                                type="email"
+                                id="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 required
                                 className="w-full pl-10 pr-4 py-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent text-white placeholder-gray-600 transition-all"
-                                placeholder="Enter username"
+                                placeholder="admin@blackstonebd.com"
                             />
                         </div>
                     </div>
@@ -112,7 +123,7 @@ export default function AdminLoginPage() {
                         <div className="relative">
                             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
                             <input
-                                type="password"
+                                type={showPassword ? "text" : "password"}
                                 id="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}

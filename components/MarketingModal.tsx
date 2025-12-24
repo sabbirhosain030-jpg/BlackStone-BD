@@ -1,25 +1,41 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Gift } from 'lucide-react';
+import { X, Gift, Copy, Check } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAdmin } from '@/context/AdminContext';
+import { usePathname } from 'next/navigation';
 
 const STORAGE_KEY = 'blackstone_marketing_modal_dismissed';
-const SESSION_KEY = 'blackstone_modal_session';
 
 export default function MarketingModal() {
     const { settings, addSubscriber } = useAdmin();
+    const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const [email, setEmail] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isCopied, setIsCopied] = useState(false);
 
     useEffect(() => {
-        // Check if user has subscribed (permanent dismissal)
+        // STRICT ALLOW LIST: Only show on these pages
+        const isHomePage = pathname === '/';
+        const isProductPage = pathname?.startsWith('/products');
+        const isCategoryPage = pathname?.startsWith('/categories');
+
+        const isAllowedPage = isHomePage || isProductPage || isCategoryPage;
+
+        // If not on an allowed page, do not show
+        if (!isAllowedPage) {
+            setIsOpen(false);
+            return;
+        }
+
+        // Check if user has subscribed (permanent dismissal via subscription)
+        // If they have NOT subscribed, we keep showing it (perhaps per session or always)
+        // The requirement is "until subscribe", so we only check the subscribed flag.
         const hasSubscribed = localStorage.getItem(STORAGE_KEY);
 
         // Show modal if enabled in settings AND user hasn't subscribed
-        // Modal will reappear on every page navigation until user subscribes or we implement a different dismissal strategy
         if (settings.marketingModal.enabled && !hasSubscribed) {
             // Delay showing modal for better UX (2 seconds after page load)
             const timer = setTimeout(() => {
@@ -28,12 +44,10 @@ export default function MarketingModal() {
 
             return () => clearTimeout(timer);
         }
-    }, [settings.marketingModal.enabled]); // Modal will show on EVERY page navigation until user subscribes
+    }, [settings.marketingModal.enabled, pathname]);
 
     const handleClose = () => {
         setIsOpen(false);
-        // Modal will reappear on next page navigation since we're not storing dismissal
-        // User must subscribe to permanently dismiss
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -43,13 +57,20 @@ export default function MarketingModal() {
             setIsSubmitted(true);
 
             // Save to localStorage when user subscribes
-            // This prevents modal from showing even on new sessions
             localStorage.setItem(STORAGE_KEY, 'true');
 
-            // Close modal after showing success message
-            setTimeout(() => {
-                handleClose();
-            }, 2000);
+            // Don't auto-close - let user copy the code first
+        }
+    };
+
+    const handleCopyCode = async () => {
+        const code = settings.marketingModal.couponCode || 'WELCOME10';
+        try {
+            await navigator.clipboard.writeText(code);
+            setIsCopied(true);
+            setTimeout(() => setIsCopied(false), 2000);
+        } catch (err) {
+            console.error('Failed to copy:', err);
         }
     };
 
@@ -73,13 +94,13 @@ export default function MarketingModal() {
                         onClick={(e) => e.stopPropagation()}
                         className="relative max-w-md w-full bg-gradient-to-br from-premium-black via-premium-charcoal to-premium-black border-2 border-premium-gold/50 rounded-2xl shadow-2xl shadow-premium-gold/20 overflow-hidden"
                     >
-                        {/* Close Button */}
+                        {/* Close Button - Enhanced */}
                         <button
                             onClick={handleClose}
-                            className="absolute top-4 right-4 z-10 text-gray-400 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full"
+                            className="absolute top-4 right-4 z-10 text-gray-400 hover:text-white transition-colors p-2.5 hover:bg-white/10 rounded-full group"
                             aria-label="Close modal"
                         >
-                            <X className="h-6 w-6" />
+                            <X className="h-6 w-6 group-hover:rotate-90 transition-transform duration-300" />
                         </button>
 
                         {/* Decorative Elements */}
@@ -107,7 +128,9 @@ export default function MarketingModal() {
                                         transition={{ delay: 0.3 }}
                                         className="text-3xl sm:text-4xl font-bold text-center mb-4 font-playfair"
                                     >
-                                        <span className="text-premium-gold">GET {discountPercentage}% OFF</span>
+                                        <span className="text-premium-gold">
+                                            GET <span className="text-5xl sm:text-6xl font-black">{discountPercentage}%</span> OFF
+                                        </span>
                                         <br />
                                         <span className="text-white text-2xl sm:text-3xl">YOUR FIRST ORDER</span>
                                     </motion.h2>
@@ -145,7 +168,7 @@ export default function MarketingModal() {
                                             whileTap={{ scale: 0.98 }}
                                             className="w-full bg-premium-gold hover:bg-white text-premium-black font-bold py-4 rounded-lg shadow-lg shadow-premium-gold/20 transition-colors uppercase tracking-wider text-sm sm:text-base"
                                         >
-                                            GET {discountPercentage}% OFF
+                                            CLAIM {discountPercentage}% DISCOUNT
                                         </motion.button>
                                     </motion.form>
 
@@ -154,7 +177,7 @@ export default function MarketingModal() {
                                     </p>
                                 </>
                             ) : (
-                                /* Success State */
+                                /* Success State with Copy Functionality */
                                 <motion.div
                                     initial={{ opacity: 0, scale: 0.8 }}
                                     animate={{ opacity: 1, scale: 1 }}
@@ -166,17 +189,43 @@ export default function MarketingModal() {
                                         </div>
                                     </div>
                                     <h3 className="text-2xl font-bold text-white mb-3 font-playfair">Thank You!</h3>
-                                    <h3 className="text-2xl font-bold text-white mb-3 font-playfair">Thank You!</h3>
-                                    <p className="text-gray-400 mb-4">
+                                    <p className="text-gray-400 mb-6">
                                         Here is your exclusive {discountPercentage}% discount code:
                                     </p>
-                                    <div className="bg-white/10 border border-premium-gold/50 rounded-lg p-4 mb-2">
+                                    <div className="bg-white/10 border border-premium-gold/50 rounded-lg p-4 mb-4">
                                         <code className="text-2xl font-mono font-bold text-premium-gold tracking-widest">
                                             {settings.marketingModal.couponCode || 'WELCOME10'}
                                         </code>
                                     </div>
-                                    <p className="text-xs text-gray-500">
-                                        Use this code at checkout
+
+                                    {/* Copy Button */}
+                                    <motion.button
+                                        onClick={handleCopyCode}
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        className={`w-full flex items-center justify-center gap-2 py-3 px-6 rounded-lg font-bold transition-all ${isCopied
+                                            ? 'bg-green-600 text-white'
+                                            : 'bg-premium-gold text-premium-black hover:bg-white'
+                                            }`}
+                                    >
+                                        {isCopied ? (
+                                            <>
+                                                <Check className="h-5 w-5" />
+                                                COPIED!
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Copy className="h-5 w-5" />
+                                                COPY CODE
+                                            </>
+                                        )}
+                                    </motion.button>
+
+                                    <p className="text-xs text-gray-500 mt-4">
+                                        Use this code at checkout to get your discount
+                                    </p>
+                                    <p className="text-xs text-premium-gold mt-2">
+                                        Click the × button above to close
                                     </p>
                                 </motion.div>
                             )}

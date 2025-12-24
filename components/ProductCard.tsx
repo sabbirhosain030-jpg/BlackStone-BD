@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ShoppingCart, Eye, Zap, Heart } from 'lucide-react';
+import { ShoppingCart, Eye, Zap, Heart, Tag } from 'lucide-react';
 import { Product } from '@/types';
 import { useCart } from '@/context/CartContext';
 import { useFavorites } from '@/context/FavoritesContext';
@@ -35,8 +35,6 @@ export default function ProductCard({ product, index = 0, viewMode = 'grid' }: P
         e.stopPropagation();
         setIsAdding(true);
         addToCart(product, 1);
-
-        // Reset animation state
         setTimeout(() => setIsAdding(false), 600);
     };
 
@@ -46,6 +44,10 @@ export default function ProductCard({ product, index = 0, viewMode = 'grid' }: P
         addToCart(product, 1);
         router.push('/checkout');
     };
+
+    const discountPercent = product.originalPrice && product.originalPrice > product.price
+        ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+        : 0;
 
     // List View Layout
     if (viewMode === 'list') {
@@ -57,92 +59,98 @@ export default function ProductCard({ product, index = 0, viewMode = 'grid' }: P
                     transition={{ delay: index * 0.05, duration: 0.5 }}
                     className="h-full"
                 >
-                    <div className="group bg-premium-charcoal rounded-lg shadow-sm hover:shadow-2xl hover:shadow-premium-gold/10 transition-all duration-500 overflow-hidden border border-gray-800 hover:border-premium-gold/30 h-full flex flex-col sm:flex-row relative">
-                        {/* Image Section */}
-                        <div className="relative w-full sm:w-64 aspect-[4/3] sm:aspect-auto overflow-hidden bg-gray-900 flex-shrink-0">
-                            {/* Favorite Button - Enhanced Design */}
-                            <motion.button
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                whileHover={{ scale: 1.15 }}
-                                whileTap={{ scale: 0.9 }}
-                                onClick={handleToggleFavorite}
-                                className={`absolute top-3 right-3 z-20 p-2.5 rounded-full backdrop-blur-md transition-all shadow-lg ${favorited
-                                    ? 'bg-gradient-to-br from-red-500 to-pink-600 shadow-red-500/50'
-                                    : 'bg-black/40 hover:bg-black/60 shadow-black/50'
-                                    }`}
-                            >
-                                <motion.div
-                                    animate={favorited ? { scale: [1, 1.2, 1] } : {}}
-                                    transition={{ duration: 0.3, repeat: favorited ? Infinity : 0, repeatDelay: 2 }}
-                                >
-                                    <Heart className={`h-5 w-5 ${favorited ? 'fill-white text-white' : 'text-white'}`} />
-                                </motion.div>
-                                {favorited && (
-                                    <motion.div
-                                        className="absolute inset-0 rounded-full bg-red-400"
-                                        initial={{ scale: 1, opacity: 0.5 }}
-                                        animate={{ scale: 1.5, opacity: 0 }}
-                                        transition={{ duration: 1, repeat: Infinity }}
-                                    />
-                                )}
-                            </motion.button>
-
-                            {/* Badges */}
+                    <div className="group bg-transparent overflow-hidden h-full flex flex-col sm:flex-row relative gap-4">
+                        {/* Image Section - Left Side */}
+                        <div className="relative w-full sm:w-48 h-64 sm:h-auto overflow-hidden bg-gray-900 flex-shrink-0">
+                            {/* New Badge - Top Left */}
                             {product.isNew && (
-                                <span className="absolute top-3 left-3 bg-premium-black text-premium-gold text-xs font-bold px-3 py-1.5 z-10 shadow-lg border border-premium-gold/30 uppercase tracking-widest">NEW</span>
+                                <div className="absolute top-2 left-2 z-10 bg-white text-black text-[10px] font-bold px-2 py-1 leading-none uppercase tracking-wider shadow-sm">
+                                    New in
+                                </div>
                             )}
-                            {product.originalPrice && product.originalPrice > product.price && (
-                                <span className="absolute top-12 left-3 bg-premium-gold text-premium-black text-xs font-bold px-3 py-1.5 z-10 shadow-lg">-{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%</span>
+
+                            {/* Discount Badge - Stacked */}
+                            {discountPercent > 0 && (
+                                <div className={`absolute left-2 z-10 bg-red-600 text-white text-[10px] font-bold px-2 py-1 leading-none shadow-sm ${product.isNew ? 'top-8' : 'top-2'}`}>
+                                    -{discountPercent}%
+                                </div>
                             )}
 
                             <Link href={`/products/${product.id}`} className="block w-full h-full">
-                                <motion.img
+                                <img
                                     src={product.images[0]}
                                     alt={product.name}
-                                    className="object-cover w-full h-full"
-                                    whileHover={{ scale: 1.05 }}
-                                    transition={{ duration: 0.4 }}
+                                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
                                 />
                             </Link>
                         </div>
 
-                        {/* Content Section */}
-                        <div className="p-5 flex flex-col flex-grow">
-                            <div className="text-xs text-premium-gold font-bold mb-2 uppercase tracking-wide">{product.category}</div>
-                            <Link href={`/products/${product.id}`}>
-                                <h3 className="text-white font-playfair font-bold text-xl mb-2 hover:text-premium-gold transition-colors line-clamp-1">{product.name}</h3>
-                            </Link>
-                            <p className="text-gray-400 text-xs mb-3 line-clamp-1">{product.description}</p>
+                        {/* Content Section - Right Side */}
+                        <div className="flex flex-col flex-grow py-2 sm:pr-12">
+                            {/* Action Buttons - Absolute Top Right of Container */}
+                            <div className="absolute top-0 right-0 z-20 flex flex-col gap-3">
+                                {/* Add to Cart Button (+) */}
+                                <button
+                                    onClick={handleAddToCart}
+                                    disabled={isAdding || product.stockStatus === 'out-of-stock' || product.stock === 0}
+                                    className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors shadow-xl disabled:opacity-50"
+                                    title="Add to Cart"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg>
+                                </button>
 
-                            <div className="flex items-center gap-4 mt-auto">
-                                <div className="flex flex-col">
-                                    <span className="text-2xl font-bold text-gray-100">৳{product.price.toLocaleString()}</span>
-                                    {product.originalPrice && (
-                                        <span className="text-sm text-gray-500 line-through">৳{product.originalPrice.toLocaleString()}</span>
-                                    )}
-                                </div>
-                                <div className="flex gap-2 ml-auto">
-                                    <motion.button
-                                        whileHover={{ scale: 1.05 }}
-                                        whileTap={{ scale: 0.95 }}
-                                        onClick={handleBuyNow}
-                                        disabled={product.stockStatus === 'out-of-stock' || product.stock === 0}
-                                        className="bg-premium-gold text-premium-black text-sm font-bold px-6 py-2 rounded shadow-sm hover:bg-white transition-colors disabled:opacity-50"
-                                    >
-                                        Buy Now
-                                    </motion.button>
-                                    <motion.button
-                                        whileHover={{ scale: 1.05 }}
-                                        whileTap={{ scale: 0.95 }}
-                                        onClick={handleAddToCart}
-                                        disabled={product.stockStatus === 'out-of-stock' || product.stock === 0}
-                                        className="bg-premium-black text-white p-2 rounded border border-gray-700 hover:bg-gray-800 transition-colors disabled:opacity-50"
-                                    >
-                                        <ShoppingCart className="h-5 w-5" />
-                                    </motion.button>
-                                </div>
+                                {/* Favorite Button (Heart) */}
+                                <button
+                                    onClick={handleToggleFavorite}
+                                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-xl ${favorited
+                                        ? 'bg-white text-red-500'
+                                        : 'bg-white text-black hover:bg-gray-100'
+                                        }`}
+                                    aria-label="Add to favorites"
+                                >
+                                    <Heart className={`h-5 w-5 ${favorited ? 'fill-current' : ''}`} />
+                                </button>
                             </div>
+
+                            <div className="text-xs text-premium-gold font-semibold mb-1 uppercase tracking-wide">
+                                {product.category}
+                            </div>
+
+                            <Link href={`/products/${product.id}`}>
+                                <h3 className="text-white font-semibold text-xl mb-2 hover:text-premium-gold transition-colors leading-tight">
+                                    {product.name}
+                                </h3>
+                            </Link>
+
+                            <div className="flex items-center gap-3 mb-3">
+                                <span className="text-2xl font-bold text-white">
+                                    ৳{product.price.toLocaleString()}
+                                </span>
+                                {product.originalPrice && (
+                                    <span className="text-sm text-gray-500 line-through">
+                                        ৳{product.originalPrice.toLocaleString()}
+                                    </span>
+                                )}
+                            </div>
+
+                            {/* Product Features / Sizes */}
+                            {product.sizes && product.sizes.length > 0 && (
+                                <div className="mb-2">
+                                    <span className="text-[10px] text-gray-500 uppercase tracking-wider block mb-1">Available Sizes:</span>
+                                    <div className="flex flex-wrap gap-1.5">
+                                        {product.sizes.map((size) => (
+                                            <span key={size} className="text-[10px] font-medium text-gray-300 border border-gray-700 px-1.5 py-0.5 rounded hover:border-premium-gold transition-colors">
+                                                {size}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Description removed as per request to simplify "order details" */}
                         </div>
                     </div>
                 </motion.div>
@@ -151,190 +159,90 @@ export default function ProductCard({ product, index = 0, viewMode = 'grid' }: P
         );
     }
 
-    // Grid View Layout (Default)
+    // Grid View Layout - Dark Theme, Compact
     return (
         <>
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1, duration: 0.5 }}
-                whileHover={{ y: -8 }}
+                transition={{ delay: index * 0.08, duration: 0.4 }}
                 className="h-full"
             >
-                <div className="group bg-premium-charcoal rounded-none shadow-sm hover:shadow-2xl hover:shadow-premium-gold/10 transition-all duration-500 overflow-hidden border border-gray-800 hover:border-premium-gold/30 h-full flex flex-col relative">
-                    <div className="relative aspect-[4/5] overflow-hidden bg-gray-900">
-                        {/* Badges */}
-                        {product.isNew && (
-                            <motion.span
-                                initial={{ scale: 0, rotate: -180 }}
-                                animate={{ scale: 1, rotate: 0 }}
-                                transition={{ delay: 0.2 + index * 0.1, type: 'spring', stiffness: 200 }}
-                                className="absolute top-3 left-3 bg-premium-black text-premium-gold text-xs font-bold px-3 py-1.5 z-10 shadow-lg border border-premium-gold/30 uppercase tracking-widest"
-                            >
-                                NEW
-                            </motion.span>
-                        )}
-                        {product.originalPrice && product.originalPrice > product.price && (
-                            <motion.span
-                                initial={{ scale: 0, rotate: 180 }}
-                                animate={{ scale: 1, rotate: 0 }}
-                                transition={{ delay: 0.3 + index * 0.1, type: 'spring', stiffness: 200 }}
-                                className="absolute top-3 right-3 bg-premium-gold text-premium-black text-xs font-bold px-3 py-1.5 z-10 shadow-lg"
-                            >
-                                -{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
-                            </motion.span>
-                        )}
+                <div className="group bg-transparent overflow-hidden h-full flex flex-col relative w-[160px] sm:w-[220px] md:w-full mx-auto">
+                    {/* Image Container */}
+                    <div className="relative aspect-[3/4] overflow-hidden bg-gray-900 leading-none mb-3">
+                        {/* Badges Container - Top Left */}
+                        <div className="absolute top-2 left-2 z-10 flex flex-col gap-2 items-start">
+                            {/* New Badge */}
+                            {product.isNew && (
+                                <div className="bg-white text-black text-[10px] font-bold px-2 py-1 leading-none uppercase tracking-wider shadow-sm">
+                                    New in
+                                </div>
+                            )}
+                            {/* Discount Badge */}
+                            {discountPercent > 0 && (
+                                <div className="bg-red-600 text-white text-[10px] font-bold px-2 py-1 leading-none shadow-sm">
+                                    -{discountPercent}%
+                                </div>
+                            )}
+                        </div>
 
-                        {/* Stock Badge */}
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.4 + index * 0.1 }}
-                            className={`absolute bottom-3 left-3 text-xs font-bold px-3 py-1.5 z-10 shadow-lg uppercase tracking-wide ${product.stockStatus === 'coming-soon' ? 'bg-blue-600 text-white' :
-                                product.stockStatus === 'out-of-stock' || product.stock === 0 ? 'bg-red-600 text-white' :
-                                    product.stock <= 10 ? 'bg-orange-500 text-white' :
-                                        'bg-green-600 text-white'
-                                }`}
-                        >
-                            {product.stockStatus === 'coming-soon' ? 'Coming Soon' :
-                                product.stockStatus === 'out-of-stock' || product.stock === 0 ? 'Out of Stock' :
-                                    product.stock <= 10 ? `Low Stock (${product.stock})` : 'In Stock'}
-                        </motion.div>
+                        {/* Action Buttons - Top Right Column */}
+                        <div className="absolute top-2 right-2 z-20 flex flex-col gap-2">
+                            {/* Add to Cart Button (+) */}
+                            <button
+                                onClick={handleAddToCart}
+                                disabled={isAdding || product.stockStatus === 'out-of-stock' || product.stock === 0}
+                                className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                                title="Add to Cart"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </button>
 
-                        {/* Image with Zoom Effect */}
+                            {/* Favorite Button (Heart) */}
+                            <button
+                                onClick={handleToggleFavorite}
+                                className={`w-8 h-8 rounded-full flex items-center justify-center transition-all shadow-lg ${favorited
+                                    ? 'bg-white text-red-500'
+                                    : 'bg-white text-black hover:bg-gray-100'
+                                    }`}
+                                aria-label="Add to favorites"
+                            >
+                                <Heart className={`h-4 w-4 ${favorited ? 'fill-current' : ''}`} />
+                            </button>
+                        </div>
+
+                        {/* Product Image */}
                         <Link href={`/products/${product.id}`} className="block w-full h-full">
-                            <motion.img
+                            <img
                                 src={product.images[0]}
                                 alt={product.name}
-                                className="object-cover w-full h-full"
-                                whileHover={{ scale: 1.1 }}
-                                transition={{ duration: 0.6, ease: 'easeOut' }}
+                                className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700"
+                                loading="lazy"
                             />
                         </Link>
-
-                        {/* Favorite Button - Enhanced Design */}
-                        <motion.button
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            whileHover={{ scale: 1.15 }}
-                            whileTap={{ scale: 0.9 }}
-                            onClick={handleToggleFavorite}
-                            className={`absolute top-3 left-3 z-20 p-2.5 rounded-full backdrop-blur-md transition-all shadow-lg ${favorited
-                                ? 'bg-gradient-to-br from-red-500 to-pink-600 shadow-red-500/50'
-                                : 'bg-black/40 hover:bg-black/60 shadow-black/50'
-                                }`}
-                        >
-                            <motion.div
-                                animate={favorited ? { scale: [1, 1.2, 1] } : {}}
-                                transition={{ duration: 0.3, repeat: favorited ? Infinity : 0, repeatDelay: 2 }}
-                            >
-                                <Heart className={`h-5 w-5 ${favorited ? 'fill-white text-white' : 'text-white'}`} />
-                            </motion.div>
-                            {favorited && (
-                                <motion.div
-                                    className="absolute inset-0 rounded-full bg-red-400"
-                                    initial={{ scale: 1, opacity: 0.5 }}
-                                    animate={{ scale: 1.5, opacity: 0 }}
-                                    transition={{ duration: 1, repeat: Infinity }}
-                                />
-                            )}
-                        </motion.button>
-
-                        {/* Overlay Actions */}
-                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
-                            <motion.button
-                                initial={{ scale: 0, opacity: 0 }}
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
-                                onClick={handleBuyNow}
-                                disabled={product.stockStatus === 'out-of-stock' || product.stockStatus === 'coming-soon' || product.stock === 0}
-                                className="bg-premium-gold text-premium-black p-3 rounded-full shadow-lg hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                title="Buy Now"
-                            >
-                                <Zap className="h-5 w-5" />
-                            </motion.button>
-                            <motion.button
-                                initial={{ scale: 0, opacity: 0 }}
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    setIsQuickViewOpen(true);
-                                }}
-                                className="bg-premium-charcoal text-premium-gold border border-premium-gold p-3 rounded-full shadow-lg hover:bg-premium-gold hover:text-premium-black transition-colors"
-                            >
-                                <Eye className="h-5 w-5" />
-                            </motion.button>
-                            <motion.button
-                                initial={{ scale: 0, opacity: 0 }}
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
-                                onClick={handleAddToCart}
-                                disabled={product.stockStatus === 'out-of-stock' || product.stockStatus === 'coming-soon' || product.stock === 0}
-                                className="bg-premium-black text-white p-3 rounded-full shadow-lg hover:bg-white hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                <ShoppingCart className="h-5 w-5" />
-                            </motion.button>
-                        </div>
                     </div>
 
-                    <div className="p-5 flex flex-col flex-grow bg-premium-charcoal">
-                        <motion.div
-                            className="text-xs text-premium-gold font-bold mb-2 uppercase tracking-wide"
-                            whileHover={{ scale: 1.05 }}
-                        >
-                            {product.category}
-                        </motion.div>
-
-                        <Link href={`/products/${product.id}`}>
-                            <motion.h3
-                                className="text-white font-playfair font-bold text-lg mb-3 line-clamp-1 hover:text-premium-gold transition-colors"
-                                whileHover={{ x: 5 }}
-                            >
+                    {/* Content Section - Minimal */}
+                    <div className="flex flex-col px-1">
+                        <Link href={`/products/${product.id}`} className="block mb-1 group-hover:text-premium-gold transition-colors">
+                            <h3 className="text-white font-medium text-sm line-clamp-1 leading-tight">
                                 {product.name}
-                            </motion.h3>
+                            </h3>
                         </Link>
 
-                        <div className="flex items-center justify-between mt-auto">
-                            <div className="flex flex-col">
-                                <motion.span
-                                    className="text-xl font-bold text-gray-100"
-                                    whileHover={{ scale: 1.1 }}
-                                >
-                                    ৳{product.price.toLocaleString()}
-                                </motion.span>
-                                {product.originalPrice && (
-                                    <motion.span
-                                        className="text-sm text-gray-500 line-through"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        transition={{ delay: 0.4 }}
-                                    >
-                                        ৳{product.originalPrice.toLocaleString()}
-                                    </motion.span>
-                                )}
-                            </div>
-                        </div>
-                        <div className="mt-4 flex gap-2">
-                            <motion.button
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                onClick={handleBuyNow}
-                                disabled={product.stockStatus === 'out-of-stock' || product.stockStatus === 'coming-soon' || product.stock === 0}
-                                className="flex-1 bg-premium-gold text-premium-black text-xs font-bold py-2 rounded shadow-sm hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                Buy Now
-                            </motion.button>
-                            <motion.button
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                onClick={handleAddToCart}
-                                disabled={product.stockStatus === 'out-of-stock' || product.stockStatus === 'coming-soon' || product.stock === 0}
-                                className="flex-1 bg-premium-black text-white text-xs font-bold py-2 rounded shadow-sm border border-gray-700 hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                Add to Cart
-                            </motion.button>
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm font-bold text-white">
+                                ${product.price.toLocaleString()}
+                            </span>
+                            {product.originalPrice && product.originalPrice > product.price && (
+                                <span className="text-xs text-gray-500 line-through">
+                                    ${product.originalPrice.toLocaleString()}
+                                </span>
+                            )}
                         </div>
                     </div>
                 </div>
