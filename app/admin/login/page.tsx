@@ -33,11 +33,23 @@ export default function AdminLoginPage() {
             console.log("📊 Login result:", success);
 
             if (success) {
-                console.log("✅ Login successful! Redirecting to /admin");
-                router.push('/admin');
+                console.log("✅ Login flow completed. Verifying session...");
+                // Force a check to ensure cookie is set before redirecting
+                const { getSession } = await import("next-auth/react");
+                const session = await getSession();
+                console.log("🔍 Session after login:", session);
+
+                if (session) {
+                    console.log("✅ Session confirmed! Redirecting to /admin");
+                    router.push('/admin');
+                    router.refresh(); // Ensure the router sees the new state
+                } else {
+                    console.error("❌ Login reported success but no session found!");
+                    setError('Login successful but session failed to initialize. Please try again.');
+                }
             } else {
                 console.log("❌ Login failed!");
-                setError('Invalid credentials. Try: admin@blackstonebd.com / BlackStone2024!');
+                setError('Invalid credentials. Try: admin / BlackStone2024!');
                 setPassword('');
             }
         } else {
