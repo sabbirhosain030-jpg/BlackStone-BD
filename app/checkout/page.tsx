@@ -102,14 +102,35 @@ export default function CheckoutPage() {
             orderDate: new Date().toISOString(),
         };
 
-        // Store order in localStorage for the success page
-        localStorage.setItem('lastOrder', JSON.stringify(orderData));
+        try {
+            // Submit order to API
+            const response = await fetch('/api/orders', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData)
+            });
 
-        // Clear cart
-        clearCart();
+            if (!response.ok) {
+                throw new Error('Failed to create order');
+            }
 
-        // Redirect to success page
-        router.push('/order-success');
+            const createdOrder = await response.json();
+            console.log('✅ Order created:', createdOrder.id);
+
+            // Store in localStorage for success page only (receipt generation)
+            localStorage.setItem('lastOrder', JSON.stringify(createdOrder));
+
+            // Clear cart
+            clearCart();
+
+            // Redirect to success page
+            router.push('/order-success');
+
+        } catch (error) {
+            console.error('Checkout error:', error);
+            alert('There was an error processing your order. Please try again.');
+            setIsSubmitting(false);
+        }
     };
 
     if (items.length === 0) {

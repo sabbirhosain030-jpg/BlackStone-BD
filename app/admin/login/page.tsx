@@ -112,18 +112,18 @@ export default function AdminLoginPage() {
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-                            Email Address
+                            Username
                         </label>
                         <div className="relative">
                             <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
                             <input
-                                type="email"
+                                type="text"
                                 id="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
                                 className="w-full pl-10 pr-4 py-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent text-white placeholder-gray-600 transition-all"
-                                placeholder="admin@blackstonebd.com"
+                                placeholder="Enter username or email"
                             />
                         </div>
                     </div>

@@ -64,12 +64,13 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const [catsRes, prodsRes, settingsRes, couponsRes, offersRes] = await Promise.all([
+                const [catsRes, prodsRes, settingsRes, couponsRes, offersRes, ordersRes] = await Promise.all([
                     fetch('/api/categories'),
                     fetch('/api/products'),
                     fetch('/api/settings'),
                     fetch('/api/coupons'),
-                    fetch('/api/hot-offers')
+                    fetch('/api/hot-offers'),
+                    fetch('/api/orders')
                 ]);
 
                 if (catsRes.ok) {
@@ -79,6 +80,10 @@ export function AdminProvider({ children }: { children: ReactNode }) {
                 if (prodsRes.ok) {
                     const prodsData = await prodsRes.json();
                     if (prodsData.length > 0) setProducts(prodsData);
+                }
+                if (ordersRes.ok) {
+                    const ordersData = await ordersRes.json();
+                    if (Array.isArray(ordersData)) setOrders(ordersData);
                 }
                 if (settingsRes.ok) {
                     const settingsData = await settingsRes.json();

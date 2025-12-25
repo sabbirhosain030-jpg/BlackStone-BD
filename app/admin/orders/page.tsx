@@ -3,20 +3,20 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Search, Filter, Eye, MoreVertical, CheckCircle, XCircle, Clock, Truck, Package, Download } from 'lucide-react';
-import { orders as initialOrders } from '@/lib/data';
+import { useAdmin } from '@/context/AdminContext';
 import { Order } from '@/types';
 import OrderDetailsModal from '@/components/admin/OrderDetailsModal';
 
 export default function AdminOrdersPage() {
-    const [orders, setOrders] = useState<Order[]>(initialOrders);
+    const { orders } = useAdmin();
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState<string>('all');
 
     const handleUpdateStatus = (orderId: string, newStatus: Order['status']) => {
-        setOrders(orders.map(order =>
-            order.id === orderId ? { ...order, status: newStatus } : order
-        ));
+        // TODO: Implement updateStatus in context/API
+        console.log("Updating status for", orderId, "to", newStatus);
+
         if (selectedOrder && selectedOrder.id === orderId) {
             setSelectedOrder({ ...selectedOrder, status: newStatus });
         }

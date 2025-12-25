@@ -17,6 +17,10 @@ export default function AdminProductsPage() {
     const [formData, setFormData] = useState<Partial<Product>>({});
     const [viewMode, setViewMode] = useState<'active' | 'trash'>('active');
 
+    // Local state for comma-separated inputs to prevent 'jumping' cursor or disappearing commas
+    const [sizesInput, setSizesInput] = useState('');
+    const [colorsInput, setColorsInput] = useState('');
+
     // Filter products based on view mode
     const displayedProducts = products.filter(p => viewMode === 'active' ? !p.isDeleted : p.isDeleted);
 
@@ -35,6 +39,9 @@ export default function AdminProductsPage() {
     const handleEdit = (product: Product) => {
         setEditingProduct(product);
         setFormData(product);
+        // Initialize string inputs
+        setSizesInput(product.sizes?.join(', ') || '');
+        setColorsInput(product.colors?.join(', ') || '');
         setIsModalOpen(true);
     };
 
@@ -49,16 +56,26 @@ export default function AdminProductsPage() {
             description: '',
             images: [''],
         });
+        setSizesInput('');
+        setColorsInput('');
         setIsModalOpen(true);
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Process variants strings into arrays
+        const processedData = {
+            ...formData,
+            sizes: sizesInput.split(',').map(s => s.trim()).filter(Boolean),
+            colors: colorsInput.split(',').map(s => s.trim()).filter(Boolean)
+        };
+
         if (editingProduct) {
-            updateProduct({ ...editingProduct, ...formData } as Product);
+            updateProduct({ ...editingProduct, ...processedData } as Product);
         } else {
             const newProduct = {
-                ...formData,
+                ...processedData,
                 id: (products.length + 1).toString(),
                 rating: 0,
                 reviews: 0,
@@ -314,8 +331,8 @@ export default function AdminProductsPage() {
                                 <label className="block text-sm font-medium text-gray-300 mb-2">Sizes (Comma separated)</label>
                                 <input
                                     type="text"
-                                    value={formData.sizes?.join(', ') || ''}
-                                    onChange={(e) => setFormData({ ...formData, sizes: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })}
+                                    value={sizesInput}
+                                    onChange={(e) => setSizesInput(e.target.value)}
                                     className="w-full px-4 py-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent text-white placeholder-gray-600 transition-all"
                                     placeholder="S, M, L, XL, XXL"
                                 />
@@ -324,8 +341,8 @@ export default function AdminProductsPage() {
                                 <label className="block text-sm font-medium text-gray-300 mb-2">Colors (Comma separated)</label>
                                 <input
                                     type="text"
-                                    value={formData.colors?.join(', ') || ''}
-                                    onChange={(e) => setFormData({ ...formData, colors: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })}
+                                    value={colorsInput}
+                                    onChange={(e) => setColorsInput(e.target.value)}
                                     className="w-full px-4 py-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent text-white placeholder-gray-600 transition-all"
                                     placeholder="Red, Blue, Black, Gold"
                                 />
