@@ -111,7 +111,8 @@ export default function CheckoutPage() {
             });
 
             if (!response.ok) {
-                throw new Error('Failed to create order');
+                const errorData = await response.json();
+                throw new Error(errorData.details || 'Failed to create order');
             }
 
             const createdOrder = await response.json();
@@ -126,9 +127,9 @@ export default function CheckoutPage() {
             // Redirect to success page
             router.push('/order-success');
 
-        } catch (error) {
+        } catch (error: any) {
             console.error('Checkout error:', error);
-            alert('There was an error processing your order. Please try again.');
+            alert(`Order Failed: ${error.message || 'Please try again.'}`);
             setIsSubmitting(false);
         }
     };
