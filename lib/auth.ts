@@ -67,7 +67,7 @@ export const authOptions: AuthOptions = {
 
                 // 2. Fallback: Hardcoded Admin (if DB failed or user not found/matched)
                 console.log("🔍 Checking hardcoded admin credentials as fallback...");
-                if (loginId === "admin" && password === "BlackStone2024!") {
+                if ((loginId === "admin" || loginId === "admin@blackstonebd.com") && password === "BlackStone2024!") {
                     console.log("✅ Admin hardcoded login successful!");
                     return { id: "1", name: "Admin", email: "admin@blackstonebd.com", role: "admin" };
                 }

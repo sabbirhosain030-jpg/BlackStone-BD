@@ -247,16 +247,7 @@ export default function CheckoutPage() {
                                                     <option>Rajshahi</option>
                                                 </select>
                                             </div>
-                                            <div>
-                                                <label htmlFor="zip" className="block text-sm font-medium text-gray-400 mb-1">Zip Code</label>
-                                                <input
-                                                    type="text"
-                                                    id="zip"
-                                                    value={formData.zip}
-                                                    onChange={handleChange}
-                                                    className="w-full bg-black border border-gray-800 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-premium-gold focus:border-transparent transition-all"
-                                                />
-                                            </div>
+
                                         </div>
                                     </div>
                                 </div>

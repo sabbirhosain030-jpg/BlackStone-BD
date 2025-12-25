@@ -5,7 +5,13 @@ import { ObjectId } from 'mongodb';
 export async function POST(request: Request) {
     try {
         const { code, cartTotal, userId, email, isFirstOrder } = await request.json();
-        const db = await connectToDatabase();
+        let db;
+        try {
+            db = await connectToDatabase();
+        } catch (dbError) {
+            console.error("Coupon API DB Connection Error:", dbError);
+            return NextResponse.json({ valid: false, message: "System error: Database unavailable." }, { status: 500 });
+        }
 
         const coupon = await db.collection('coupons').findOne({ code: code, isActive: true });
 

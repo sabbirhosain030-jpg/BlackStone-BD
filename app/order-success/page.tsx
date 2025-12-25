@@ -124,9 +124,9 @@ export default function OrderSuccessPage() {
                         </div>
                     </div>
 
-                    {/* Professional Receipt - Hidden on screen, visible for printing/PDF */}
+                    {/* Professional Receipt - Hidden from view but available for PDF/Print */}
                     {orderData && (
-                        <div className="hidden print:block">
+                        <div className="fixed -left-[9999px] top-0 w-[210mm] min-h-[297mm] bg-white text-black p-10 print:static print:w-auto print:h-auto print:p-0">
                             <OrderReceipt orderData={orderData} />
                         </div>
                     )}
