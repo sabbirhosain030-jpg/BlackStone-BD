@@ -13,6 +13,7 @@ export default function AdminLoginPage() {
     const [email, setEmail] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     // Redirect if already authenticated
     if (isAuthenticated) {
@@ -23,38 +24,37 @@ export default function AdminLoginPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
-        console.log("🔐 Admin login submit clicked");
-        console.log("📧 Email:", email);
-        console.log("🔑 Has password:", !!password);
+        setIsLoading(true);
 
-        if (email && password) {
-            console.log("✅ Credentials present, calling login...");
-            const success = await login(email, password);
-            console.log("📊 Login result:", success);
+        try {
+            if (email && password) {
+                const success = await login(email, password);
 
-            if (success) {
-                console.log("✅ Login flow completed. Verifying session...");
-                // Force a check to ensure cookie is set before redirecting
-                const { getSession } = await import("next-auth/react");
-                const session = await getSession();
-                console.log("🔍 Session after login:", session);
+                if (success) {
+                    // Force a check to ensure cookie is set before redirecting
+                    const { getSession } = await import("next-auth/react");
+                    const session = await getSession();
 
-                if (session) {
-                    console.log("✅ Session confirmed! Redirecting to /admin");
-                    router.push('/admin');
-                    router.refresh(); // Ensure the router sees the new state
+                    if (session) {
+                        router.push('/admin');
+                        router.refresh();
+                    } else {
+                        setError('Login successful but session failed to initialize. Please try again.');
+                        setIsLoading(false);
+                    }
                 } else {
-                    console.error("❌ Login reported success but no session found!");
-                    setError('Login successful but session failed to initialize. Please try again.');
+                    setError('Invalid credentials. Please checking your username and password.'); // Updated error message
+                    setPassword('');
+                    setIsLoading(false);
                 }
             } else {
-                console.log("❌ Login failed!");
-                setError('Invalid credentials. Try: admin / admin');
-                setPassword('');
+                setError('Please enter both username/email and password');
+                setIsLoading(false);
             }
-        } else {
-            console.log("⚠️ Missing email or password");
-            setError('Please enter both email and password');
+        } catch (err) {
+            console.error(err);
+            setError('An unexpected error occurred');
+            setIsLoading(false);
         }
     };
 
@@ -112,7 +112,7 @@ export default function AdminLoginPage() {
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-                            Username
+                            Username or Email
                         </label>
                         <div className="relative">
                             <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
@@ -122,8 +122,9 @@ export default function AdminLoginPage() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
-                                className="w-full pl-10 pr-4 py-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent text-white placeholder-gray-600 transition-all"
-                                placeholder="Enter username or email"
+                                disabled={isLoading}
+                                className="w-full pl-10 pr-4 py-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent text-white placeholder-gray-600 transition-all disabled:opacity-50"
+                                placeholder="Enter your username"
                             />
                         </div>
                     </div>
@@ -140,8 +141,9 @@ export default function AdminLoginPage() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
-                                className="w-full pl-10 pr-12 py-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent text-white placeholder-gray-600 transition-all"
-                                placeholder="Enter password"
+                                disabled={isLoading}
+                                className="w-full pl-10 pr-12 py-3 bg-black border border-gray-800 rounded-lg focus:ring-2 focus:ring-premium-gold focus:border-transparent text-white placeholder-gray-600 transition-all disabled:opacity-50"
+                                placeholder="Enter your password"
                             />
                             <button
                                 type="button"
@@ -157,24 +159,29 @@ export default function AdminLoginPage() {
                         <motion.div
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="bg-red-900/20 border border-red-900/50 text-red-500 px-4 py-3 rounded-lg text-sm"
+                            className="bg-red-900/20 border border-red-900/50 text-red-500 px-4 py-3 rounded-lg text-sm flex items-center gap-2"
                         >
+                            <span className="block w-1.5 h-1.5 rounded-full bg-red-500" />
                             {error}
                         </motion.div>
                     )}
 
                     <motion.button
                         type="submit"
+                        disabled={isLoading}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        className="w-full bg-premium-gold text-premium-black font-bold py-3 px-4 rounded-lg shadow-lg hover:bg-white transition-all duration-300"
+                        className="w-full bg-premium-gold text-premium-black font-bold py-3 px-4 rounded-lg shadow-lg hover:bg-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        Login to Admin Panel
+                        {isLoading ? (
+                            <span className="flex items-center justify-center gap-2">
+                                <span className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                                Authenticating...
+                            </span>
+                        ) : (
+                            "Login to Dashboard"
+                        )}
                     </motion.button>
-
-                    <p className="text-center text-sm text-gray-500 mt-4">
-                        Default: <span className="font-medium text-gray-400">admin / admin</span>
-                    </p>
                 </form>
             </motion.div>
         </div>

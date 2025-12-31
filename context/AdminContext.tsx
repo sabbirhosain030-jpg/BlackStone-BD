@@ -305,7 +305,6 @@ export function AdminProvider({ children }: { children: ReactNode }) {
             deleteSubscriber,
             addCoupon,
             updateCoupon,
-            updateCoupon,
             deleteCoupon,
             updateOrder,
             deleteOrder,
