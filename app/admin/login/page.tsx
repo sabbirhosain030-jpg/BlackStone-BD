@@ -49,7 +49,7 @@ export default function AdminLoginPage() {
                 }
             } else {
                 console.log("❌ Login failed!");
-                setError('Invalid credentials. Try: admin / BlackStone2024!');
+                setError('Invalid credentials. Try: admin / admin');
                 setPassword('');
             }
         } else {
@@ -173,7 +173,7 @@ export default function AdminLoginPage() {
                     </motion.button>
 
                     <p className="text-center text-sm text-gray-500 mt-4">
-                        Default: admin / admin
+                        Default: <span className="font-medium text-gray-400">admin / admin</span>
                     </p>
                 </form>
             </motion.div>
