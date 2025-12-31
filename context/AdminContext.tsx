@@ -44,6 +44,8 @@ interface AdminContextType {
     addCoupon: (coupon: Coupon) => void;
     updateCoupon: (coupon: Coupon) => void;
     deleteCoupon: (id: string) => void;
+    updateOrder: (order: Order) => void;
+    deleteOrder: (id: string) => void;
 }
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
@@ -252,6 +254,30 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         }
     };
 
+    const updateOrder = async (updatedOrder: Order) => {
+        try {
+            await fetch('/api/orders', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedOrder),
+            });
+            setOrders(orders.map(o => o.id === updatedOrder.id ? updatedOrder : o));
+        } catch (error) {
+            console.error("Failed to update order:", error);
+        }
+    };
+
+    const deleteOrder = async (id: string) => {
+        try {
+            await fetch(`/api/orders?id=${id}`, {
+                method: 'DELETE',
+            });
+            setOrders(orders.filter(o => o.id !== id));
+        } catch (error) {
+            console.error("Failed to delete order:", error);
+        }
+    };
+
     return (
         <AdminContext.Provider value={{
             categories,
@@ -279,7 +305,10 @@ export function AdminProvider({ children }: { children: ReactNode }) {
             deleteSubscriber,
             addCoupon,
             updateCoupon,
+            updateCoupon,
             deleteCoupon,
+            updateOrder,
+            deleteOrder,
 
             addHotOffer: async (offer: HotOffer) => {
                 try {

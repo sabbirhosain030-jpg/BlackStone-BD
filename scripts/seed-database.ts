@@ -1,5 +1,6 @@
 // scripts/seed-database.ts
-import { connectToDatabase, closeDatabase } from "../lib/mongodb";
+import { connectToDatabase, closeDatabase } from "../lib/mongodb.ts";
+import { products } from "../lib/data.ts"; // Import products to seed
 
 const categories = [
     {
@@ -83,10 +84,31 @@ async function seed() {
             console.log("ℹ️ Settings already exist, skipping");
         }
 
-        // 3. Create Indexes (Optional but good)
+        // 3. Seed Products (Correcting the demo data issue)
+        const productsColl = db.collection("products");
+        if (products && products.length > 0) {
+            let seededCount = 0;
+            for (const prod of products) {
+                // Ensure ID is string
+                const productWithStringId = { ...prod, id: prod.id.toString() };
+
+                const result = await productsColl.updateOne(
+                    { id: productWithStringId.id },
+                    { $setOnInsert: { ...productWithStringId, createdAt: new Date(), updatedAt: new Date() } },
+                    { upsert: true }
+                );
+                if (result.upsertedCount > 0) seededCount++;
+            }
+            console.log(`✅ Products seeded: ${seededCount} new products added`);
+        } else {
+            console.warn("⚠️ No products found in lib/data to seed");
+        }
+
+        // 4. Create Indexes
         await db.collection("products").createIndex({ id: 1 }, { unique: true });
         await db.collection("products").createIndex({ category: 1 });
         await db.collection("categories").createIndex({ slug: 1 }, { unique: true });
+        await db.collection("orders").createIndex({ id: 1 }, { unique: true });
 
         console.log("✅ Collections and indexes verified");
 

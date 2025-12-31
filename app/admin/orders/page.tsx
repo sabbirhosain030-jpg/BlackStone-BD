@@ -2,23 +2,31 @@
 
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { Search, Filter, Eye, MoreVertical, CheckCircle, XCircle, Clock, Truck, Package, Download } from 'lucide-react';
+import { Search, Filter, Eye, MoreVertical, CheckCircle, XCircle, Clock, Truck, Package, Download, Trash2 } from 'lucide-react';
 import { useAdmin } from '@/context/AdminContext';
 import { Order } from '@/types';
 import OrderDetailsModal from '@/components/admin/OrderDetailsModal';
 
 export default function AdminOrdersPage() {
-    const { orders } = useAdmin();
+    const { orders, updateOrder, deleteOrder } = useAdmin();
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState<string>('all');
 
-    const handleUpdateStatus = (orderId: string, newStatus: Order['status']) => {
-        // TODO: Implement updateStatus in context/API
-        console.log("Updating status for", orderId, "to", newStatus);
+    const handleUpdateStatus = async (orderId: string, newStatus: Order['status']) => {
+        const orderToUpdate = orders.find(o => o.id === orderId);
+        if (orderToUpdate) {
+            await updateOrder({ ...orderToUpdate, status: newStatus });
+            if (selectedOrder && selectedOrder.id === orderId) {
+                setSelectedOrder({ ...selectedOrder, status: newStatus });
+            }
+        }
+    };
 
-        if (selectedOrder && selectedOrder.id === orderId) {
-            setSelectedOrder({ ...selectedOrder, status: newStatus });
+    const handleDeleteOrder = async (orderId: string) => {
+        if (window.confirm('Are you sure you want to delete this order? This action cannot be undone.')) {
+            await deleteOrder(orderId);
+            if (selectedOrder?.id === orderId) setSelectedOrder(null);
         }
     };
 
@@ -154,9 +162,20 @@ export default function AdminOrdersPage() {
                                                     e.stopPropagation();
                                                     setSelectedOrder(order);
                                                 }}
-                                                className="text-gray-400 hover:text-white transition-colors"
+                                                className="text-gray-400 hover:text-white transition-colors mr-3"
+                                                title="View Details"
                                             >
                                                 <Eye className="h-5 w-5" />
+                                            </button>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleDeleteOrder(order.id);
+                                                }}
+                                                className="text-red-400 hover:text-red-300 transition-colors"
+                                                title="Delete Order"
+                                            >
+                                                <Trash2 className="h-5 w-5" />
                                             </button>
                                         </td>
                                     </motion.tr>
